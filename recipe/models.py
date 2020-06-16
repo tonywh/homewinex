@@ -1,12 +1,28 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+class Method(models.Model):
+    description = models.TextField()
+
 class Ingredient(models.Model):
+    ''' All proportions are stored as g/l or g/kg 
+    '''
     name = models.CharField(max_length=128)
-    sg = models.FloatField()
-    ta = models.FloatField()          # g/l as Tartaric
-    tannin = models.FloatField()      # g/l
-    yield_l = models.FloatField()     # l/kg. 1.0 means it's a liquid ingredient
+    variety = models.CharField(max_length=128)
+    acid = models.FloatField()          # as tartaric
+    sugar = models.FloatField()
+    unferm_sugar = models.FloatField()
+    solu_solid = models.FloatField()
+    body_to_acid = models.FloatField()  # don't know what this is
+    tannin = models.FloatField()
+    pectin = models.BooleanField()
+    pectolaise = models.BooleanField()
+    redness = models.FloatField()       # scale 1 - 10
+    brownness = models.FloatField()     # scale 1 - 10
+    starch = models.FloatField()
+    method = models.ForeignKey(Method, on_delete=models.PROTECT)
+    liquid = models.FloatField()        # 1000.0 means it's a liquid ingredient
+    suggest_max = models.FloatField()   # max suggested quantity of the ingredient
 
 class Recipe(models.Model):
     name = models.CharField(max_length=128)
