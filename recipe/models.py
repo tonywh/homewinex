@@ -30,7 +30,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Ingredient, through='IngredientUse')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     create_date = models.DateField()
-    # add image here
+    image = models.ForeignKey('Image', on_delete=models.CASCADE, blank=True, null=True)
 
 class IngredientUse(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
@@ -41,7 +41,7 @@ class Brew(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     recipe = models.ForeignKey(Recipe, on_delete=models.PROTECT)
     size_l = models.FloatField()
-    # add image here
+    image = models.ForeignKey('Image', on_delete=models.CASCADE, blank=True, null=True)
 
 class LogEntry(models.Model):
     datetime = models.DateField()
@@ -49,6 +49,18 @@ class LogEntry(models.Model):
     brew = models.ForeignKey(Brew, on_delete=models.CASCADE)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True)
 
-class Image:
+class Image(models.Model):
     location = models.FileField()
-    parent = models.ForeignKey(LogEntry, on_delete=models.CASCADE)
+    parent = models.ForeignKey(LogEntry, on_delete=models.CASCADE, blank=True)
+
+class WineStyle(models.Model):
+    ''' All proportions are stored as g/l, except alcohol which is % vol.
+    '''
+    sweetness = models.CharField(max_length=32)
+    colour = models.CharField(max_length=32)
+    grapes = models.CharField(max_length=64)
+    region = models.CharField(max_length=64)
+    alcohol = models.FloatField()
+    acid = models.FloatField()
+    tannin = models.FloatField()
+    solu_solid = models.FloatField()
