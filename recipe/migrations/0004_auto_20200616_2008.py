@@ -55,16 +55,25 @@ def readRecord(data, offset):
     record['SuggMax_g_gal'], i = readFloat40(data, i)
     return record, i
 
-def import_bbc(apps, schema_editor):
-    # Get the historical version of the Ingredient model
+def import_ingredients(apps, schema_editor):
+    # Get the historical version of the models
     Ingredient = apps.get_model('recipe', 'Ingredient')
+    Method = apps.get_model('recipe', 'Method')
 
-    # Read the data from the table in web page
-    datafile = open('./Home_Wine_Program_1c/Ingreds.dat', 'rb')
-    data = bytes(datafile.read())
+    # Add methods
+    f = open('./imports/methods.txt', 'r')
+    m = 1
+    for line in f:
+        method = Method(method_num=m, description=line)
+        method.save()
+        m += 1
+
+    # Add ingredients
+    f = open('./imports/ingredients.dat', 'rb')
+    data = bytes(f.read())
     i = 0
     value,i = readFloat40(data, i)      # Don't know what first number is
-    while i + 5 < len(data):
+    while i + 5 < len(data):            # Ignore the last 5-byte number also
         record,i = readRecord(data, i)
         ingredient = Ingredient(
             name = record['Fruit'],
@@ -80,17 +89,25 @@ def import_bbc(apps, schema_editor):
             redness = record['Redness'],
             brownness = record['Brownness'],
             starch = record['Starch_pc'] * 10.0,
-            method_id = int(record['Method']),
+            method = Method.objects.get(method_num=int(record['Method'])),
             liquid = 500.0 if record['Solid'] == 'yes' else 1000.0,
             suggest_max = record['SuggMax_g_gal'] / 4.55 )
         ingredient.save()
 
+def remove_ingredients(apps, schema_editor):
+    # Get the historical version of the models
+    Ingredient = apps.get_model('recipe', 'Ingredient')
+    Method = apps.get_model('recipe', 'Method')
+
+    Ingredient.objects.all().delete()
+    Method.objects.all().delete()
+
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('recipe', '0002_auto_20200616_1927'),
+        ('recipe', '0003_method_method_num'),
     ]
 
     operations = [
-        migrations.RunPython(import_bbc)
+        migrations.RunPython(import_ingredients,remove_ingredients)
     ]
