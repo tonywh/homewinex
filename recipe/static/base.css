@@ -1,0 +1,64 @@
+* {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #014101;
+}
+
+html {
+  background: #f0e5db;
+}
+
+html,body {
+  max-width: 1000px;
+  margin: auto;
+}
+
+#banner {
+  padding-bottom: 5px;
+}
+
+.navbar-brand img {
+  width:300px;
+}
+
+.nav-item {
+  font-size: 2em;
+  color: #014101;
+}
+
+.nav-item:hover, .nav-link:hover {
+  text-decoration: none;
+  color: #00d800;
+}
+
+.nav-link, .nav-icon {
+  color: inherit;
+}
+
+.navbar-custom {
+  background-image: url("/static/italian_flag.png");
+  background-size: 100%;
+  background-position-y: center;
+}
+  
+#cartlink {
+  font-size: 4em;
+}
+
+button {
+  background-color: rgb(238, 197, 147);
+  height: 40px;
+  border-radius: 10px;
+}
+
+button:disabled, button:disabled:hover {
+  background-color: rgb(238, 217, 190);
+  color: #9cd89c!important;
+}
+
+button:hover {
+  background-color: rgb(255, 164, 53);
+}
+
+button:active {
+  background-color: rgb(219, 139, 41);
+}

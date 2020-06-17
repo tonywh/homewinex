@@ -1,0 +1,13 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll(".nav-item").forEach( item => {
+      item.style.visibility = "hidden";
+    });
+  })
+</script>
+
+{% endblock %}
