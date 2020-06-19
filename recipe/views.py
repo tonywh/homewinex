@@ -37,5 +37,7 @@ def profile(request):
         profile.solid_large_units = request.POST.get('solid_large_units')
         profile.liquid_small_units = request.POST.get('liquid_small_units')
         profile.liquid_large_units = request.POST.get('liquid_large_units')
+        profile.save()
+        profile = Profile.objects.get(user=user)
 
     return render(request, "recipe/profile.html", {'user': user, 'profile': profile})

@@ -1,0 +1,9 @@
+#profile {
+  padding: 10px;
+  font-size: 1.1em;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+  background-color: #7e7e7e;
+  border-color: #7e7e7e;
+}
