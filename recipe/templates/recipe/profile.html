@@ -1,0 +1,118 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "profile.css" %}">
+
+  <script src="{% static "profile.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+<h2>User Profile</h2>
+<form method="post" action="{% url 'profile' %}">
+  {% csrf_token %}
+  <div class="form-group row">
+    <label for="username" class="col-sm-2 col-form-label">Username</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control-plaintext" id="username" value="{{user.username}}" readonly>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="email" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+      <input type="email" class="form-control-plaintext" id="email" value="{{user.email}}" readonly>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="first_name" class="col-sm-2 col-form-label">First name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="first_name" value="{{user.first_name}}">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="last_name" class="col-sm-2 col-form-label">Last name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="last_name" value="{{user.last_name}}">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="location" class="col-sm-2 col-form-label">Location</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="location" value="{{profile.location}}">
+    </div>
+  </div>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">Solid small units</legend>
+      <div class="col-sm-10">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="solid_small_units" id="solid_small_units_g" value="1">
+          <label class="form-check-label" for="solid_small_units_g">g</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="solid_small_units" id="solid_small_units_oz" value="3">
+          <label class="form-check-label" for="solid_small_units_oz">oz</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">Solid large units</legend>
+      <div class="col-sm-10">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="solid_large_units" id="solid_large_units_kg" value="0">
+          <label class="form-check-label" for="solid_large_units_kg">kg</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="solid_large_units" id="solid_large_units_lb" value="2">
+          <label class="form-check-label" for="solid_large_units_lb">lb</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">Liquid small units</legend>
+      <div class="col-sm-10">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="liquid_small_units" id="liquid_small_units_ml" value="1">
+          <label class="form-check-label" for="liquid_small_units_ml">ml</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="liquid_small_units" id="liquid_small_units_flozus" value="4">
+          <label class="form-check-label" for="liquid_small_units_flozus">fl oz (US)</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="liquid_small_units" id="liquid_small_units_flozimp" value="5">
+          <label class="form-check-label" for="liquid_small_units_flozimp">fl oz (Imp)</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">Liquid large units</legend>
+      <div class="col-sm-10">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="liquid_large_units" id="liquid_large_units_l" value="0">
+          <label class="form-check-label" for="liquid_large_units_l">l</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="liquid_large_units" id="liquid_large_units_galus" value="2">
+          <label class="form-check-label" for="liquid_large_units_galus">gal (US)</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="liquid_large_units" id="liquid_large_units_galimp" value="3">
+          <label class="form-check-label" for="liquid_large_units_galimp">gal (Imp)</label>
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

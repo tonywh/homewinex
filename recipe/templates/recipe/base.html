@@ -23,25 +23,48 @@
 
   </head>
   <body>
-    <div class="container-fluid h-100 d-flex flex-column">
-      <div class="row flex-shrink-0" id="banner">
-        <nav class="col-12 border navbar navbar-light">
-          {% load static %}
-          <div class="navbar-brand"><img src="{% static "logo.png" %}"></div>
-          <span class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <nav class="navbar navbar-expand-sm navbar-light bannerbar">
+      {% load static %}
+      <div class="navbar-brand mr-auto"><img src="{% static "logo.png" %}"></div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse flex-grow-0" id="navbarSupportedContent">
+        <ul class="navbar-nav text-right">
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <form action="/accounts/profile"><button type="link" class="m-1 btn btn-secondary" value="{{user.username}}">
               <span class="fa fa-user nav-icon"></span> {{user.username}}
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-              <a class="dropdown-item" href="accounts/logout">Logout</a>
-            </div>
-          </span>
-          <a class="nav-item" id="orderslink" href="ordersview">Orders</a>
-          <a class="nav-item" id="cartlink" href="cartview"><span class="fa fa-shopping-cart nav-icon"></span></a>
-        </nav>
+            </button></form>
+          </li>
+          <li class="nav-item">
+            <form action="/accounts/logout"><button type="link" class="m-1 btn btn-secondary">
+              Logout
+            </button></form>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <form action="/accounts/login"><button type="link" class="m-1 btn btn-secondary">
+              Login
+            </button></form>
+          </li>
+          <li class="nav-item">
+            <form action="/accounts/logout"><button type="link" class="m-1 btn btn-secondary">
+              Register
+            </button></form>
+          </li>
+          {% endif %}
+        </ul>
       </div>
-      {% block body %}
-      {% endblock %}
-    </div>
+    </nav>
+    <nav class="navbar navbar-expand-sm menubar">
+      <a class="nav-item" href="/home">Home</a>
+      <a class="nav-item" href="/recipes">Recipes</a>
+      {% if user.is_authenticated %}
+      <a class="nav-item" href="/mywine">My Wine</a>
+      {% endif %}
+    </nav>
+    {% block body %}
+    {% endblock %}
   </body>
 </html>

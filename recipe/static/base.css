@@ -12,53 +12,36 @@ html,body {
   margin: auto;
 }
 
-#banner {
-  padding-bottom: 5px;
+.bannerbar {
+  background-color: #fff7e0;
 }
 
 .navbar-brand img {
   width:300px;
 }
 
-.nav-item {
-  font-size: 2em;
-  color: #014101;
+.menubar {
+  background-color: #800064;
 }
 
-.nav-item:hover, .nav-link:hover {
+.menubar .nav-item {
+  color: white;
+  font-size: 1.4em;
+  padding: 0.1em 1em 0.1em 1em;
+}
+
+.menubar .nav-item:hover, .menubar .nav-item:hover {
   text-decoration: none;
-  color: #00d800;
+  background-color: #a70082;
 }
 
 .nav-link, .nav-icon {
   color: inherit;
 }
 
-.navbar-custom {
-  background-image: url("/static/italian_flag.png");
-  background-size: 100%;
-  background-position-y: center;
-}
-  
-#cartlink {
-  font-size: 4em;
-}
-
-button {
-  background-color: rgb(238, 197, 147);
-  height: 40px;
-  border-radius: 10px;
-}
-
-button:disabled, button:disabled:hover {
-  background-color: rgb(238, 217, 190);
-  color: #9cd89c!important;
-}
-
-button:hover {
-  background-color: rgb(255, 164, 53);
-}
-
-button:active {
-  background-color: rgb(219, 139, 41);
+.navbar-toggler {
+  font-size: 1.4em;
+  padding: 0.3em;
+  margin: 0em;
+  border: none;
 }

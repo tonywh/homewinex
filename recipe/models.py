@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from . import measures
 
 class Method(models.Model):
     method_num = models.IntegerField(unique=True)
@@ -64,3 +65,14 @@ class WineStyle(models.Model):
     acid = models.FloatField()
     tannin = models.FloatField()
     solu_solid = models.FloatField()
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    location = models.CharField(max_length=30, blank=True, default='')
+    solid_small_units = models.PositiveSmallIntegerField(choices=measures.Solid.UNITS, default=measures.Solid.G)
+    solid_large_units = models.PositiveSmallIntegerField(choices=measures.Solid.UNITS, default=measures.Solid.KG)
+    liquid_small_units = models.PositiveSmallIntegerField(choices=measures.Liquid.UNITS, default=measures.Liquid.ML)
+    liquid_large_units = models.PositiveSmallIntegerField(choices=measures.Liquid.UNITS, default=measures.Liquid.L)
+
+    def __str__(self):
+        return self.user.username

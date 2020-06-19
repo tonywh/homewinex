@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from datetime import datetime
 
-from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle
+from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
 
 def index(request):
     return "HomeWineX says Hello!"
@@ -19,8 +19,23 @@ def register(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return HttpResponseRedirect("/")
-    else:
-        form = UserCreationForm()
+            profile, created = Profile.objects.get_or_create(user=user)
+            return HttpResponseRedirect("/accounts/profile")
 
+    form = UserCreationForm()
     return render(request, "registration/register.html", {'form': form})
+
+def profile(request):
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    if request.method == "POST":
+        user.first_name = request.POST.get("first_name")
+        user.last_name = request.POST.get("last_name")
+        user.save()
+        profile.location = request.POST.get('location')
+        profile.solid_small_units = request.POST.get('solid_small_units')
+        profile.solid_large_units = request.POST.get('solid_large_units')
+        profile.liquid_small_units = request.POST.get('liquid_small_units')
+        profile.liquid_large_units = request.POST.get('liquid_large_units')
+
+    return render(request, "recipe/profile.html", {'user': user, 'profile': profile})
