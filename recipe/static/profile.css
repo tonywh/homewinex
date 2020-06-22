@@ -1,5 +1,15 @@
 #profile {
+  max-width: 1000px;
+  margin: auto;
   padding: 10px;
+  font-size: 1.1em;
+}
+
+label, legend {
+  font-style: italic;
+}
+
+.form-control-plaintext {
   font-size: 1.1em;
 }
 

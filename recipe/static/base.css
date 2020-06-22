@@ -7,11 +7,6 @@ html {
   background: #f0e5db;
 }
 
-html,body {
-  max-width: 1000px;
-  margin: auto;
-}
-
 .bannerbar {
   background-color: #fff7e0;
 }
