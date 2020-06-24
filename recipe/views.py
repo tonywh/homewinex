@@ -1,4 +1,5 @@
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
@@ -8,7 +9,35 @@ from datetime import datetime
 from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
 
 def index(request):
-    return "HomeWineX says Hello!"
+    return HttpResponseRedirect("/recipes")
+
+def recipes(request):
+    return render(request, "recipe/recipes.html", data )
+
+def recipe(request):
+    id = int(request.GET.get("id"))
+    if id < 0:
+        # Creating a new recipe from Get request, e.g.
+        #/recipe?id=-1&name=MyWine&volume=25&descr=This%20is%20my%20new%20wine%20recipe.
+        data = {'id': -1, 'name': request.GET.get("name"), 'volume': request.GET.get("volume"), 'descr': request.GET.get("descr")}
+    else:
+        recipe = Recipe.objects.get(id=id)
+        data = {'id': id, 'name': recipe.name, 'volume': recipe.volume_l, 'descr': recipe.description}
+
+    return render(request, "recipe/recipe.html", data )
+
+def recipedetail(request):
+    id = int(request.GET.get("id"))
+    if id < 0:
+        recipe = {'id': -1, 'name': '', 'volume': 0, 'descr': '', 'ingredients': [] }
+    else:
+        recipe = Recipe.objects.get(id=id).to_dict()
+    
+    data = { 
+        'recipe': recipe,
+        'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
+        }
+    return JsonResponse(data, safe=False)
 
 def register(request):
     if request.method == "POST":

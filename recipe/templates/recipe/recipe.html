@@ -1,0 +1,79 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "recipe.css" %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+  <script id="ingredient" type="text/x-handlebars-template">
+    {% verbatim %}
+      <div class="row ingredient-table">
+        <input class="col-sm-5 form-control-plaintext" value="{{ingredient.name}}" readonly>
+        <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-1 form-control qty" value="{{ingredient.qty}}" >
+        <span class="col-sm-1 ingredient-value">{{ingedient.sugar}}</span>
+        <span class="col-sm-1 ingredient-value">{{ingedient.acid}}</span>
+        <span class="col-sm-1 ingredient-value">{{ingedient.tannin}}</span>
+        <span class="col-sm-1 ingredient-value">{{ingedient.solids}}</span>
+        <span class="col-sm-1 ingredient-value">{{ingedient.redness}}</span>
+      </div>
+    {% endverbatim %}
+  </script>
+
+  <script id="new_ingredient" type="text/x-handlebars-template">
+    {% verbatim %}
+      <select name="new_ingr_select" id="new_ingr_select" value="-1">
+        <option value="-1">&nbsp;&nbsp;&nbsp;--- Select new ingredient ---</option>
+        {{# each ingredients}}
+          <option value="{{this.id}}">{{this.name}}{{#if this.variety }}, {{this.variety}}{{/if}}</option>
+        {{/each}}
+      </select>
+      <button id="new_ingr_button" disabled>Add</button>
+    {% endverbatim %}
+  </script>
+
+  <script src="{% static "recipe.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="row flex-fill mainview">
+    <div class="col-lg-6 col-md-12 col-sm-12">
+      <form method="post" action="{% url 'recipe' %}">
+        {% csrf_token %}
+        <input type="hidden" name="id" id="recipe_id" value="{{id}}">
+        <div class="row ingredient-table">
+        <div class="col-sm-5">
+          <h3 id="recipe-name">{{name}}</h3>
+          <span id="recipe-volume">{{volume}}</span> l
+        </div>
+        <div class="col-sm-6">
+          <p id="recipe-descr">{{descr}}</p>
+        </div>
+        </div>
+        <div class="row ingredient-table">
+          <span class="col-sm-5"></span>
+          <span class="col-sm-1">Qty</span>
+          <span class="col-sm-1">Sugar</span>
+          <span class="col-sm-1">Acid</span>
+          <span class="col-sm-1">Tannin</span>
+          <span class="col-sm-1">Solids</span>
+          <span class="col-sm-1">Redness</span>
+        </div>
+        <div class="row ingredient-table">
+          <span class="col-sm-5"></span>
+          <span class="col-sm-1">(kg)</span>
+          <span class="col-sm-1">(%)</span>
+          <span class="col-sm-1">(g/l)</span>
+          <span class="col-sm-1">(g/l)</span>
+          <span class="col-sm-1">(g/l)</span>
+          <span class="col-sm-1"></span>
+        </div>
+        <div id="ingredients">
+        </div>
+        <div class="row ingredient-table" id="ingredient-select">
+        </div>
+      </form>
+    </div>
+    <div id="targets" class="col-lg-6 col-md-6 col-sm-12">
+    </div>
+  </div>
+{% endblock %}
