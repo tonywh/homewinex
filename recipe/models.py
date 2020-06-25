@@ -75,10 +75,10 @@ class Recipe(models.Model):
         data = {}
         for f in chain(opts.concrete_fields, opts.private_fields):
             data[f.name] = f.value_from_object(self)
-        for f in opts.many_to_many:
-            iu = IngredientUse.objects.filter(recipe_id=self.id).values()
-            print(iu)
-            data[f.name] = [i.id for i in f.value_from_object(self)]
+
+        ingredientuses = list(IngredientUse.objects.filter(recipe_id=self.id).values())
+        print(ingredientuses)
+        data['ingredients'] = ingredientuses
         return data
 
 class IngredientUse(models.Model):

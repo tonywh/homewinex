@@ -9,12 +9,12 @@
     {% verbatim %}
       <div class="row ingredient-table">
         <input class="col-sm-5 form-control-plaintext" value="{{ingredient.name}}" readonly>
-        <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-1 form-control qty" value="{{ingredient.qty}}" >
-        <span class="col-sm-1 ingredient-value">{{ingedient.sugar}}</span>
-        <span class="col-sm-1 ingredient-value">{{ingedient.acid}}</span>
-        <span class="col-sm-1 ingredient-value">{{ingedient.tannin}}</span>
-        <span class="col-sm-1 ingredient-value">{{ingedient.solids}}</span>
-        <span class="col-sm-1 ingredient-value">{{ingedient.redness}}</span>
+        <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
+        <span class="col-sm-1 ingredient-value sugar">{{ingredient.sugar}}</span>
+        <span class="col-sm-1 ingredient-value acid">{{ingredient.acid}}</span>
+        <span class="col-sm-1 ingredient-value tannin">{{ingredient.tannin}}</span>
+        <span class="col-sm-1 ingredient-value solids">{{ingredient.solids}}</span>
+        <span class="col-sm-1 ingredient-value redness">{{ingredient.redness}}</span>
       </div>
     {% endverbatim %}
   </script>
@@ -51,7 +51,7 @@
         </div>
         <div class="row ingredient-table">
           <span class="col-sm-5"></span>
-          <span class="col-sm-1">Qty</span>
+          <span class="col-sm-2 col-md-2 col-lg-1">Qty</span>
           <span class="col-sm-1">Sugar</span>
           <span class="col-sm-1">Acid</span>
           <span class="col-sm-1">Tannin</span>
@@ -60,8 +60,8 @@
         </div>
         <div class="row ingredient-table">
           <span class="col-sm-5"></span>
-          <span class="col-sm-1">(kg)</span>
-          <span class="col-sm-1">(%)</span>
+          <span class="col-sm-2 col-md-2 col-lg-1">(kg)</span>
+          <span class="col-sm-1">(gravity)</span>
           <span class="col-sm-1">(g/l)</span>
           <span class="col-sm-1">(g/l)</span>
           <span class="col-sm-1">(g/l)</span>
