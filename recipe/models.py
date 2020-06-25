@@ -71,14 +71,15 @@ class Recipe(models.Model):
         return f"{self.id}: {self.name}"
 
     def to_dict(self):
-        opts = self._meta
         data = {}
-        for f in chain(opts.concrete_fields, opts.private_fields):
-            data[f.name] = f.value_from_object(self)
-
-        ingredientuses = list(IngredientUse.objects.filter(recipe_id=self.id).values())
-        print(ingredientuses)
-        data['ingredients'] = ingredientuses
+        data['name'] = self.name
+        data['ingredients'] = list(IngredientUse.objects.filter(recipe_id=self.id).values())
+        data['created_by'] = self.created_by.username
+        data['create_date'] = self.create_date
+        data['volume_l'] = self.volume_l
+        data['description'] = self.description
+        data['style'] = self.style.id
+        data['image'] = self.image.id if self.image else None
         return data
 
 class IngredientUse(models.Model):

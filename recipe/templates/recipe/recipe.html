@@ -7,8 +7,8 @@
 
   <script id="ingredient" type="text/x-handlebars-template">
     {% verbatim %}
-      <div class="row ingredient-table">
-        <input class="col-sm-5 form-control-plaintext" value="{{ingredient.name}}" readonly>
+      <div class="row ingredient-table ingredient-data">
+        <input class="col-sm-5 form-control-plaintext" value="{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}" readonly>
         <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
         <span class="col-sm-1 ingredient-value sugar">{{ingredient.sugar}}</span>
         <span class="col-sm-1 ingredient-value acid">{{ingredient.acid}}</span>
@@ -27,7 +27,28 @@
           <option value="{{this.id}}">{{this.name}}{{#if this.variety }}, {{this.variety}}{{/if}}</option>
         {{/each}}
       </select>
-      <button id="new_ingr_button" disabled>Add</button>
+      <button id="new_ingr_button" class="m-1 btn btn-secondary" disabled>Add</button>
+    {% endverbatim %}
+  </script>
+
+  <script id="ingredient_totals" type="text/x-handlebars-template">
+    {% verbatim %}
+      <span class="col-sm-5 ingredient-total" >{{legend}}</span>
+      <span class="col-sm-2 col-md-2 col-lg-1 ingredient-total"></span>
+      <span class="col-sm-1 ingredient-total sugar">{{totals.sugar}}</span>
+      <span class="col-sm-1 ingredient-total acid">{{totals.acid}}</span>
+      <span class="col-sm-1 ingredient-total tannin">{{totals.tannin}}</span>
+      <span class="col-sm-1 ingredient-total solids">{{totals.solids}}</span>
+      {{#if totals.redness}}
+        <span class="col-sm-1 ingredient-total redness">{{totals.redness}}</span>
+      {{/if}}
+    {% endverbatim %}
+  </script>
+
+  <script id="style" type="text/x-handlebars-template">
+    {% verbatim %}
+      <div>Style: {{style.grapes}}, {{style.region}}</div>
+      <div>{{style.sweetness}} {{style.colour}}, {{style.alcohol}}% alcohol</div>
     {% endverbatim %}
   </script>
 
@@ -36,21 +57,24 @@
 
 {% block body %}
   <div class="row flex-fill mainview">
-    <div class="col-lg-6 col-md-12 col-sm-12">
+    <div class="col-lg-8 col-md-8 col-sm-12">
       <form method="post" action="{% url 'recipe' %}">
         {% csrf_token %}
         <input type="hidden" name="id" id="recipe_id" value="{{id}}">
         <div class="row ingredient-table">
         <div class="col-sm-5">
           <h3 id="recipe-name">{{name}}</h3>
-          <span id="recipe-volume">{{volume}}</span> l
+          <span id="recipe-username"></span> l
         </div>
         <div class="col-sm-6">
-          <p id="recipe-descr">{{descr}}</p>
+          <p id="recipe-style"></p>
+          {% if descr %}
+            <p id="recipe-descr">{{descr}}</p>
+          {% endif %}
         </div>
         </div>
         <div class="row ingredient-table">
-          <span class="col-sm-5"></span>
+          <span class="col-sm-5">Ingredients for {{volume}} L</span>
           <span class="col-sm-2 col-md-2 col-lg-1">Qty</span>
           <span class="col-sm-1">Sugar</span>
           <span class="col-sm-1">Acid</span>
@@ -71,9 +95,14 @@
         </div>
         <div class="row ingredient-table" id="ingredient-select">
         </div>
+        <div class="row ingredient-table" id="ingredient-totals">
+        </div>
+        <div class="row ingredient-table" id="style-targets">
+        </div>
       </form>
     </div>
-    <div id="targets" class="col-lg-6 col-md-6 col-sm-12">
+    <div id="chart-block" class="col-lg-4 col-md-4 col-sm-12">
+      <canvas id="wine-chart" width="100%" height="100%"></canvas>
     </div>
   </div>
 {% endblock %}

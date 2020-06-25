@@ -7,7 +7,16 @@ label, legend {
   margin: 0px;
 }
 
-.ingredient-value {
+.ingredient-value, .ingredient-total {
   text-align: center;
   padding: 7px 0;
+}
+
+#ingredient-totals {
+  padding-top: 5px;
+}
+
+#new_ingr_select {
+  padding: 0;
+  margin: 4px 0px 4px 0px;
 }

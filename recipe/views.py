@@ -36,7 +36,8 @@ def recipedetail(request):
     data = { 
         'recipe': recipe,
         'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
-        }
+        'styles': list(WineStyle.objects.values()),
+    }
     return JsonResponse(data, safe=False)
 
 def register(request):
