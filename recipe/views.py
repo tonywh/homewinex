@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
-from datetime import datetime
+import datetime
 
 from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
 
@@ -13,6 +13,26 @@ def index(request):
 
 def recipes(request):
     return render(request, "recipe/recipes.html", data )
+
+def newrecipe(request):
+    if request.method == "GET":
+        return render(request, "recipe/newrecipe.html", {'styles': list(WineStyle.objects.values())})
+
+    # POST - create a new recipe from the form data then render recipe page
+    print(request.POST.get("name"))
+    print(request.POST.get("style"))
+    print(request.POST.get("volume"))
+
+    recipe = Recipe.objects.create(
+        name=request.POST.get("name"),
+        style_id=request.POST.get("style"),
+        volume_l=request.POST.get("volume"),
+        description=request.POST.get("descr"),
+        created_by=request.user
+        )
+
+    data = {'id': recipe.id, 'name': recipe.name, 'volume': recipe.volume_l, 'descr': recipe.description}
+    return render(request, "recipe/recipe.html", data )
 
 def recipe(request):
     id = int(request.GET.get("id"))

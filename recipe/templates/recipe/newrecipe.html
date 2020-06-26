@@ -1,0 +1,60 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "newrecipe.css" %}">
+
+  <script src="{% static "newrecipe.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+<div id="new-recipe">
+  <h2>Create New Recipe</h2>
+  <form method="post" action="{% url 'newrecipe' %}">
+    {% csrf_token %}
+    <div class="form-group row">
+      <label for="name" class="col-sm-4 col-md-3 col-lg-2 col-form-label">Recipe Name</label>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        <input type="text" class="form-control" name="name" id="name" value="">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="style" class="col-sm-4 col-md-3 col-lg-2 col-form-label">Style</label>
+      <div class="col-sm-8 col-md-9 col-lg-10 style-select">
+        <select name="style" id="style" value="-1">
+          <option value="-1" data-alcohol="" data-acid="" data-tannin="" data-solids="">&nbsp;&nbsp;&nbsp;--- Select style ---</option>
+          {% for s in styles %}
+            <option value="{{s.id}}" data-alcohol="{{s.alcohol}}" data-acid="{{s.acid}}" data-tannin="{{s.tannin}}" data-solids="{{s.solu_solid}}">
+              {{s.grapes}}, {{s.region}}: {{s.sweetness}} {{s.colour}} {{s.alcohol}}% alc
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-4 col-md-3 col-lg-2 col-form-label">Targets</label>
+      <span class="col-sm-2" id="target-alcohol"></span>
+      <span class="col-sm-2" id="target-acid"></span>
+      <span class="col-sm-2" id="target-tannin"></span>
+      <span class="col-sm-2" id="target-solids"></span>
+    </div>
+    <div class="form-group row">
+      <label for="volume" class="col-sm-4 col-md-3 col-lg-2 col-form-label">Volume (L)</label>
+      <div class="col-sm-2 col-md-2 col-lg-2">
+        <input type="number" step="0.1" class="form-control" name="volume" id="volume" value="25.0">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="volume" class="col-sm-4 col-md-3 col-lg-2 col-form-label">Description</label>
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        <textarea class="text" name="descr" rows="3" maxlength="1000" autofocus placeholder="Optional"></textarea>
+      </div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-8 col-md-9 col-lg-10">
+        <button type="submit" class="submit btn btn-secondary" disabled>Create</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

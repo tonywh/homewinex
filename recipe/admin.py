@@ -19,7 +19,7 @@ class RecipeAdmin(admin.ModelAdmin):
 #    filter_horizontal = ("ingredients",)
     inlines = (IngredientUseInline,)
     fields = ( ('name', 'volume_l', 'created_by', 'create_date'),
-               'style', 
+               ('style', 'visibility'),
                ( 'description', 'image' ) )
 
 admin.site.register(Method)

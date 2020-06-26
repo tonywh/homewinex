@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from itertools import chain
 from . import measures
+import datetime
 
 class Method(models.Model):
     method_num = models.IntegerField(unique=True)
@@ -55,15 +56,21 @@ class WineStyle(models.Model):
         return f"{self.grapes}, {self.region}"
 
 class Recipe(models.Model):
+    PRIVATE = 0
+    PUBLIC = 1
+    VISIBILITY = (
+        ( PRIVATE, "priivate" ),
+        ( PUBLIC, "public" ),
+    )
     name = models.CharField(max_length=128)
     ingredients = models.ManyToManyField(Ingredient, through='IngredientUse', related_name='recipes')
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
-    create_date = models.DateField()
+    create_date = models.DateField(default=datetime.date.today)
     volume_l = models.FloatField()
     description = models.TextField()
     style = models.ForeignKey(WineStyle, on_delete=models.PROTECT)
     image = models.ForeignKey('Image', on_delete=models.CASCADE, blank=True, null=True)
-
+    visibility = models.PositiveSmallIntegerField(choices=VISIBILITY, default=PRIVATE)
     class Meta:
         ordering = ['name']
 

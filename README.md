@@ -27,7 +27,13 @@ I will add a description of files here.
 | Admin site management                       | Python, Django              | Pre-release |
 | Recipe builder                              | Javascript, Bootstrap, Chart.js | Pre-release |
 | Recipe storage and list                     | Javascript, Python, Django  | Todo        |
+| Display weights and volumes in chosen units | Javascript                  | Todo        |
 | Recipe brew logging                         | Javascript, Python, Django  | Todo        |
 | Recipe review and rating                    | Javascript, Python, Django  | Todo        |
 | Website activity view                       | Javascript, Python, Django  | Todo        |
 | "My Wine" view                              | Javascript, Python, Django  | Todo        |
+
+## ToDo
+The is a list of small items to be done in addition to the "Todo" features above.
+* update URL on new recipe creation
+* Cancel / Save recipe changes

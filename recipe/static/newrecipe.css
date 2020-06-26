@@ -1,0 +1,14 @@
+#new-recipe {
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px;
+  font-size: 1.1em;
+}
+
+label {
+  font-style: italic;
+}
+
+select {
+  padding: 3px;
+}
