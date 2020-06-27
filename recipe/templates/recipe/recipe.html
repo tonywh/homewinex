@@ -9,6 +9,7 @@
     {% verbatim %}
       <div class="row ingredient-table ingredient-data">
         <input class="col-sm-5 form-control-plaintext" value="{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}" readonly>
+        <input type="number" name="ingredient_id[]" value="{{ingredient.id}}" hidden>
         <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
         <span class="col-sm-1 ingredient-value sugar">{{ingredient.sugar}}</span>
         <span class="col-sm-1 ingredient-value acid">{{ingredient.acid}}</span>
@@ -21,7 +22,7 @@
 
   <script id="new_ingredient" type="text/x-handlebars-template">
     {% verbatim %}
-      <select name="new_ingr_select" id="new_ingr_select" value="-1">
+      <select id="new_ingr_select" value="-1">
         <option value="-1">&nbsp;&nbsp;&nbsp;--- Select new ingredient ---</option>
         {{# each ingredients}}
           <option value="{{this.id}}">{{this.name}}{{#if this.variety }}, {{this.variety}}{{/if}}</option>
@@ -48,6 +49,11 @@
   <script id="style" type="text/x-handlebars-template">
     {% verbatim %}
       <div>Style: {{style.grapes}}, {{style.region}}</div>
+    {% endverbatim %}
+  </script>
+
+  <script id="style_info" type="text/x-handlebars-template">
+    {% verbatim %}
       <div>{{style.sweetness}} {{style.colour}}, {{style.alcohol}}% alcohol</div>
     {% endverbatim %}
   </script>
@@ -58,23 +64,30 @@
 {% block body %}
   <div class="row flex-fill mainview">
     <div class="col-lg-8 col-md-8 col-sm-12">
-      <form method="post" action="{% url 'recipe' %}">
+      <form name="recipe-form">
         {% csrf_token %}
         <input type="hidden" name="id" id="recipe_id" value="{{id}}">
         <div class="row ingredient-table">
-        <div class="col-sm-5">
-          <h3 id="recipe-name">{{name}}</h3>
-          <span id="recipe-username"></span> l
-        </div>
-        <div class="col-sm-6">
-          <p id="recipe-style"></p>
-          {% if descr %}
-            <p id="recipe-descr">{{descr}}</p>
-          {% endif %}
-        </div>
+          <input type="text" name="name" id="recipe-name" class="col-sm-5 form-control-plaintext" value="{{name}}" 
+            data-toggle="tooltip" title="Rename">
+          <div class="col-sm-6">
+            <p id="recipe-style"></p>
+          </div>
         </div>
         <div class="row ingredient-table">
-          <span class="col-sm-5">Ingredients for {{volume}} L</span>
+          <label class="col-sm-1 left-label" for="volume">Volume</label>
+          <div class="col-sm-2">
+            <input type="number" step="0.1" name="volume" id="volume" value="{{volume}}">
+          </div>
+          <span class="col-sm-2">L</span>
+          <div class="col-sm-6">
+            <p id="style-info"></p>
+            <textarea name="descr" id="recipe-descr" class="text form-control-plaintext" rows="1" max-rows="5" maxlength="1000"
+              value="{{descr}}" data-toggle="tooltip" title="Edit description"></textarea>
+          </div>
+        </div>
+        <div class="row ingredient-table">
+          <span class="col-sm-5"></span>
           <span class="col-sm-2 col-md-2 col-lg-1">Qty</span>
           <span class="col-sm-1">Sugar</span>
           <span class="col-sm-1">Acid</span>
@@ -98,6 +111,10 @@
         <div class="row ingredient-table" id="ingredient-totals">
         </div>
         <div class="row ingredient-table" id="style-targets">
+        </div>
+        <div class="row ingredient-table">
+          <button class="btn btn-secondary" id="save-button" style="visibility:hidden">Save</button>
+          <span id="save-status" style="visibility:hidden">Saved</span>
         </div>
       </form>
     </div>

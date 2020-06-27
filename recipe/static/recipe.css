@@ -2,7 +2,38 @@ label, legend {
   font-style: italic;
 }
 
-.heading, .ingredient-table {
+#recipe-name {
+  padding: 0px 5px 0px 5px;
+  margin: 0px;
+  font-size: 1.4em;
+}
+
+#recipe-name:hover {
+  border-color: black;
+  border-style: solid;
+}
+
+#volume {
+  width: 100%;
+  max-width: 4em;
+}
+
+#recipe-descr, #recipe-descr-clone {
+  padding: 0px 2px 0px 2px;
+  margin: 0px;
+  width: 100%;
+}
+
+#recipe-descr:hover {
+  border-color: black;
+  border-style: solid;
+}
+
+#recipe-descr-zero {
+  height: '0';
+}
+
+.ingredient-table, .left-label {
   padding: 0px 5px 0px 5px;
   margin: 0px;
 }
@@ -19,4 +50,14 @@ label, legend {
 #new_ingr_select {
   padding: 0;
   margin: 4px 0px 4px 0px;
+}
+
+#save-status {
+  opacity: 1;
+  transition: opacity 0s; 
+}
+
+#save-status.fade {
+  opacity: 0;
+  transition: opacity 5s; 
 }

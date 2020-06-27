@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, Http404
 from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.urls import reverse
@@ -35,16 +35,41 @@ def newrecipe(request):
     return render(request, "recipe/recipe.html", data )
 
 def recipe(request):
-    id = int(request.GET.get("id"))
-    if id < 0:
-        # Creating a new recipe from Get request, e.g.
-        #/recipe?id=-1&name=MyWine&volume=25&descr=This%20is%20my%20new%20wine%20recipe.
-        data = {'id': -1, 'name': request.GET.get("name"), 'volume': request.GET.get("volume"), 'descr': request.GET.get("descr")}
-    else:
-        recipe = Recipe.objects.get(id=id)
-        data = {'id': id, 'name': recipe.name, 'volume': recipe.volume_l, 'descr': recipe.description}
+    if request.method == "GET":
+        id = int(request.GET.get("id"))
+        try:
+            recipe = Recipe.objects.get(id=id)
+        except Recipe.DoesNotExist:
+            raise Http404("Recipe does not exist")
 
-    return render(request, "recipe/recipe.html", data )
+        data = {'id': id, 'name': recipe.name, 'volume': recipe.volume_l, 'descr': recipe.description}
+        return render(request, "recipe/recipe.html", data )
+    else:
+        print(request.POST)
+        id = int(request.POST.get("id"))
+        try:
+            recipe = Recipe.objects.get(id=id)
+        except Recipe.DoesNotExist:
+            raise Http404("Recipe does not exist")
+
+        recipe.name = request.POST.get("name")
+        recipe.volume = request.POST.get("volume")
+        recipe.description = request.POST.get("descr")
+        ingredient_ids = request.POST.getlist("ingredient_id[]")
+        qtys = request.POST.getlist("qty[]")
+        oldUses = IngredientUse.objects.filter(recipe_id=id)
+
+        # Update / add ingredient uses.
+        for ingredient_id, qty in zip(ingredient_ids, qtys):
+            use, created = IngredientUse.objects.get_or_create(recipe_id=id, ingredient_id=ingredient_id, defaults={'qty_kg': 1.0})
+            oldUses = oldUses.exclude(recipe_id=id, ingredient_id=ingredient_id)
+            use.qty_kg = qty
+            use.save()
+
+        # Remove old ingredient uses that are no longer used.
+        oldUses.delete()
+            
+        return HttpResponse("")
 
 def recipedetail(request):
     id = int(request.GET.get("id"))

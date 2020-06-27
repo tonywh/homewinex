@@ -35,5 +35,11 @@ I will add a description of files here.
 
 ## ToDo
 The is a list of small items to be done in addition to the "Todo" features above.
-* update URL on new recipe creation
 * Cancel / Save recipe changes
+* protect private recipe access on backend
+* delete an ingredient from a recipe
+* handle residual sweetness
+* control the chart more precisely
+* read-only view for anonymous users
+* format recipe builder for small mobile device
+* fix solids bar in chart

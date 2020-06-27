@@ -2,11 +2,13 @@ const ingredient_template = Handlebars.compile(document.querySelector('#ingredie
 const new_ingredient_template = Handlebars.compile(document.querySelector('#new_ingredient').innerHTML);
 const ingredient_totals_template = Handlebars.compile(document.querySelector('#ingredient_totals').innerHTML);
 const style_template = Handlebars.compile(document.querySelector('#style').innerHTML);
+const style_info_template = Handlebars.compile(document.querySelector('#style_info').innerHTML);
 
 var recipe;
 var ingredients;
 var styles;
 var totals;
+var descrLineHeight;
 
 document.addEventListener('DOMContentLoaded', () => {
   buildRecipeApp();
@@ -38,6 +40,33 @@ function enableSave() {
 
 function buildRecipeApp() {
   id = document.querySelector('#recipe_id').value;
+
+  // update displayed URL - it might have the newrecipe URL still
+  page_url = 'recipe?' + new URLSearchParams({id: id}).toString();
+  history.pushState({'url': 'recipe', 'id': id}, page_url, page_url);
+
+  // Set actions for name and volume inputs
+  document.querySelector('#recipe-name').oninput = () => {
+    showSaveButton();
+    hideSavedStatus();
+  };
+  document.querySelector('#volume').oninput = () => {
+    showSaveButton();
+    hideSavedStatus();
+  };
+
+  // Set description size and add action for description input
+  descr = document.querySelector("#recipe-descr");
+  descrLineHeight = descr.scrollHeight;   // HTML/CSS is set to 1 row, no padding
+  setDescrSize();
+  document.querySelector("#recipe-descr").oninput = () => {
+    setDescrSize();
+    showSaveButton();
+    hideSavedStatus();
+  };
+
+  // Add action for Save button
+  document.querySelector("#save-button").onclick = saveRecipe;
 
   // Get recipe and ingredient list
   const request = new XMLHttpRequest();
@@ -75,6 +104,7 @@ function showRecipe(ev) {
 function showStyle() {
   style = getStyleData();
   document.querySelector('#recipe-style').innerHTML = style_template({style: style});
+  document.querySelector('#style-info').innerHTML = style_info_template({style: style});
   document.querySelector('#style-targets').innerHTML = ingredient_totals_template({legend: 'TARGETS', totals: style});
 }
 
@@ -115,6 +145,8 @@ function showIngredients() {
       ingredient_id: document.querySelector('#new_ingr_select').value,
       qty_kg: 1.0
      });
+     showSaveButton();
+     hideSavedStatus();
      showIngredients();
      return false;
   };
@@ -165,6 +197,9 @@ function showGraph() {
 function updateQty(ev) { 
   // Set the values in the existing elements rather than rebuilding HTML,
   // so that the UI runs smoothly making it a more interactive experience.
+
+  showSaveButton();
+  hideSavedStatus();
 
   qty_kg = ev.target.value;
   use = recipe.ingredients[ev.target.dataset.index];
@@ -222,6 +257,7 @@ function calcTotalAttrs() {
 
 function calcIngredientAttrs(ingredient, qty_kg, volume_l) {
   return {
+    id: ingredient.id,
     name: ingredient.name,
     variety: ingredient.variety,
     qty: parseFloat(qty_kg).toFixed(2),
@@ -250,4 +286,55 @@ function getStyleData() {
     }
   });
   return result;
+}
+
+function setDescrSize() {
+  descr = document.querySelector('#recipe-descr');
+  lines = Math.floor(descr.scrollHeight / descrLineHeight);
+
+  if (lines < 1) {
+    lines = 1;
+  }
+  if (lines > 4) {
+    lines = 4;
+  }
+  descr.rows = lines;
+}
+
+function saveRecipe() {
+  const request = new XMLHttpRequest();
+  request.open('POST', `/recipe`);
+  const data = new FormData(document.forms.namedItem("recipe-form"));
+
+  request.onload = () => {
+    console.log("Saved");
+    if (request.status == 200) {
+      hideSaveButton();
+      showSavedStatus();
+    }
+  };
+  
+  csrftoken = Cookies.get('csrftoken');
+  request.setRequestHeader("X-CSRFToken", csrftoken);
+  request.send(data);
+  return false;
+}
+
+function showSaveButton() {
+  document.querySelector('#save-button').style.visibility = "visible"
+}
+
+
+function hideSaveButton() {
+  document.querySelector('#save-button').style.visibility = "hidden"
+}
+
+function showSavedStatus() {
+  document.querySelector('#save-status').style.visibility = "visible"
+  document.querySelector('#save-status').classList.add("fade");
+}
+
+function hideSavedStatus() {
+  document.querySelector('#save-status').style.visibility = "hidden"
+  document.querySelector('#save-status').classList.remove("fade");
 }
