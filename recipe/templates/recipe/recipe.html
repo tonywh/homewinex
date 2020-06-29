@@ -8,8 +8,11 @@
   <script id="ingredient" type="text/x-handlebars-template">
     {% verbatim %}
       <div class="row ingredient-table ingredient-data">
-        <input class="col-sm-5 form-control-plaintext" value="{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}" readonly>
-        <input type="number" name="ingredient_id[]" value="{{ingredient.id}}" hidden>
+        <div class="col-sm-5">
+          <input class="ingredient-name" value="{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}" readonly>
+          <input type="number" name="ingredient_id[]" value="{{ingredient.id}}" hidden>
+          <button type="button" class="fa fa-trash m-1 btn btn-light remove-button" data-index="{{index}}" data-toggle="tooltip" title="Remove"></button>
+        </div>
         <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
         <span class="col-sm-1 ingredient-value sugar">{{ingredient.sugar}}</span>
         <span class="col-sm-1 ingredient-value acid">{{ingredient.acid}}</span>
@@ -28,7 +31,7 @@
           <option value="{{this.id}}">{{this.name}}{{#if this.variety }}, {{this.variety}}{{/if}}</option>
         {{/each}}
       </select>
-      <button id="new_ingr_button" class="m-1 btn btn-secondary" disabled>Add</button>
+      <button type="button" id="new_ingr_button" class="m-1 btn btn-secondary" disabled>Add</button>
     {% endverbatim %}
   </script>
 
@@ -113,7 +116,7 @@
         <div class="row ingredient-table" id="style-targets">
         </div>
         <div class="row ingredient-table">
-          <button class="btn btn-secondary" id="save-button" style="visibility:hidden">Save</button>
+          <button type="button" class="btn btn-secondary" id="save-button" style="visibility:hidden">Save</button>
           <span id="save-status" style="visibility:hidden">Saved</span>
         </div>
       </form>

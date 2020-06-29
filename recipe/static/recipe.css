@@ -43,6 +43,18 @@ label, legend {
   padding: 7px 0;
 }
 
+.ingredient-name {
+  margin-top: 7px;
+  width: 80%;
+  border: 0;
+}
+
+.remove-button {
+  float: right;
+  padding: 4px;
+  font-size: 1.2em;
+}
+
 #ingredient-totals {
   padding-top: 5px;
 }

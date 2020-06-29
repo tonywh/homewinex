@@ -36,8 +36,6 @@ I will add a description of files here.
 ## ToDo
 The is a list of small items to be done in addition to the "Todo" features above.
 * protect private recipe access on backend
-* delete an ingredient from a recipe
-* handle residual sweetness
 * read-only view for anonymous users
 * format recipe builder for small mobile device
 * protect registration from bots

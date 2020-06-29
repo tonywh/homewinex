@@ -131,6 +131,18 @@ function showIngredients() {
   totals = calcTotalAttrs();
   document.querySelector('#ingredient-totals').innerHTML = ingredient_totals_template({legend: 'TOTALS', totals: totals});
 
+  // Set actions for remove buttons
+  ingr_el.querySelectorAll('.remove-button').forEach( el => { 
+    el.onclick = (ev) => {
+      // Remove the ingredient from the array and updates the page.
+      console.log("remove");
+      console.log(ev);
+      recipe.ingredients.splice(ev.target.dataset.index, 1);
+      updateAfterChange();
+      return false;
+    }
+  });
+
   // Set actions for qty changes
   ingr_el.querySelectorAll('.qty').forEach( el => { el.oninput = updateQty });
 
@@ -145,12 +157,9 @@ function showIngredients() {
     recipe.ingredients.push({
       ingredient_id: document.querySelector('#new_ingr_select').value,
       qty_kg: 1.0
-     });
-     showSaveButton();
-     hideSavedStatus();
-     showIngredients();
-     showGraph();
-     return false;
+    });
+    updateAfterChange();
+    return false;
   };
 }
 
@@ -210,6 +219,7 @@ function updateQty(ev) {
   // Set the values in the existing elements rather than rebuilding HTML,
   // so that the UI runs smoothly making it a more interactive experience.
 
+  console.log("qty");
   showSaveButton();
   hideSavedStatus();
 
@@ -319,7 +329,6 @@ function saveRecipe() {
   const data = new FormData(document.forms.namedItem("recipe-form"));
 
   request.onload = () => {
-    console.log("Saved");
     if (request.status == 200) {
       hideSaveButton();
       showSavedStatus();
@@ -330,6 +339,13 @@ function saveRecipe() {
   request.setRequestHeader("X-CSRFToken", csrftoken);
   request.send(data);
   return false;
+}
+
+function updateAfterChange() {
+  showSaveButton();
+  hideSavedStatus();
+  showIngredients();
+  showGraph();
 }
 
 function showSaveButton() {
