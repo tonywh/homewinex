@@ -59,7 +59,7 @@ class Recipe(models.Model):
     PRIVATE = 0
     PUBLIC = 1
     VISIBILITY = (
-        ( PRIVATE, "priivate" ),
+        ( PRIVATE, "private" ),
         ( PUBLIC, "public" ),
     )
     name = models.CharField(max_length=128)

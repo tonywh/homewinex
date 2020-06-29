@@ -6,13 +6,26 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 import datetime
 
+from django.contrib.auth.models import User
 from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
 
 def index(request):
     return HttpResponseRedirect("/recipes")
 
 def recipes(request):
-    return render(request, "recipe/recipes.html", data )
+    return render(request, "recipe/recipes.html")
+
+def recipelist(request):
+    order = request.GET.get("order")
+    arglist = order.split(',')
+    recipes = list(Recipe.objects.all().order_by(*arglist).values())
+    for recipe in recipes:
+        try:
+            recipe['style'] = WineStyle.objects.filter(id=recipe['style_id']).values()[0]
+            recipe['created_by'] = User.objects.filter(id=recipe['created_by_id']).values()[0]
+        except:
+            pass
+    return JsonResponse({'recipes': recipes}, safe=False)
 
 def newrecipe(request):
     if request.method == "GET":

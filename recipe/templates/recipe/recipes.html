@@ -1,0 +1,37 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "recipes.css" %}">
+
+  <script id="recipe_list" type="text/x-handlebars-template">
+    {% verbatim %}
+      {{# each recipes }}
+        <tr class="recipe-row" data-recipe_id="{{this.id}}">
+          <td>{{this.name}}</td>
+          <td>{{this.style.grapes}}, {{this.style.region}}</td>
+          <td>{{this.style.sweetness}} {{this.style.colour}} {{this.style.alcohol}}% alc</td>
+          <td>{{this.create_date}}</td>
+          <td>{{this.created_by.username}}</td>
+        </tr>
+      {{/each}}
+    {% endverbatim %}
+  </script>
+
+  <script src="{% static "recipes.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="mainview">
+    <h3>Recipes</h3>
+    <table id="recipe-table">
+      <tr>
+        <th data-order='name'>Name <span class="fa fa-sort"></span></th>
+        <th data-order='style__grapes,style__region'>Style Name <span class="fa fa-sort"></span></th>
+        <th data-order='style__sweetness,style__colour'>Style Character <span class="fa fa-sort"></span></th>
+        <th data-order='create_date'>Date <span class="fa fa-sort"></span></th>
+        <th data-order='created_by'>Creator <span class="fa fa-sort"></span></th>
+      </tr>
+    </table>
+  </div>
+{% endblock %}

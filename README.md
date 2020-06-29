@@ -26,7 +26,7 @@ I will add a description of files here.
 | Wine style database                         | Django/SQL database         | Pre-release |
 | Admin site management                       | Python, Django              | Pre-release |
 | Recipe builder                              | Javascript, Bootstrap, Chart.js | Pre-release |
-| Recipe storage and list                     | Javascript, Python, Django  | Todo        |
+| Recipe storage and list                     | Javascript, Python, Django  | Pre-release |
 | Display weights and volumes in chosen units | Javascript                  | Todo        |
 | Recipe brew logging                         | Javascript, Python, Django  | Todo        |
 | Recipe review and rating                    | Javascript, Python, Django  | Todo        |
@@ -39,3 +39,4 @@ The is a list of small items to be done in addition to the "Todo" features above
 * read-only view for anonymous users
 * format recipe builder for small mobile device
 * protect registration from bots
+* show liquids in liquid units

@@ -135,8 +135,6 @@ function showIngredients() {
   ingr_el.querySelectorAll('.remove-button').forEach( el => { 
     el.onclick = (ev) => {
       // Remove the ingredient from the array and updates the page.
-      console.log("remove");
-      console.log(ev);
       recipe.ingredients.splice(ev.target.dataset.index, 1);
       updateAfterChange();
       return false;
@@ -219,7 +217,6 @@ function updateQty(ev) {
   // Set the values in the existing elements rather than rebuilding HTML,
   // so that the UI runs smoothly making it a more interactive experience.
 
-  console.log("qty");
   showSaveButton();
   hideSavedStatus();
 
