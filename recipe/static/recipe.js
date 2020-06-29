@@ -9,6 +9,7 @@ var ingredients;
 var styles;
 var totals;
 var descrLineHeight;
+var barChart;
 
 document.addEventListener('DOMContentLoaded', () => {
   buildRecipeApp();
@@ -148,6 +149,7 @@ function showIngredients() {
      showSaveButton();
      hideSavedStatus();
      showIngredients();
+     showGraph();
      return false;
   };
 }
@@ -155,7 +157,10 @@ function showIngredients() {
 function showGraph() {
   Chart.defaults.global.defaultFontSize = 16;
   ctx = document.querySelector('#wine-chart').getContext('2d');
-  var myBarChart = new Chart(ctx, {
+  if ( barChart ) {
+    barChart.destroy();
+  }
+  barChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: ['Sugar', 'Acid', 'Tannin', 'Solids'],
@@ -164,10 +169,10 @@ function showGraph() {
         backgroundColor: 'rgb(255, 225, 128)',
         borderColor: 'rgb(255, 225, 128)',
         data: [
-          100*totals.sugar/style.sugar,
-          100*totals.acid/style.acid,
-          100*totals.tannin/style.tannin,
-          100*totals.solids/style.solu_solids
+          (100*totals.sugar/style.sugar).toFixed(0),
+          (100*totals.acid/style.acid).toFixed(0),
+          (100*totals.tannin/style.tannin).toFixed(0),
+          (100*totals.solids/style.solu_solid).toFixed(0),
         ]
       },
       {
@@ -189,7 +194,14 @@ function showGraph() {
       },
       animation: {
         duration: 0
-      }
+      },
+      scales: {
+        yAxes: [{
+            ticks: {
+                beginAtZero: true
+            }
+        }]
+      },
     }
   });  
 }
