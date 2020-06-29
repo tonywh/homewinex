@@ -8,8 +8,8 @@ This project has two purposes.
 The heart of the website is an interactive home wine recipe builder.
 To start a new recipe the user selects the desired wine style and volume 
 and then proceeds to add ingredients to acheive the desired style.
-The recipe build uses wine-style and ingredient data to give real-time feedback
-as ingredients and quantities are change allowing the user to experiment and
+The recipe builder uses wine-style and ingredient data to give real-time feedback
+as ingredients and quantities are changed allowing the user to experiment and
 create a recipe with the desired qualities.
 
 ## Demo
@@ -35,7 +35,6 @@ I will add a description of files here.
 
 ## ToDo
 The is a list of small items to be done in addition to the "Todo" features above.
-* Cancel / Save recipe changes
 * protect private recipe access on backend
 * delete an ingredient from a recipe
 * handle residual sweetness
@@ -43,3 +42,4 @@ The is a list of small items to be done in addition to the "Todo" features above
 * read-only view for anonymous users
 * format recipe builder for small mobile device
 * fix solids bar in chart
+* round numbers used in chart
