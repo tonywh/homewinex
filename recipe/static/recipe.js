@@ -254,7 +254,7 @@ function updateQty(ev) {
 
 function calcTotalAttrs() {
   sugar = 0;
-  acid = 0;
+  acid = 1.5;     // Produced during fermenation
   tannin = 0;
   solids = 0;
   redness = 0;
