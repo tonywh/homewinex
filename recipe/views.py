@@ -12,13 +12,21 @@ from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, Wi
 def index(request):
     return HttpResponseRedirect("/recipes")
 
+def mywine(request):
+    return render(request, "recipe/recipes.html", {'thisUserOnly': True})
+
 def recipes(request):
     return render(request, "recipe/recipes.html")
 
 def recipelist(request):
     order = request.GET.get("order")
+    thisUserOnly = request.GET.get("thisUserOnly")
+    if thisUserOnly:
+        recipelist = Recipe.objects.filter(created_by=request.user)
+    else:
+        recipelist = Recipe.objects.all()
     arglist = order.split(',')
-    recipes = list(Recipe.objects.all().order_by(*arglist).values())
+    recipes = list(recipelist.order_by(*arglist).values())
     for recipe in recipes:
         try:
             recipe['style'] = WineStyle.objects.filter(id=recipe['style_id']).values()[0]
@@ -32,10 +40,6 @@ def newrecipe(request):
         return render(request, "recipe/newrecipe.html", {'styles': list(WineStyle.objects.values())})
 
     # POST - create a new recipe from the form data then render recipe page
-    print(request.POST.get("name"))
-    print(request.POST.get("style"))
-    print(request.POST.get("volume"))
-
     recipe = Recipe.objects.create(
         name=request.POST.get("name"),
         style_id=request.POST.get("style"),
@@ -58,7 +62,6 @@ def recipe(request):
         data = {'id': id, 'name': recipe.name, 'volume': recipe.volume_l, 'descr': recipe.description}
         return render(request, "recipe/recipe.html", data )
     else:
-        print(request.POST)
         id = int(request.POST.get("id"))
         try:
             recipe = Recipe.objects.get(id=id)

@@ -23,8 +23,12 @@
 
 {% block body %}
   <div class="mainview">
-    <h3>Recipes</h3>
-    <table id="recipe-table">
+    {% if thisUserOnly %}
+      <h3>My Recipes</h3>
+    {% else %}
+      <h3>Recipes</h3>
+    {% endif %}
+    <table id="recipe-table" {% if thisUserOnly %}class="this-user-only"{% endif %}>
       <tr>
         <th data-order='name'>Name <span class="fa fa-sort"></span></th>
         <th data-order='style__grapes,style__region'>Style Name <span class="fa fa-sort"></span></th>
