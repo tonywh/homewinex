@@ -10,7 +10,7 @@
     {% verbatim %}
       <div class="list-group-item">
         <div class="row ingredient-table ingredient-data">
-          <div class="col-sm-5">
+          <div class="col-5">
             <div class="handle">
               <span class="fa fa-sort"></span>
               <input class="ingredient-name" value="{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}" readonly>
@@ -19,12 +19,12 @@
             <input type="number" name="ingredient_order[]" value="{{ingredient.order}}" hidden>
             <button type="button" class="fa fa-trash m-1 btn btn-light remove-button" data-index="{{index}}" data-toggle="tooltip" title="Remove"></button>
           </div>
-          <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
-          <span class="col-sm-1 ingredient-value sugar">{{ingredient.sugar}}</span>
-          <span class="col-sm-1 ingredient-value acid">{{ingredient.acid}}</span>
-          <span class="col-sm-1 ingredient-value tannin">{{ingredient.tannin}}</span>
-          <span class="col-sm-1 ingredient-value solids">{{ingredient.solids}}</span>
-          <span class="col-sm-1 ingredient-value redness">{{ingredient.redness}}</span>
+          <input type="number" name="qty[]" step="0.01" min="0" class="col-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
+          <span class="col-1 ingredient-value sugar">{{ingredient.sugar}}</span>
+          <span class="col-1 ingredient-value acid">{{ingredient.acid}}</span>
+          <span class="col-1 ingredient-value tannin">{{ingredient.tannin}}</span>
+          <span class="col-1 ingredient-value solids">{{ingredient.solids}}</span>
+          <span class="col-1 ingredient-value redness">{{ingredient.redness}}</span>
         </div>
       </div>
     {% endverbatim %}
@@ -44,14 +44,14 @@
 
   <script id="ingredient_totals" type="text/x-handlebars-template">
     {% verbatim %}
-      <span class="col-sm-5 ingredient-total" >{{legend}}</span>
-      <span class="col-sm-2 col-md-2 col-lg-1 ingredient-total"></span>
-      <span class="col-sm-1 ingredient-total sugar">{{totals.sugar}}</span>
-      <span class="col-sm-1 ingredient-total acid">{{totals.acid}}</span>
-      <span class="col-sm-1 ingredient-total tannin">{{totals.tannin}}</span>
-      <span class="col-sm-1 ingredient-total solids">{{totals.solids}}</span>
+      <span class="col-5 ingredient-total" >{{legend}}</span>
+      <span class="col-2 col-md-2 col-lg-1 ingredient-total"></span>
+      <span class="col-1 ingredient-total sugar">{{totals.sugar}}</span>
+      <span class="col-1 ingredient-total acid">{{totals.acid}}</span>
+      <span class="col-1 ingredient-total tannin">{{totals.tannin}}</span>
+      <span class="col-1 ingredient-total solids">{{totals.solids}}</span>
       {{#if totals.redness}}
-        <span class="col-sm-1 ingredient-total redness">{{totals.redness}}</span>
+        <span class="col-1 ingredient-total redness">{{totals.redness}}</span>
       {{/if}}
     {% endverbatim %}
   </script>
@@ -73,27 +73,27 @@
 
 {% block body %}
   <div class="row flex-fill mainview">
-    <div class="col-lg-8 col-md-8 col-sm-12">
+    <div class="col-lg-8 col-md-8 col-12">
       <form name="recipe-form">
         {% csrf_token %}
         <input type="hidden" name="id" id="recipe_id" value="{{id}}">
         <div class="row ingredient-table">
-          <div class="col-sm-5 tltip">
+          <div class="col-5 tltip">
             <input type="text" name="name" id="recipe-name" class="form-control-plaintext" value="{{name}}">
             <span class="tltiptext">Rename</span>
           </div>
-          <div class="col-sm-6 full-width bottom">
+          <div class="col-6 full-width bottom">
             <span id="recipe-style"></span>
           </div>
         </div>
         <div class="row ingredient-table">
-          <label class="col-sm-1 left-label" for="volume">Volume</label>
-          <div class="col-sm-2">
+          <label class="col-1 left-label" for="volume">Volume</label>
+          <div class="col-2">
             <input type="number" step="0.1" name="volume" id="volume" class="form-control" value="{{volume}}">
             <div id="volume-unit">L</div>
           </div>
-          <span class="col-sm-2"></span>
-          <div class="col-sm-6 full-width">
+          <span class="col-2"></span>
+          <div class="col-6 full-width">
             <span id="style-info"></span>
             <div class="tltip full-width">
               <textarea name="descr" id="recipe-descr" class="text form-control-plaintext" rows="1" 
@@ -103,29 +103,29 @@
           </div>
         </div>
         <div class="row ingredient-table">
-          <span class="col-sm-5"></span>
-          <span class="col-sm-2 col-md-2 col-lg-1 heading">Qty</span>
-          <span class="col-sm-1 heading">Sugar</span>
-          <span class="col-sm-1 heading">Acid</span>
-          <span class="col-sm-1 heading">Tannin</span>
-          <span class="col-sm-1 heading">Solids</span>
-          <span class="col-sm-1 heading">Redness</span>
+          <span class="col-5"></span>
+          <span class="col-2 col-md-2 col-lg-1 heading">Qty</span>
+          <span class="col-1 heading">Sugar</span>
+          <span class="col-1 heading">Acid</span>
+          <span class="col-1 heading">Tannin</span>
+          <span class="col-1 heading">Solids</span>
+          <span class="col-1 heading">Redness</span>
         </div>
         <div class="row ingredient-table">
-          <span class="col-sm-5"></span>
-          <span class="col-sm-2 col-md-2 col-lg-1 heading">(kg or L)</span>
-          <span class="col-sm-1 heading">(gravity)</span>
-          <span class="col-sm-1 heading">(g/l)</span>
-          <span class="col-sm-1 heading">(g/l)</span>
-          <span class="col-sm-1 heading">(g/l)</span>
-          <span class="col-sm-1"></span>
+          <span class="col-5"></span>
+          <span class="col-2 col-md-2 col-lg-1 heading">(kg&nbsp;L)</span>
+          <span class="col-1 heading">(grav)</span>
+          <span class="col-1 heading">(g/l)</span>
+          <span class="col-1 heading">(g/l)</span>
+          <span class="col-1 heading">(g/l)</span>
+          <span class="col-1"></span>
         </div>
         <div id="ingredients" class="list-group">
         </div>
         <div class="row ingredient-table" id="acid-from-fermentation">
-          <span class="col-sm-5 adacid-label" >Additional acid from fermenation</span>
-          <span class="col-sm-3 col-md-3 col-lg-2"></span>
-          <span class="col-sm-1 ingredient-value">1.50</span>
+          <span class="col-5 adacid-label" >Additional acid from fermenation</span>
+          <span class="col-3 col-md-3 col-lg-2"></span>
+          <span class="col-1 ingredient-value">1.50</span>
         </div>
         <div class="row ingredient-table" id="ingredient-select">
         </div>
@@ -139,7 +139,7 @@
         </div>
       </form>
     </div>
-    <div id="chart-block" class="col-lg-4 col-md-4 col-sm-12">
+    <div id="chart-block" class="col-lg-4 col-md-4 col-12">
       <canvas id="wine-chart" width="100%" height="100%"></canvas>
     </div>
   </div>

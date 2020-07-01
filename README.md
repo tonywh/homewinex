@@ -43,6 +43,5 @@ I will add a description of files here.
 
 ## ToDo
 The is a list of small items to be done in addition to the "Todo" features above.
-* format recipe builder for small mobile device
 * protect registration from bots
 * style login and registration pages
