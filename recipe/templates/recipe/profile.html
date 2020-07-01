@@ -2,13 +2,13 @@
 
 {% block head %}
   {% load static %}
-  <link rel="stylesheet" href="{% static "profile.css" %}">
+  <link rel="stylesheet" href="{% static "account.css" %}">
 
   <script src="{% static "profile.js" %}"></script>
 {% endblock %}
 
 {% block body %}
-<div id="profile">
+<div id="account">
   <h2>User Profile</h2>
   <form method="post" action="{% url 'profile' %}">
     {% csrf_token %}

@@ -2,12 +2,15 @@
 
 {% block head %}
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll(".nav-item").forEach( item => {
-      item.style.visibility = "hidden";
-    });
-  })
-</script>
+  {% load static %}
+  <link rel="stylesheet" href="{% static "account.css" %}">
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll(".nav-item").forEach( item => {
+        item.style.visibility = "hidden";
+      });
+    })
+  </script>
 
 {% endblock %}

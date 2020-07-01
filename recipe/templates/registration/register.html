@@ -2,15 +2,17 @@
 
 {% block body %}
 
-{% if form.errors %}
-<p>Your passwords didn't match or did not fit the minimum criteria. Please try again.</p>
-{% endif %}
+  <div id="account">
+    {% if form.errors %}
+    <p>Your passwords didn't match or did not fit the minimum criteria. Please try again.</p>
+    {% endif %}
 
-<h2>Register</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Register</button>
-</form>
+    <h2>Register</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Register</button>
+    </form>
+  </div>
 
 {% endblock %}
