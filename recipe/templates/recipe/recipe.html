@@ -89,9 +89,10 @@
         <div class="row ingredient-table">
           <label class="col-sm-1 left-label" for="volume">Volume</label>
           <div class="col-sm-2">
-            <input type="number" step="0.1" name="volume" id="volume" value="{{volume}}">
+            <input type="number" step="0.1" name="volume" id="volume" class="form-control" value="{{volume}}">
+            <div id="volume-unit">L</div>
           </div>
-          <span class="col-sm-2">L</span>
+          <span class="col-sm-2"></span>
           <div class="col-sm-6 full-width">
             <span id="style-info"></span>
             <div class="tltip full-width">
@@ -103,20 +104,20 @@
         </div>
         <div class="row ingredient-table">
           <span class="col-sm-5"></span>
-          <span class="col-sm-2 col-md-2 col-lg-1">Qty</span>
-          <span class="col-sm-1">Sugar</span>
-          <span class="col-sm-1">Acid</span>
-          <span class="col-sm-1">Tannin</span>
-          <span class="col-sm-1">Solids</span>
-          <span class="col-sm-1">Redness</span>
+          <span class="col-sm-2 col-md-2 col-lg-1 heading">Qty</span>
+          <span class="col-sm-1 heading">Sugar</span>
+          <span class="col-sm-1 heading">Acid</span>
+          <span class="col-sm-1 heading">Tannin</span>
+          <span class="col-sm-1 heading">Solids</span>
+          <span class="col-sm-1 heading">Redness</span>
         </div>
         <div class="row ingredient-table">
           <span class="col-sm-5"></span>
-          <span class="col-sm-2 col-md-2 col-lg-1">(kg)</span>
-          <span class="col-sm-1">(gravity)</span>
-          <span class="col-sm-1">(g/l)</span>
-          <span class="col-sm-1">(g/l)</span>
-          <span class="col-sm-1">(g/l)</span>
+          <span class="col-sm-2 col-md-2 col-lg-1 heading">(kg or L)</span>
+          <span class="col-sm-1 heading">(gravity)</span>
+          <span class="col-sm-1 heading">(g/l)</span>
+          <span class="col-sm-1 heading">(g/l)</span>
+          <span class="col-sm-1 heading">(g/l)</span>
           <span class="col-sm-1"></span>
         </div>
         <div id="ingredients" class="list-group">

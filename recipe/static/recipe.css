@@ -67,9 +67,20 @@ label, legend {
   align-items: flex-end;
 }
 
+.left-label {
+  padding: 7px 5px 0px 5px;
+  margin: 0px;
+}
+
+#volume-unit {
+  padding-top: 7px;
+}
+
 #volume {
   width: 100%;
   max-width: 4em;
+  float: left;
+  margin-right: 5px;
 }
 
 #recipe-descr, #recipe-descr-clone {
@@ -87,7 +98,11 @@ label, legend {
   height: '0';
 }
 
-.ingredient-table, .left-label {
+.ingredient-table .heading {
+  text-align: center;
+}
+
+.ingredient-table {
   padding: 0px 5px 0px 5px;
   margin: 0px;
 }

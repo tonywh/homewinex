@@ -33,16 +33,16 @@ I will add a description of files here.
 | Recipe builder, chart totals vs. targets    | Javascript, Chart.js        | Pre-release |
 | Recipe builder, save                        | Javascript, Python, Django  | Pre-release |
 | Recipe list                                 | Javascript, Python, Django  | Pre-release |
+| Recipe private/public control               | Javascript, Python, Django  | Todo        |
 | Display weights and volumes in chosen units | Javascript                  | Todo        |
 | Recipe brew logging                         | Javascript, Python, Django  | Todo        |
 | Recipe review and rating                    | Javascript, Python, Django  | Todo        |
 | Website activity view                       | Javascript, Python, Django  | Todo        |
 | "My Wine" view                              | Javascript, Python, Django  | Todo        |
+| Read-only view for anonymous users          | Javascript, Python, Django  | Todo        |
 
 ## ToDo
 The is a list of small items to be done in addition to the "Todo" features above.
-* protect private recipe access on backend
-* read-only view for anonymous users
 * format recipe builder for small mobile device
 * protect registration from bots
-* show liquids in liquid units
+* style login and registration pages
