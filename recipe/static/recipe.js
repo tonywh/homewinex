@@ -141,6 +141,13 @@ function showIngredients() {
     }
   });
 
+  // Create the drag and drop list
+  ingredientSortable = Sortable.create(ingr_el, {
+    handle: '.handle', // handle's class
+    animation: 150,
+    onEnd: dropIngredient,
+  });
+  
   // Set actions for qty changes
   ingr_el.querySelectorAll('.qty').forEach( el => { el.oninput = updateQty });
 
@@ -159,6 +166,29 @@ function showIngredients() {
     updateAfterChange();
     return false;
   };
+}
+
+function dropIngredient(ev) {
+  if (ev.oldDraggableIndex != ev.newDraggableIndex) {
+    // In recipe, remove from old position and insert in new position,
+    // then renumber the order sequence.
+    ingredient = recipe.ingredients.splice(ev.oldDraggableIndex, 1);
+    recipe.ingredients.splice(ev.newDraggableIndex, 0, ingredient);
+    order = 0;
+    recipe.ingredients.forEach( ingredient => {
+      ingredient.order = order;
+      order++;
+    });
+
+    // In HTML elements, renumber the order sequence.
+    order = 0;
+    document.getElementsByName("ingredient_order[]").forEach( el => {
+      el.value = order;
+      order++;
+    });
+
+    showSaveButton();
+  }
 }
 
 function showGraph() {

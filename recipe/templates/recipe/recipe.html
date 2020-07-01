@@ -4,21 +4,28 @@
   {% load static %}
   <link rel="stylesheet" href="{% static "recipe.css" %}">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js"></script>
 
   <script id="ingredient" type="text/x-handlebars-template">
     {% verbatim %}
-      <div class="row ingredient-table ingredient-data">
-        <div class="col-sm-5">
-          <input class="ingredient-name" value="{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}" readonly>
-          <input type="number" name="ingredient_id[]" value="{{ingredient.id}}" hidden>
-          <button type="button" class="fa fa-trash m-1 btn btn-light remove-button" data-index="{{index}}" data-toggle="tooltip" title="Remove"></button>
+      <div class="list-group-item">
+        <div class="row ingredient-table ingredient-data">
+          <div class="col-sm-5">
+            <div class="handle">
+              <span class="fa fa-sort"></span>
+              <input class="ingredient-name" value="{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}" readonly>
+            </div>
+            <input type="number" name="ingredient_id[]" value="{{ingredient.id}}" hidden>
+            <input type="number" name="ingredient_order[]" value="{{ingredient.order}}" hidden>
+            <button type="button" class="fa fa-trash m-1 btn btn-light remove-button" data-index="{{index}}" data-toggle="tooltip" title="Remove"></button>
+          </div>
+          <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
+          <span class="col-sm-1 ingredient-value sugar">{{ingredient.sugar}}</span>
+          <span class="col-sm-1 ingredient-value acid">{{ingredient.acid}}</span>
+          <span class="col-sm-1 ingredient-value tannin">{{ingredient.tannin}}</span>
+          <span class="col-sm-1 ingredient-value solids">{{ingredient.solids}}</span>
+          <span class="col-sm-1 ingredient-value redness">{{ingredient.redness}}</span>
         </div>
-        <input type="number" name="qty[]" step="0.01" min="0" class="col-sm-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
-        <span class="col-sm-1 ingredient-value sugar">{{ingredient.sugar}}</span>
-        <span class="col-sm-1 ingredient-value acid">{{ingredient.acid}}</span>
-        <span class="col-sm-1 ingredient-value tannin">{{ingredient.tannin}}</span>
-        <span class="col-sm-1 ingredient-value solids">{{ingredient.solids}}</span>
-        <span class="col-sm-1 ingredient-value redness">{{ingredient.redness}}</span>
       </div>
     {% endverbatim %}
   </script>
@@ -112,7 +119,7 @@
           <span class="col-sm-1">(g/l)</span>
           <span class="col-sm-1"></span>
         </div>
-        <div id="ingredients">
+        <div id="ingredients" class="list-group">
         </div>
         <div class="row ingredient-table" id="acid-from-fermentation">
           <span class="col-sm-5 adacid-label" >Additional acid from fermenation</span>

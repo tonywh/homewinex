@@ -69,14 +69,16 @@ def recipe(request):
         recipe.volume = request.POST.get("volume")
         recipe.description = request.POST.get("descr")
         ingredient_ids = request.POST.getlist("ingredient_id[]")
+        orders = request.POST.getlist("ingredient_order[]")
         qtys = request.POST.getlist("qty[]")
         oldUses = IngredientUse.objects.filter(recipe_id=id)
 
         # Update / add ingredient uses.
-        for ingredient_id, qty in zip(ingredient_ids, qtys):
+        for ingredient_id, qty, order in zip(ingredient_ids, qtys, orders):
             use, created = IngredientUse.objects.get_or_create(recipe_id=id, ingredient_id=ingredient_id, defaults={'qty_kg': 1.0})
             oldUses = oldUses.exclude(recipe_id=id, ingredient_id=ingredient_id)
             use.qty_kg = qty
+            use.order = order
             use.save()
 
         # Remove old ingredient uses that are no longer used.

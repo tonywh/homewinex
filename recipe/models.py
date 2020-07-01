@@ -93,6 +93,10 @@ class IngredientUse(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE)
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     qty_kg = models.FloatField()
+    order = models.PositiveSmallIntegerField()
+
+    class Meta:
+        ordering = ['order']
 
 class Brew(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT)
