@@ -25,8 +25,14 @@ I will add a description of files here.
 | Ingredient database                         | Django/SQL database         | Pre-release |
 | Wine style database                         | Django/SQL database         | Pre-release |
 | Admin site management                       | Python, Django              | Pre-release |
-| Recipe builder                              | Javascript, Bootstrap, Chart.js | Pre-release |
-| Recipe storage and list                     | Javascript, Python, Django  | Pre-release |
+| Recipe builder, layout                      | Javascript, Bootstrap       | Pre-release |
+| Recipe builder, add ingredient              | Javascript                  | Pre-release |
+| Recipe builder, change quantity             | Javascript                  | Pre-release |
+| Recipe builder, remove ingredient           | Javascript                  | Pre-release |
+| Recipe builder, drag and drop ingredients   | Javascript, Sortable.js     | Pre-release |
+| Recipe builder, chart totals vs. targets    | Javascript, Chart.js        | Pre-release |
+| Recipe builder, save                        | Javascript, Python, Django  | Pre-release |
+| Recipe list                                 | Javascript, Python, Django  | Pre-release |
 | Display weights and volumes in chosen units | Javascript                  | Todo        |
 | Recipe brew logging                         | Javascript, Python, Django  | Todo        |
 | Recipe review and rating                    | Javascript, Python, Django  | Todo        |
