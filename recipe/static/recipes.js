@@ -1,6 +1,12 @@
 const recipe_list_template = Handlebars.compile(document.querySelector('#recipe_list').innerHTML);
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Default sort order is 'name' in the first column. 
+  // Style the heading to reflect this
+  th = document.querySelector('th');
+  th.style.fontStyle = 'italic';
+  th.style.fontSize = '1.1em';
+
   getRecipeList('name');
 })
 
