@@ -10,8 +10,8 @@ def readFloat40(data, offset):
     # set is overwritten by a sign bit.
     # Read the mantissa as an integer.
     mant = struct.unpack_from('<i', data, offset)[0]
-    mant >>= 1              # Make space for the top bit, sign bit extends
-    mant += 0x40000000      # Set the top bit, i.e. bit below the new sign bit
+    mant >>= 1                  # Make space for the top bit, sign bit extends
+    mant = mant | 0x40000000    # Set the top bit, i.e. bit below the new sign bit
 
     # 5th byte is an exponent. Read the exponent as an integer and adjust it
     # to get the correct float value from the mantissa

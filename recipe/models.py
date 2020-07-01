@@ -15,7 +15,7 @@ class Ingredient(models.Model):
     ''' All proportions are stored as g/l or g/kg 
     '''
     name = models.CharField(max_length=128)
-    variety = models.CharField(max_length=128)
+    variety = models.CharField(max_length=128, blank=True)
     acid = models.FloatField()          # as tartaric
     sugar = models.FloatField()
     unferm_sugar = models.FloatField()
