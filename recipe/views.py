@@ -30,7 +30,7 @@ def recipelist(request):
     for recipe in recipes:
         try:
             recipe['style'] = WineStyle.objects.filter(id=recipe['style_id']).values()[0]
-            recipe['created_by'] = User.objects.filter(id=recipe['created_by_id']).values()[0]
+            recipe['created_by'] = User.objects.filter(id=recipe['created_by_id']).values()[0]['username']
         except:
             pass
     return JsonResponse({'recipes': recipes}, safe=False)

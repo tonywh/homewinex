@@ -27,7 +27,13 @@ function getRecipeList(order) {
 function showRecipeList(ev) {
   request = ev.target;
   const data = JSON.parse(request.responseText);
-  
+
+  // Convert create dates to locale specific format
+  data.recipes.forEach( recipe => {
+    d = new Date(recipe.create_date);
+    recipe.create_date = d.toLocaleDateString();
+  });
+
   document.querySelectorAll('.recipe-row').forEach( row => { row.remove(); });
   document.querySelector("#recipe-table").innerHTML += recipe_list_template({recipes: data.recipes});
 
