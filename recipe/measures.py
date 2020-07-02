@@ -26,12 +26,12 @@ class Liquid:
     USFLOZ = 4
     IMPFLOZ = 5
     UNITS = (
-        (L, 'l'),
+        (L, 'L'),
         (ML, 'ml'),
-        (USGAL, 'gal (US)'),
-        (IMPGAL, 'gal (Imp)'),
-        (USFLOZ, 'fl oz (US)'),
-        (IMPFLOZ, 'fl oz (Imp)'),
+        (USGAL, 'gal-US'),
+        (IMPGAL, 'gal-Imp'),
+        (USFLOZ, 'floz-US'),
+        (IMPFLOZ, 'floz-Imp'),
     )
     CONV = [1.0, 1000.0, 0.26417205, 0.21996925, 33.814023, 35.195079]
 

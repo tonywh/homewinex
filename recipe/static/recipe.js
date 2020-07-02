@@ -4,12 +4,30 @@ const ingredient_totals_template = Handlebars.compile(document.querySelector('#i
 const style_template = Handlebars.compile(document.querySelector('#style').innerHTML);
 const style_info_template = Handlebars.compile(document.querySelector('#style_info').innerHTML);
 
+class Converter {
+  constructor(data) {
+    this.units = data.units;    // array of tuples (id, string), where id is same as index
+    this.conv = data.conv;      // array of conv factors indexed by id
+  }
+
+  convert(value, fromUnit, toUnit) {
+    return value * this.conv[toUnit] / this.conv[fromUnit];
+  }
+
+  toString(unit) {
+    return this.units[unit][1];
+  }
+}
+
 var recipe;
 var ingredients;
 var styles;
+var liquid;
+var solid;
 var totals;
 var descrLineHeight;
 var barChart;
+var profile;
 
 document.addEventListener('DOMContentLoaded', () => {
   buildRecipeApp();
@@ -87,6 +105,9 @@ function showRecipe(ev) {
   recipe = data.recipe;
   ingredients = data.ingredients;
   styles = data.styles;
+  liquid = new Converter(data.liquid);
+  solid = new Converter(data.solid);
+  profile = data.profile;
 
   // If starting a new recipe, get the basic data from the HTML elements already
   // created.
@@ -97,6 +118,19 @@ function showRecipe(ev) {
     recipe.ingredients = [];
   }
 
+  // Set recipe volume to the chosen liquid units. Value from backend is always
+  // index zero in the converter.
+  volume_el = document.querySelector('#volume');
+  volume_el.value = liquid.convert(volume_el.value, 0, profile.liquid_large_units).toFixed(1);
+  unit_el = document.querySelector('#volume-unit');
+  unit_el.innerHTML = liquid.toString(profile.liquid_large_units);
+
+  // Qty unit string to chosen solid and liquid units.
+  unit_el = document.querySelector('#qty-unit');
+  liquidStr = liquid.toString(profile.liquid_large_units);
+  solidStr = solid.toString(profile.solid_large_units);
+  unit_el.innerHTML = `(${solidStr} ${liquidStr})`;
+  
   showStyle();
   showIngredients();
   showGraph();
@@ -305,11 +339,18 @@ function calcTotalAttrs() {
 }
 
 function calcIngredientAttrs(ingredient, qty_kg, volume_l) {
+  // Convert qty to chosen units
+  if (ingredient.liquid == 1000) {
+    qty = liquid.convert(qty_kg, 0, profile.liquid_large_units);
+  } else {
+    qty = solid.convert(qty_kg, 0, profile.solid_large_units);
+  }
+
   return {
     id: ingredient.id,
     name: ingredient.name,
     variety: ingredient.variety,
-    qty: parseFloat(qty_kg).toFixed(2),
+    qty: qty.toFixed(2),
     sugar: (qty_kg * ingredient.sugar / volume_l / 2.64).toFixed(0),
     acid: (qty_kg * ingredient.acid / volume_l).toFixed(2),
     tannin: (qty_kg * ingredient.tannin / volume_l).toFixed(2),

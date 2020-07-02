@@ -34,7 +34,7 @@ I will add a description of files here.
 | Recipe builder, save                        | Javascript, Python, Django  | Pre-release |
 | Recipe list                                 | Javascript, Python, Django  | Pre-release |
 | "My Wine" view                              | Javascript, Python, Django  | Pre-release |
-| Display weights and volumes in chosen units | Javascript                  | Todo        |
+| Display weights and volumes in chosen units | Javascript                  | Pre-release |
 | Recipe private/public control               | Javascript, Python, Django  | Todo        |
 | Recipe brew logging                         | Javascript, Python, Django  | Todo        |
 | Recipe review and rating                    | Javascript, Python, Django  | Todo        |

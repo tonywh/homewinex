@@ -42,7 +42,7 @@
         <input type="text" class="form-control" name="location" id="location" value="{{profile.location}}" data-value="{{user.location}}">
       </div>
     </div>
-    <fieldset class="form-group solid_small_units" data-value="{{profile.solid_small_units}}">
+    <fieldset class="form-group solid_small_units" data-value="{{profile.solid_small_units}}" hidden>
       <div class="row">
         <legend class="col-form-label col-sm-4 col-md-3 col-lg-2 pt-0">Solid small units</legend>
         <div class="col-sm-8 col-md-9 col-lg-10">
@@ -59,7 +59,7 @@
     </fieldset>
     <fieldset class="form-group solid_large_units" data-value="{{profile.solid_large_units}}">
       <div class="row">
-        <legend class="col-form-label col-sm-4 col-md-3 col-lg-2 pt-0">Solid large units</legend>
+        <legend class="col-form-label col-sm-4 col-md-3 col-lg-2 pt-0">Solid units</legend>
         <div class="col-sm-8 col-md-9 col-lg-10">
           <div class="custom-control custom-radio custom-control-inline">
             <input class="custom-control-input" type="radio" name="solid_large_units" id="solid_large_units_kg" value="0" {% if profile.solid_large_units == 0 %}checked{% endif %}>
@@ -72,7 +72,7 @@
         </div>
       </div>
     </fieldset>
-    <fieldset class="form-group liquid_small_units" data-value="{{profile.liquid_small_units}}">
+    <fieldset class="form-group liquid_small_units" data-value="{{profile.liquid_small_units}}" hidden>
       <div class="row">
         <legend class="col-form-label col-sm-4 col-md-3 col-lg-2 pt-0">Liquid small units</legend>
         <div class="col-sm-8 col-md-9 col-lg-10">
@@ -93,7 +93,7 @@
     </fieldset>
     <fieldset class="form-group liquid_large_units" data-value="{{profile.liquid_large_units}}">
       <div class="row">
-        <legend class="col-form-label col-sm-4 col-md-3 col-lg-2 pt-0">Liquid large units</legend>
+        <legend class="col-form-label col-sm-4 col-md-3 col-lg-2 pt-0">Liquid units</legend>
         <div class="col-sm-8 col-md-9 col-lg-10">
           <div class="custom-control custom-radio custom-control-inline">
             <input class="custom-control-input" type="radio" name="liquid_large_units" id="liquid_large_units_l" value="0" {% if profile.liquid_large_units == 0 %}checked{% endif %}>

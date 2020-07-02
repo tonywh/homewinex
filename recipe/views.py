@@ -8,6 +8,7 @@ import datetime
 
 from django.contrib.auth.models import User
 from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
+from . import measures
 
 def index(request):
     return HttpResponseRedirect("/recipes")
@@ -100,6 +101,9 @@ def recipedetail(request):
         'recipe': recipe,
         'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
         'styles': list(WineStyle.objects.values()),
+        'liquid': {'units': list(measures.Liquid.UNITS), 'conv': list(measures.Liquid.CONV)},
+        'solid': {'units': list(measures.Solid.UNITS), 'conv': list(measures.Solid.CONV)},
+        'profile': Profile.objects.filter(user=request.user).values()[0],
     }
     return JsonResponse(data, safe=False)
 
