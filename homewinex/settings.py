@@ -122,3 +122,6 @@ STATIC_URL = '/static/'
 
 # On login, redirect here instead of accounts/profile.
 LOGIN_REDIRECT_URL = '/'
+
+# On logout, redirect here instead of logout success page.
+LOGOUT_REDIRECT_URL = '/'

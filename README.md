@@ -48,5 +48,4 @@ I will add a description of files here.
 ## ToDo
 The is a list of small items to be done in addition to the "Todo" features above.
 * protect registration from bots - do this for deployment
-* add new recipe button/link
-* update recipe calcs on volume change
+* recipe: save as new

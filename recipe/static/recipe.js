@@ -70,8 +70,8 @@ function buildRecipeApp() {
     hideSavedStatus();
   };
   document.querySelector('#volume').oninput = () => {
-    showSaveButton();
-    hideSavedStatus();
+    recipe.volume_l = document.querySelector('#volume').value;
+    updateAfterChange();
   };
 
   // Set description size and add action for description input
