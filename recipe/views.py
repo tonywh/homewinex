@@ -41,15 +41,25 @@ def newrecipe(request):
         return render(request, "recipe/newrecipe.html", {'styles': list(WineStyle.objects.values())})
 
     # POST - create a new recipe from the form data then render recipe page
-    recipe = Recipe.objects.create(
-        name=request.POST.get("name"),
-        style_id=request.POST.get("style"),
-        volume_l=request.POST.get("volume"),
-        description=request.POST.get("descr"),
-        created_by=request.user
-        )
+    data = {
+        'id': -1,
+        'name': request.POST.get("name"),
+        'style_id': request.POST.get("style"),
+        'volume_l': request.POST.get("volume"),
+        'description': request.POST.get("descr"),
+        'created_by': request.user
+    }
 
-    data = {'id': recipe.id, 'name': recipe.name, 'volume': recipe.volume_l, 'descr': recipe.description}
+    if request.user.is_authenticated:
+        recipe = Recipe.objects.create(
+            name=data['name'],
+            style_id=data['style_id'],
+            volume_l=data['volume_l'],
+            description=data['description'],
+            created_by=data['created_by']
+            )
+        data['id'] = recipe.id
+
     return render(request, "recipe/recipe.html", data )
 
 def recipe(request):
@@ -60,9 +70,12 @@ def recipe(request):
         except Recipe.DoesNotExist:
             raise Http404("Recipe does not exist")
 
-        data = {'id': id, 'name': recipe.name, 'volume': recipe.volume_l, 'descr': recipe.description}
+        data = {'id': id, 'name': recipe.name, 'volume_l': recipe.volume_l, 'descr': recipe.description}
         return render(request, "recipe/recipe.html", data )
     else:
+        if request.user.is_anonymous:
+            return HttpResponse('Unauthorized', status=401)
+
         id = int(request.POST.get("id"))
         try:
             recipe = Recipe.objects.get(id=id)
@@ -103,8 +116,13 @@ def recipedetail(request):
         'styles': list(WineStyle.objects.values()),
         'liquid': {'units': list(measures.Liquid.UNITS), 'conv': list(measures.Liquid.CONV)},
         'solid': {'units': list(measures.Solid.UNITS), 'conv': list(measures.Solid.CONV)},
-        'profile': Profile.objects.filter(user=request.user).values()[0],
     }
+
+    if request.user.is_authenticated:
+        data['profile'] = Profile.objects.filter(user=request.user).values()[0]
+    else:
+        data['profile'] = None
+
     return JsonResponse(data, safe=False)
 
 def register(request):
@@ -123,6 +141,9 @@ def register(request):
     return render(request, "registration/register.html", {'form': form})
 
 def profile(request):
+    if request.user.is_anonymous:
+        return HttpResponse('Unauthorized', status=401)
+
     user = request.user
     profile = Profile.objects.get(user=user)
     if request.method == "POST":

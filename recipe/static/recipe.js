@@ -85,7 +85,11 @@ function buildRecipeApp() {
   };
 
   // Add action for Save button
-  document.querySelector("#save-button").onclick = saveRecipe;
+  try {
+    document.querySelector("#save-button").onclick = saveRecipe;
+  }
+  catch(err) {
+  }
 
   // Get recipe and ingredient list
   const request = new XMLHttpRequest();
@@ -101,6 +105,8 @@ function showRecipe(ev) {
   request = ev.target;
   const data = JSON.parse(request.responseText);
 
+  console.log(data);
+
   // Keep a copy of the data to allow us to build the recipe locally.
   recipe = data.recipe;
   ingredients = data.ingredients;
@@ -113,24 +119,27 @@ function showRecipe(ev) {
   // created.
   if ( recipe.id < 0 ) {
     recipe.name = document.querySelector('#recipe-name').innerHTML;
-    recipe.volume = document.querySelector('#recipe-volume').innerHTML;
+    recipe.volume_l = document.querySelector('#volume').value;
     recipe.descr = document.querySelector('#recipe-descr').innerHTML;
+    recipe.style = document.querySelector('#recipe-style').dataset.style_id;
     recipe.ingredients = [];
   }
 
-  // Set recipe volume to the chosen liquid units. Value from backend is always
-  // index zero in the converter.
-  volume_el = document.querySelector('#volume');
-  volume_el.value = liquid.convert(volume_el.value, 0, profile.liquid_large_units).toFixed(1);
-  unit_el = document.querySelector('#volume-unit');
-  unit_el.innerHTML = liquid.toString(profile.liquid_large_units);
+  if ( profile ) {
+    // Set recipe volume to the chosen liquid units. Value from backend is always
+    // index zero in the converter.
+    volume_el = document.querySelector('#volume');
+    volume_el.value = liquid.convert(volume_el.value, 0, profile.liquid_large_units).toFixed(1);
+    unit_el = document.querySelector('#volume-unit');
+    unit_el.innerHTML = liquid.toString(profile.liquid_large_units);
 
-  // Qty unit string to chosen solid and liquid units.
-  unit_el = document.querySelector('#qty-unit');
-  liquidStr = liquid.toString(profile.liquid_large_units);
-  solidStr = solid.toString(profile.solid_large_units);
-  unit_el.innerHTML = `(${solidStr} ${liquidStr})`;
-  
+    // Qty unit string to chosen solid and liquid units.
+    unit_el = document.querySelector('#qty-unit');
+    liquidStr = liquid.toString(profile.liquid_large_units);
+    solidStr = solid.toString(profile.solid_large_units);
+    unit_el.innerHTML = `(${solidStr} ${liquidStr})`;
+  }
+
   showStyle();
   showIngredients();
   showGraph();
@@ -206,8 +215,8 @@ function dropIngredient(ev) {
   if (ev.oldDraggableIndex != ev.newDraggableIndex) {
     // In recipe, remove from old position and insert in new position,
     // then renumber the order sequence.
-    ingredient = recipe.ingredients.splice(ev.oldDraggableIndex, 1);
-    recipe.ingredients.splice(ev.newDraggableIndex, 0, ingredient);
+    removed = recipe.ingredients.splice(ev.oldDraggableIndex, 1);
+    recipe.ingredients.splice(ev.newDraggableIndex, 0, removed[0]);
     order = 0;
     recipe.ingredients.forEach( ingredient => {
       ingredient.order = order;
@@ -340,10 +349,14 @@ function calcTotalAttrs() {
 
 function calcIngredientAttrs(ingredient, qty_kg, volume_l) {
   // Convert qty to chosen units
-  if (ingredient.liquid == 1000) {
-    qty = liquid.convert(qty_kg, 0, profile.liquid_large_units);
+  if ( profile ) {
+    if (ingredient.liquid == 1000) {
+      qty = liquid.convert(qty_kg, 0, profile.liquid_large_units);
+    } else {
+      qty = solid.convert(qty_kg, 0, profile.solid_large_units);
+    }
   } else {
-    qty = solid.convert(qty_kg, 0, profile.solid_large_units);
+    qty = parseFloat(qty_kg);
   }
 
   return {
@@ -417,20 +430,36 @@ function updateAfterChange() {
 }
 
 function showSaveButton() {
-  document.querySelector('#save-button').style.visibility = "visible"
+  try {
+    document.querySelector('#save-button').style.visibility = "visible"
+  }
+  catch(err) {
+  }
 }
 
 
 function hideSaveButton() {
-  document.querySelector('#save-button').style.visibility = "hidden"
+  try {
+    document.querySelector('#save-button').style.visibility = "hidden"
+  }
+  catch(err) {
+  }
 }
 
 function showSavedStatus() {
-  document.querySelector('#save-status').style.visibility = "visible"
-  document.querySelector('#save-status').classList.add("fade");
+  try {
+    document.querySelector('#save-status').style.visibility = "visible"
+    document.querySelector('#save-status').classList.add("fade");
+  }
+  catch(err) {
+  }
 }
 
 function hideSavedStatus() {
-  document.querySelector('#save-status').style.visibility = "hidden"
-  document.querySelector('#save-status').classList.remove("fade");
+  try {
+    document.querySelector('#save-status').style.visibility = "hidden"
+    document.querySelector('#save-status').classList.remove("fade");
+  }
+  catch(err) {
+  }
 }

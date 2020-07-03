@@ -35,11 +35,11 @@ I will add a description of files here.
 | Recipe list                                 | Javascript, Python, Django  | Pre-release |
 | "My Wine" view                              | Javascript, Python, Django  | Pre-release |
 | Display weights and volumes in chosen units | Javascript                  | Pre-release |
+| Read-only view for anonymous users          | Javascript, Python, Django  | Pre-release |
 | Recipe private/public control               | Javascript, Python, Django  | Todo        |
 | Recipe brew logging                         | Javascript, Python, Django  | Todo        |
 | Recipe review and rating                    | Javascript, Python, Django  | Todo        |
 | Website activity view                       | Javascript, Python, Django  | Todo        |
-| Read-only view for anonymous users          | Javascript, Python, Django  | Todo        |
 | Change password                             | Django/SQL database         | Todo        |
 | About + acknowledgements                    | HTML                        | Todo        |
 | Home / introduction                         | HTML                        | Todo        |
@@ -48,3 +48,5 @@ I will add a description of files here.
 ## ToDo
 The is a list of small items to be done in addition to the "Todo" features above.
 * protect registration from bots - do this for deployment
+* add new recipe button/link
+* update recipe calcs on volume change

@@ -83,13 +83,13 @@
             <span class="tltiptext">Rename</span>
           </div>
           <div class="col-6 full-width bottom">
-            <span id="recipe-style"></span>
+            <span id="recipe-style" data-style_id="{{style_id}}"></span>
           </div>
         </div>
         <div class="row ingredient-table">
           <label class="col-1 left-label" for="volume">Volume</label>
           <div class="col-2">
-            <input type="number" step="0.1" name="volume" id="volume" class="form-control" value="{{volume}}">
+            <input type="number" step="0.1" name="volume" id="volume" class="form-control" value="{{volume_l}}">
             <div id="volume-unit">L</div>
           </div>
           <span class="col-2"></span>
@@ -134,8 +134,10 @@
         <div class="row ingredient-table" id="style-targets">
         </div>
         <div class="row ingredient-table">
-          <button type="button" class="btn btn-secondary" id="save-button" style="visibility:hidden">Save</button>
-          <span id="save-status" style="visibility:hidden">Saved</span>
+          {% if user.is_authenticated %}
+            <button type="button" class="btn btn-secondary" id="save-button" style="visibility:hidden">Save</button>
+            <span id="save-status" style="visibility:hidden">Saved</span>
+          {% endif %}
         </div>
       </form>
     </div>
