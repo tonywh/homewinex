@@ -35,7 +35,7 @@ class Ingredient(models.Model):
         ordering = ['name', 'variety']
 
     def __str__(self):
-        return f"{self.name}, {self.variety}"
+        return f"{self.id}: {self.name}, {self.variety}"
 
 class WineStyle(models.Model):
     ''' All proportions are stored as g/l, except alcohol which is % vol.

@@ -92,7 +92,7 @@ def recipe(request):
 
         # Update / add ingredient uses.
         for ingredient_id, qty, order in zip(ingredient_ids, qtys, orders):
-            use, created = IngredientUse.objects.get_or_create(recipe_id=id, ingredient_id=ingredient_id, defaults={'qty_kg': 1.0})
+            use, created = IngredientUse.objects.get_or_create(recipe_id=id, ingredient_id=ingredient_id, defaults={'qty_kg': 1.0,'order': 0})
             oldUses = oldUses.exclude(recipe_id=id, ingredient_id=ingredient_id)
             use.qty_kg = qty
             use.order = order

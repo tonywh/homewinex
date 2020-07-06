@@ -105,8 +105,6 @@ function showRecipe(ev) {
   request = ev.target;
   const data = JSON.parse(request.responseText);
 
-  console.log(data);
-
   // Keep a copy of the data to allow us to build the recipe locally.
   recipe = data.recipe;
   ingredients = data.ingredients;
@@ -163,8 +161,8 @@ function showIngredients() {
   recipe.ingredients.forEach( use => {
     ingredients.forEach( ingredient => {
       if ( use.ingredient_id == ingredient.id ) {
-        ingr = calcIngredientAttrs(ingredient, use.qty_kg, recipe.volume_l);
-        ingr_el.innerHTML += ingredient_template({ingredient: ingr, index: i});;
+        ingr = calcIngredientAttrs(ingredient, use, recipe.volume_l);
+        ingr_el.innerHTML += ingredient_template({ingredient: ingr, index: i});
       }
     });
     i++;
@@ -204,7 +202,8 @@ function showIngredients() {
     // Adds new ingredient to the array and updates the page.
     recipe.ingredients.push({
       ingredient_id: document.querySelector('#new_ingr_select').value,
-      qty_kg: 1.0
+      qty_kg: 1.0,
+      order: recipe.ingredients.length,
     });
     updateAfterChange();
     return false;
@@ -300,7 +299,7 @@ function updateQty(ev) {
   // Update values for this ingredient
   ingredients.forEach( ingredient => {
     if ( use.ingredient_id == ingredient.id ) {
-      ingr = calcIngredientAttrs(ingredient, use.qty_kg, recipe.volume_l);
+      ingr = calcIngredientAttrs(ingredient, use, recipe.volume_l);
 
       ingr_row = ev.target.closest('.ingredient-data');
       ingr_row.querySelector('.qty').innerHTML = ingr.qty_kg;
@@ -347,28 +346,29 @@ function calcTotalAttrs() {
   };
 }
 
-function calcIngredientAttrs(ingredient, qty_kg, volume_l) {
+function calcIngredientAttrs(ingredient, use, volume_l) {
   // Convert qty to chosen units
   if ( profile ) {
     if (ingredient.liquid == 1000) {
-      qty = liquid.convert(qty_kg, 0, profile.liquid_large_units);
+      qty = liquid.convert(use.qty_kg, 0, profile.liquid_large_units);
     } else {
-      qty = solid.convert(qty_kg, 0, profile.solid_large_units);
+      qty = solid.convert(use.qty_kg, 0, profile.solid_large_units);
     }
   } else {
-    qty = parseFloat(qty_kg);
+    qty = parseFloat(use.qty_kg);
   }
 
   return {
     id: ingredient.id,
     name: ingredient.name,
     variety: ingredient.variety,
+    order: use.order,
     qty: qty.toFixed(2),
-    sugar: (qty_kg * ingredient.sugar / volume_l / 2.64).toFixed(0),
-    acid: (qty_kg * ingredient.acid / volume_l).toFixed(2),
-    tannin: (qty_kg * ingredient.tannin / volume_l).toFixed(2),
-    solids: (qty_kg * ingredient.solu_solid / volume_l).toFixed(2),
-    redness: (qty_kg * ingredient.redness / volume_l).toFixed(1),
+    sugar: (use.qty_kg * ingredient.sugar / volume_l / 2.64).toFixed(0),
+    acid: (use.qty_kg * ingredient.acid / volume_l).toFixed(2),
+    tannin: (use.qty_kg * ingredient.tannin / volume_l).toFixed(2),
+    solids: (use.qty_kg * ingredient.solu_solid / volume_l).toFixed(2),
+    redness: (use.qty_kg * ingredient.redness / volume_l).toFixed(1),
   };
 }
 

@@ -10,7 +10,9 @@ class IngredientUseInline(admin.TabularInline):
 
 class IngredientAdmin(admin.ModelAdmin):
     inlines = (IngredientUseInline,)
-    fields = ( ('name', 'variety'),
+    readonly_fields = ('id',)
+    fields = ( ('id',),
+               ('name', 'variety'),
                ('acid', 'sugar', 'unferm_sugar', 'solu_solid', 'body_to_acid', 'tannin', 'starch', 'liquid'),
                ('pectin', 'pectolaise', 'redness', 'brownness', 'suggest_max'),
                ('method') )
@@ -18,7 +20,9 @@ class IngredientAdmin(admin.ModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
 #    filter_horizontal = ("ingredients",)
     inlines = (IngredientUseInline,)
-    fields = ( ('name', 'volume_l', 'created_by', 'create_date'),
+    readonly_fields = ('id',)
+    fields = ( ('id',),
+               ('name', 'volume_l', 'created_by', 'create_date'),
                ('style', 'visibility'),
                ( 'description', 'image' ) )
 
