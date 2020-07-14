@@ -1,0 +1,23 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "home.css" %}">
+
+  <script src="{% static "home.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="mainview">
+    <h3>Welcome to Home Wine Exchange.</h3>
+    <p>
+      The aim of this website is to enable home wine enthusiasts make wines of real quality.
+      The HomeWineX recipe app helps create balanced recipes. 
+      User's exchange recipes and brewing experiences. 
+    </p>
+    <p>
+      You can view the site anonymously, but to save a recipe or log a brew you will need to register and login. 
+      If you haven't been here before, the <a href="{% url 'recipes' %}">recipes</a> page is a good place to get started.
+    </p>
+  </div>
+{% endblock %}

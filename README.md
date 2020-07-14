@@ -121,3 +121,4 @@ It focuses instead on the files that contain code or data specific to this proje
 * edit recipe: only author or admin
 * drag: don't allow drag from ingredient name - too easy to hit accidentally
 * mobile: switch to landscape
+* cookie warning

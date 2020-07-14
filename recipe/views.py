@@ -11,7 +11,7 @@ from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, Wi
 from . import measures
 
 def index(request):
-    return HttpResponseRedirect("/recipes")
+    return render(request, "recipe/home.html")
 
 def mywine(request):
     return render(request, "recipe/recipes.html", {'thisUserOnly': True})
