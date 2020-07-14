@@ -2,9 +2,12 @@ label, legend {
   font-style: italic;
 }
 
+.mainview {
+  font-size: 0.8em;
+}
 #recipe-name {
   padding: 0px 1px 0px 1px; /* make sure cursor visible when at start of text. */
-  font-size: 1.4em;
+  font-size: 1.1em;
 }
 
 .full-width {
@@ -68,12 +71,12 @@ label, legend {
 }
 
 .left-label {
-  padding: 7px 5px 0px 5px;
+  padding: 3px 5px 0px 5px;
   margin: 0px;
 }
 
 #volume-unit {
-  padding-top: 7px;
+  padding-top: 3px;
 }
 
 #volume {
@@ -81,6 +84,9 @@ label, legend {
   max-width: 4em;
   float: left;
   margin-right: 5px;
+  font-size: 1em;
+  padding: 0 6px 0 6px;
+  height: 2em;
 }
 
 #recipe-descr, #recipe-descr-clone {
@@ -119,7 +125,6 @@ label, legend {
 }
 
 .ingredient-name {
-  margin-top: 7px;
   width: 90%;
   border: 0;
 }
@@ -128,13 +133,28 @@ label, legend {
   padding: 0;
   margin: 0;
   border: none;
+  height: 2em;
 }
 
-.handle {
+.ingredient-col {
+  padding: 0px;
+}
+
+.ingr-div {
   width:80%;
   margin: 0;
   padding: 0;
   float: left;
+}
+
+.handle {
+  float: left;
+}
+
+input.qty {
+  font-size: 1em;
+  padding: 0 6px 0 6px;
+  height: 2em;
 }
 
 #ingredient-totals {
@@ -144,8 +164,9 @@ label, legend {
 
 .remove-button {
   float: right;
-  padding: 4px;
-  font-size: 1.2em;
+  padding: 0;
+  margin: 0;
+  font-size: 1em;
   color: #014101;
 }
 
@@ -156,6 +177,13 @@ label, legend {
 #new_ingr_select {
   padding: 0;
   margin: 4px 0px 4px 0px;
+  height: 2em;
+}
+
+#new_ingr_button {
+  font-size: 1em;
+  padding: 0 5px 0 5px;
+  height: 2em;
 }
 
 #save-status {
