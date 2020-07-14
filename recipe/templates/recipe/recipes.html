@@ -24,17 +24,15 @@
 {% block body %}
   <div class="mainview">
     {% if thisUserOnly %}
-      <h3>My Recipes</h3>
-    {% else %}
       <h3>Recipes</h3>
     {% endif %}
     <table id="recipe-table" {% if thisUserOnly %}class="this-user-only"{% endif %}>
       <tr>
-        <th data-order='name'>Name <span class="fa fa-sort"></span></th>
-        <th data-order='style__grapes,style__region'>Style Name <span class="fa fa-sort"></span></th>
-        <th data-order='style__sweetness,style__colour'>Style Character <span class="fa fa-sort"></span></th>
+        <th id="th-name" data-order='name'>Name <span class="fa fa-sort"></span></th>
+        <th data-order='style__grapes,style__region'>Style <span class="fa fa-sort"></span></th>
+        <th data-order='style__sweetness,style__colour'>Type <span class="fa fa-sort"></span></th>
         <th data-order='create_date'>Date <span class="fa fa-sort"></span></th>
-        <th data-order='created_by'>Creator <span class="fa fa-sort"></span></th>
+        <th data-order='created_by'>By <span class="fa fa-sort"></span></th>
       </tr>
     </table>
     <form action="/newrecipe"><button type="link" class="m-1 btn btn-secondary">

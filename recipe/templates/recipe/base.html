@@ -15,8 +15,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
     {% load static %}
     <link rel="stylesheet" href="{% static "base.css" %}">
+    <script src="{% static "base.js" %}"></script>
     
     {% block head %}
     {% endblock %}
@@ -59,9 +62,9 @@
     </nav>
     <nav class="navbar navbar-expand-sm menubar">
       <!--<a class="nav-item" href="/">Home</a>-->
-      <a class="nav-item" href="/recipes">Recipes</a>
+      <a class="nav-item" data-name="recipes" href="/recipes">Recipes</a>
       {% if user.is_authenticated %}
-      <a class="nav-item" href="/mywine">My Wine</a>
+      <a class="nav-item" data-name="mywine" href="/mywine">My Wine</a>
       {% endif %}
     </nav>
     {% block body %}

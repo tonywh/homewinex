@@ -1,6 +1,12 @@
 const recipe_list_template = Handlebars.compile(document.querySelector('#recipe_list').innerHTML);
 
 document.addEventListener('DOMContentLoaded', () => {
+  if ( document.querySelector(".this-user-only") ) {
+    showActiveTab('mywine');
+  } else {
+    showActiveTab('recipes');
+  }
+
   // Default sort order is 'name' in the first column. 
   // Style the heading to reflect this
   th = document.querySelector('th');

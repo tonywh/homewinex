@@ -112,5 +112,12 @@ It focuses instead on the files that contain code or data specific to this proje
 | About + acknowledgements                    | HTML                        |
 | Home / introduction                         | HTML                        |
 | Help                                        | HTML                        |
-| Protect registration from bots              | ReCapcha                    |
+| Protect registration from bots              | ReCaptcha                   |
 | Recipe: save as new                         | Javascript                  |
+
+### Todo
+* units: selection per ingredient
+* units: default amount in database, choose appropriate units
+* edit recipe: only author or admin
+* drag: don't allow drag from ingredient name - too easy to hit accidentally
+* mobile: switch to landscape

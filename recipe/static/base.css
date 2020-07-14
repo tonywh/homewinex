@@ -12,20 +12,22 @@ html {
 }
 
 .navbar-brand img {
-  width:300px;
+  width:200px;
 }
 
 .menubar {
   background-color: #800064;
+  margin: 0;
+  padding: 0;
 }
 
 .menubar .nav-item {
   color: white;
-  font-size: 1.4em;
-  padding: 0.1em 1em 0.1em 1em;
+  font-size: 1em;
+  padding: 0.4em 1.5em 0.4em 1.5em;
 }
 
-.menubar .nav-item:hover, .menubar .nav-item:hover {
+.menubar .nav-item:hover, .menubar .nav-item.active {
   text-decoration: none;
   background-color: #a70082;
 }
@@ -35,8 +37,8 @@ html {
 }
 
 .navbar-toggler {
-  font-size: 1.4em;
-  padding: 0.3em;
+  font-size: 1em;
+  padding: 0.2em;
   margin: 0em;
   border: none;
 }
