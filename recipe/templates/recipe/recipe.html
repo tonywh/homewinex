@@ -142,7 +142,16 @@
       </form>
     </div>
     <div id="chart-block" class="col-lg-4 col-md-4 col-7">
-      <canvas id="wine-chart" width="100%" height="100%"></canvas>
+      <canvas width="100%" height="100%"></canvas>
     </div>
   </div>
+  <div id="modal-chart-block">
+    <div id="chart-handle" class="menubar">
+      <button type="button" class="fa fa-close m-1 btn btn-light close-button" data-toggle="tooltip" title="Close"></button>
+    </div>
+    <div id="modal-chart-container">
+      <canvas width="100%" height="100%"></canvas>
+    </div>
+  </div>
+  <div id="modal-chart-shadow"></div>
 {% endblock %}

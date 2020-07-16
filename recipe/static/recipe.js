@@ -234,11 +234,32 @@ function dropIngredient(ev) {
 }
 
 function showGraph() {
-  Chart.defaults.global.defaultFontSize = 16;
-  ctx = document.querySelector('#wine-chart').getContext('2d');
+  // Set graph display for desktop devices
+  document.querySelector('#modal-chart-block').style.visibility = "hidden";
+  document.querySelector('#modal-chart-shadow').style.visibility = "hidden";
+  document.querySelector('#chart-block').style.visibility = "visible";
+  ctx = document.querySelector('#chart-block canvas').getContext('2d');
+
+  // Change graph display if it's a mobile device
+  if ( window.innerWidth < 768
+        || window.innerHeight < 768 ) {
+    document.querySelector('#chart-block').style.visibility = "hidden";
+    document.querySelector('#modal-chart-block').style.visibility = "visible";
+    document.querySelector('#modal-chart-shadow').style.visibility = "visible";
+    if ( window.innerWidth > window.innerHeight ) {
+      document.querySelector('#modal-chart-block').classList.remove("portrait");
+      document.querySelector('#modal-chart-shadow').classList.remove("portrait");
+    } else {
+      document.querySelector('#modal-chart-block').classList.add("portrait");
+      document.querySelector('#modal-chart-shadow').classList.add("portrait");
+    }    
+    ctx = document.querySelector('#modal-chart-container canvas').getContext('2d');
+  }
+
   if ( barChart ) {
     barChart.destroy();
   }
+  Chart.defaults.global.defaultFontSize = 11;
   barChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -269,7 +290,8 @@ function showGraph() {
     options: {
       title: {
         display: true,
-        text: '% Comparison to Target Values'
+        text: '% Comparison to Target Values',
+        fontSize: 12
       },
       animation: {
         duration: 0
@@ -281,6 +303,8 @@ function showGraph() {
             }
         }]
       },
+      responsive: true,
+      maintainAspectRatio: false
     }
   });  
 }

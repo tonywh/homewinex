@@ -170,6 +170,24 @@ input.qty {
   color: #014101;
 }
 
+#chart-handle {
+  background-color: #800064;
+  margin: 0;
+  padding: 0;
+}
+
+.close-button {
+  padding: 3px;
+  margin: 0;
+  position: relative;
+  left: 90%;
+  margin-left: 12px;
+  border: none;
+  font-size: 0.8em;
+  color: white;
+  background-color: #800064;
+}
+
 #ingredient-totals {
   padding-top: 5px;
 }
@@ -194,4 +212,39 @@ input.qty {
 #save-status.fade {
   opacity: 0;
   transition: opacity 5s; 
+}
+
+#modal-chart-block, #modal-chart-shadow {
+  top: 30%;
+  left: 65%;
+  height: 60%;
+  width: 30%;
+  position: absolute;
+  border-radius: 6px;
+}
+
+#modal-chart-block.portrait, #modal-chart-shadow.portrait {
+  top: 65%;
+  left: 30%;
+  height: 30%;
+  width: 60%;
+}
+
+#modal-chart-block {
+  border: solid;
+  border-width: 1px;
+  z-index: 2;
+  background-color: white;
+}
+
+#modal-chart-shadow {
+  margin-top: 10px;
+  margin-left: 10px;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#modal-chart-container {
+  width: 100%;
+  height: 85%;
 }
