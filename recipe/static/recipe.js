@@ -28,6 +28,7 @@ var totals;
 var descrLineHeight;
 var barChart;
 var profile;
+var graphVisible = true;
 
 document.addEventListener('DOMContentLoaded', () => {
   buildRecipeApp();
@@ -233,27 +234,57 @@ function dropIngredient(ev) {
   }
 }
 
-function showGraph() {
-  // Set graph display for desktop devices
+function makeVisibleModalChart() {
+  document.querySelector('#chart-block').style.visibility = "hidden";
+  document.querySelector('#modal-chart-block').style.visibility = "visible";
+  document.querySelector('#modal-chart-shadow').style.visibility = "visible";
+  document.querySelector('.graph-button').style.visibility = "hidden";
+  document.querySelector('.close-button').onclick = hideGraph;
+  if ( window.innerWidth > window.innerHeight ) {
+    document.querySelector('#modal-chart-block').classList.remove("portrait");
+    document.querySelector('#modal-chart-shadow').classList.remove("portrait");
+  } else {
+    document.querySelector('#modal-chart-block').classList.add("portrait");
+    document.querySelector('#modal-chart-shadow').classList.add("portrait");
+  }    
+  return document.querySelector('#modal-chart-container canvas').getContext('2d');
+}
+
+function makeVisibleChart() {
   document.querySelector('#modal-chart-block').style.visibility = "hidden";
   document.querySelector('#modal-chart-shadow').style.visibility = "hidden";
   document.querySelector('#chart-block').style.visibility = "visible";
-  ctx = document.querySelector('#chart-block canvas').getContext('2d');
+  document.querySelector('.graph-button').style.visibility = "hidden";
+  return document.querySelector('#chart-block canvas').getContext('2d');
+}
 
-  // Change graph display if it's a mobile device
+function hideGraph() {
+  document.querySelector('#modal-chart-block').style.visibility = "hidden";
+  document.querySelector('#modal-chart-shadow').style.visibility = "hidden";
+  document.querySelector('#chart-block').style.visibility = "hidden";
+  document.querySelector('.graph-button').style.visibility = "visible";
+  graphVisible = false;
+  document.querySelector('.graph-button').onclick = forceShowGraph;
+}
+
+function forceShowGraph() {
+  graphVisible = true;
+  showGraph();
+}
+
+function showGraph() {
+  if ( !graphVisible ) {
+    return;
+  }
+
+  // Set graph display for mobile or desktop devices
   if ( window.innerWidth < 768
         || window.innerHeight < 768 ) {
-    document.querySelector('#chart-block').style.visibility = "hidden";
-    document.querySelector('#modal-chart-block').style.visibility = "visible";
-    document.querySelector('#modal-chart-shadow').style.visibility = "visible";
-    if ( window.innerWidth > window.innerHeight ) {
-      document.querySelector('#modal-chart-block').classList.remove("portrait");
-      document.querySelector('#modal-chart-shadow').classList.remove("portrait");
-    } else {
-      document.querySelector('#modal-chart-block').classList.add("portrait");
-      document.querySelector('#modal-chart-shadow').classList.add("portrait");
-    }    
-    ctx = document.querySelector('#modal-chart-container canvas').getContext('2d');
+    // Mobile
+    ctx = makeVisibleModalChart();
+  } else {
+    // Desktop
+    ctx = makeVisibleChart();
   }
 
   if ( barChart ) {
