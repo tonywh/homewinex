@@ -235,11 +235,15 @@ function dropIngredient(ev) {
 }
 
 function makeVisibleModalChart() {
+  var oldX = 0, oldY = 0;
+
   document.querySelector('#chart-block').style.visibility = "hidden";
   document.querySelector('#modal-chart-block').style.visibility = "visible";
   document.querySelector('#modal-chart-shadow').style.visibility = "visible";
   document.querySelector('.graph-button').style.visibility = "hidden";
   document.querySelector('.close-button').onclick = hideGraph;
+  document.querySelector('#chart-handle').onmousedown = dragGraphDown;
+  document.querySelector('#chart-handle').ontouchstart = dragGraphDown;
   if ( window.innerWidth > window.innerHeight ) {
     document.querySelector('#modal-chart-block').classList.remove("portrait");
     document.querySelector('#modal-chart-shadow').classList.remove("portrait");
@@ -248,6 +252,51 @@ function makeVisibleModalChart() {
     document.querySelector('#modal-chart-shadow').classList.add("portrait");
   }    
   return document.querySelector('#modal-chart-container canvas').getContext('2d');
+
+  function dragGraphDown(ev) {
+    ev.preventDefault();
+    if ( Object.prototype.toString.call(ev) === "[object MouseEvent]") {
+      x = ev.clientX;
+      y = ev.clientY;
+      document.onmousemove = dragGraphMove;
+      document.onmouseup = dragGraphUp;
+    } else {
+      x = ev.touches[0].clientX;
+      y = ev.touches[0].clientY;
+      document.ontouchmove = dragGraphMove;
+      document.ontouchend = dragGraphUp;
+    }
+    oldX = x;
+    oldY = y;
+  }
+
+  function dragGraphMove(ev) {
+    if ( Object.prototype.toString.call(ev) === "[object MouseEvent]") {
+      ev.preventDefault();
+      x = ev.clientX;
+      y = ev.clientY;
+    } else {
+      x = ev.touches[0].clientX;
+      y = ev.touches[0].clientY;
+    }
+    newX = oldX - x;
+    newY = oldY - y;
+    dragEl = document.querySelector('#modal-chart-block');
+    dragShadowEl = document.querySelector('#modal-chart-shadow');
+    dragEl.style.top = (dragEl.offsetTop - newY) + "px";
+    dragEl.style.left = (dragEl.offsetLeft - newX) + "px";
+    dragShadowEl.style.top = (dragEl.offsetTop - newY) + "px";
+    dragShadowEl.style.left = (dragEl.offsetLeft - newX) + "px";
+    oldX = x;
+    oldY = y;
+  }
+  
+  function dragGraphUp() {
+    document.onmousemove = null;
+    document.onmouseup = null;
+    document.ontouchmove = null;
+    document.ontouchend = null;
+  }
 }
 
 function makeVisibleChart() {
