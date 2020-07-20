@@ -19,6 +19,28 @@ class Converter {
   }
 }
 
+var ingredientColours = [
+  'rgba(255,0,0,0.2)',
+  'rgba(255,100,0,0.2)',
+  'rgba(255,200,0,0.2)',
+  'rgba(100,255,0,0.2)',
+  'rgba(0,255,100,0.2)',
+  'rgba(0,100,255,0.2)',
+  'rgba(0,0,255,0.2)',
+  'rgba(100,0,255,0.2)',
+];
+
+var ingredientBorderColours = [
+  'rgba(255,0,0,0.4)',
+  'rgba(255,100,0,0.4)',
+  'rgba(255,200,0,0.4)',
+  'rgba(100,255,0,0.4)',
+  'rgba(0,255,100,0.4)',
+  'rgba(0,100,255,0.4)',
+  'rgba(0,0,255,0.4)',
+  'rgba(100,0,255,0.4)',
+];
+
 var recipe;
 var ingredients;
 var styles;
@@ -168,6 +190,17 @@ function showIngredients() {
     });
     i++;
   });
+
+  // Ingredient background colours
+  i = 0;
+  document.querySelectorAll('.ingredient-name').forEach( el => {
+    el.style.backgroundColor = i < ingredientColours.length? ingredientColours[i] : 'rgba(0,0,0,0.2)',
+    el.style.borderColor = i < ingredientBorderColours.length? ingredientBorderColours[i] : 'rgba(0,0,0,0.4)',
+  i++;
+  });
+  el = document.querySelector('.adacid-label');
+  el.style.backgroundColor = ingredientColours[ingredientColours.length-1];
+  el.style.borderColor = ingredientBorderColours[ingredientBorderColours.length-1];
 
   // Set totals
   totals = calcTotalAttrs();
@@ -339,26 +372,20 @@ function showGraph() {
   if ( barChart ) {
     barChart.destroy();
   }
+
   Chart.defaults.global.defaultFontSize = 11;
-  barChart = new Chart(ctx, {
+  Chart.defaults.global.legend.display = false;
+
+  chartData =  {
     type: 'bar',
     data: {
       labels: ['Sugar', 'Acid', 'Tannin', 'Solids'],
-      datasets: [{
-        label: 'recipe',
-        backgroundColor: 'rgb(255, 225, 128)',
-        borderColor: 'rgb(255, 225, 128)',
-        data: [
-          (100*totals.sugar/style.sugar).toFixed(0),
-          (100*totals.acid/style.acid).toFixed(0),
-          (100*totals.tannin/style.tannin).toFixed(0),
-          (100*totals.solids/style.solu_solid).toFixed(0),
-        ]
-      },
-      {
+      datasets: [      {
         label: 'target',
-        backgroundColor: 'rgb(255, 128, 255)',
-        borderColor: 'rgb(255, 128, 255)',
+        stack: 'target',
+        backgroundColor: 'rgba(255, 128, 255, 0.5)',
+        borderColor: 'rgba(255, 128, 255, 0.7)',
+        borderWidth: 1,
         data: [
           100,
           100,
@@ -386,7 +413,52 @@ function showGraph() {
       responsive: true,
       maintainAspectRatio: false
     }
-  });  
+  };
+
+  // Add ingredient data
+  i = 0;
+  document.querySelectorAll('.ingredient-data').forEach( ingr_row => {
+    chartData.data.datasets.push({
+      label: ingr_row.querySelector('.ingredient-name').value,
+      stack: 'recipe',
+      backgroundColor: i < ingredientColours.length? ingredientColours[i] : 'rgba(0,0,0,0.2)',
+      borderColor: i < ingredientBorderColours.length? ingredientBorderColours[i] : 'rgba(0,0,0,0.4)',
+      borderWidth: 1,
+      data: calcChartData({
+        sugar: parseFloat(ingr_row.querySelector('.sugar').innerHTML),
+        acid: parseFloat(ingr_row.querySelector('.acid').innerHTML),
+        tannin: parseFloat(ingr_row.querySelector('.tannin').innerHTML),
+        solids: parseFloat(ingr_row.querySelector('.solids').innerHTML),
+        }, style),
+    });
+    i++;
+  });
+
+  // Add additional acid from fermentation
+  chartData.data.datasets.push({
+    label: 'Acid from fermentation',
+    stack: 'recipe',
+    backgroundColor: ingredientColours[ingredientColours.length-1],
+    borderColor: ingredientBorderColours[ingredientBorderColours.length-1],
+    borderWidth: 1,
+    data: calcChartData({
+      sugar: 0,
+      acid: 1.5,
+      tannin: 0,
+      solids: 0,
+      }, style),
+  });
+
+  barChart = new Chart(ctx, chartData);  
+}
+
+function calcChartData(values, style) {
+  return [
+    (100*values.sugar/style.sugar).toFixed(0),
+    (100*values.acid/style.acid).toFixed(0),
+    (100*values.tannin/style.tannin).toFixed(0),
+    (100*values.solids/style.solu_solid).toFixed(0),
+  ];
 }
 
 function updateQty(ev) { 

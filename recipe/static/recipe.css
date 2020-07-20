@@ -5,9 +5,11 @@ label, legend {
 .mainview {
   font-size: 0.8em;
 }
+
 #recipe-name {
   padding: 0px 1px 0px 1px; /* make sure cursor visible when at start of text. */
-  font-size: 1.1em;
+  font-size: 1.5em;
+  size: 100%
 }
 
 .full-width {
@@ -64,10 +66,10 @@ label, legend {
   visibility: visible;
 }
 
-/* Align items at the bottom of a box */
-.bottom {
-  display:flex;
-  align-items: flex-end;
+.btn {
+  font-size: 1em;
+  padding: 2px 5px 2px 5px;
+  margin: 0;
 }
 
 .left-label {
@@ -79,10 +81,12 @@ label, legend {
   padding-top: 3px;
 }
 
+.inline {
+  display:inline;
+}
+
 #volume {
-  width: 100%;
-  max-width: 4em;
-  float: left;
+  width: 4em;
   margin-right: 5px;
   font-size: 1em;
   padding: 0 6px 0 6px;
@@ -119,14 +123,17 @@ label, legend {
 }
 
 .adacid-label {
-  margin-top: 7px;
+  margin-left: 1em;
+  padding: 2px 2px 2px 2px;
   width: 80%;
-  border: 0;
+  border: solid;
+  border-width: 1px;
 }
 
 .ingredient-name {
   width: 90%;
-  border: 0;
+  border: solid;
+  border-width: 1px;
 }
 
 .list-group-item {
@@ -148,6 +155,7 @@ label, legend {
 }
 
 .handle {
+  width: 90%;
   float: left;
 }
 
@@ -166,7 +174,6 @@ input.qty {
   float: right;
   padding: 0;
   margin: 0;
-  font-size: 1em;
   color: #014101;
 }
 
@@ -194,7 +201,6 @@ input.qty {
   padding: 7px;
   margin: 0!important;
   border: none;
-  font-size: 1em;
   color: white;
   background-color: #800064;
 }
@@ -210,7 +216,6 @@ input.qty {
 }
 
 #new_ingr_button {
-  font-size: 1em;
   padding: 0 5px 0 5px;
   height: 2em;
 }

@@ -6,6 +6,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.10.2/Sortable.min.js"></script>
 
+  <!-- Template: content of an ingredient row-->
   <script id="ingredient" type="text/x-handlebars-template">
     {% verbatim %}
       <div class="list-group-item">
@@ -29,7 +30,8 @@
       </div>
     {% endverbatim %}
   </script>
-
+  
+  <!-- Template: content of the new ingredient row-->
   <script id="new_ingredient" type="text/x-handlebars-template">
     {% verbatim %}
       <div class="col-5">
@@ -48,6 +50,7 @@
     {% endverbatim %}
   </script>
 
+  <!-- Template: content of the totals row-->
   <script id="ingredient_totals" type="text/x-handlebars-template">
     {% verbatim %}
       <span class="col-5 ingredient-total" >{{legend}}</span>
@@ -62,12 +65,14 @@
     {% endverbatim %}
   </script>
 
+  <!-- Template: wine style display-->
   <script id="style" type="text/x-handlebars-template">
     {% verbatim %}
       <div>Style: {{style.grapes}}, {{style.region}}</div>
     {% endverbatim %}
   </script>
 
+  <!-- Template: content of the new ingredient row-->
   <script id="style_info" type="text/x-handlebars-template">
     {% verbatim %}
       <div>{{style.sweetness}} {{style.colour}}, {{style.alcohol}}% alcohol</div>
@@ -83,23 +88,20 @@
       <form name="recipe-form">
         {% csrf_token %}
         <input type="hidden" name="id" id="recipe_id" value="{{id}}">
+
+        <!-- Title/Volume   Style/Description   Edit/Brew -->
         <div class="row ingredient-table">
-          <div class="col-5 tltip">
-            <input type="text" name="name" id="recipe-name" class="form-control-plaintext" value="{{name}}">
-            <span class="tltiptext">Rename</span>
+          <div class="col-5 full-width">
+            <div class="tltip full-width">
+              <input type="text" name="name" id="recipe-name" class="form-control-plaintext" value="{{name}}">
+              <span class="tltiptext">Rename</span>
+            </div>
+            <label class="left-label inline" for="volume">Volume</label>
+            <input type="number" step="0.1" name="volume" id="volume" class="form-control inline" value="{{volume_l}}">
+            <span class="inline" id="volume-unit">L</span>
           </div>
-          <div class="col-6 full-width bottom">
+          <div class="col-5 col-md-5 col-lg-4 full-width">
             <span id="recipe-style" data-style_id="{{style_id}}"></span>
-          </div>
-        </div>
-        <div class="row ingredient-table">
-          <label class="col-1 left-label" for="volume">Volume</label>
-          <div class="col-2">
-            <input type="number" step="0.1" name="volume" id="volume" class="form-control" value="{{volume_l}}">
-            <div id="volume-unit">L</div>
-          </div>
-          <span class="col-2"></span>
-          <div class="col-6 full-width">
             <span id="style-info"></span>
             <div class="tltip full-width">
               <textarea name="descr" id="recipe-descr" class="text form-control-plaintext" rows="1" 
@@ -107,7 +109,15 @@
               <span class="tltiptext">Edit description</span>
             </div>
           </div>
+          <div class="col-1 full-width">
+          </div>
+          <div class="col-1 full-width">
+            <button type="button" id="edit_button" class="m-1 btn btn-secondary">Edit</button>
+            <button type="button" id="brew_button" class="m-1 btn btn-secondary">Brew</button>
+          </div>
         </div>
+
+        <!--          Column-titles -->
         <div class="row ingredient-table">
           <span class="col-5"></span>
           <span class="col-2 col-md-2 col-lg-1 heading">Qty</span>
@@ -117,6 +127,8 @@
           <span class="col-1 heading">Solids</span>
           <span class="col-1 heading">Redness</span>
         </div>
+
+        <!--          Column-units -->
         <div class="row ingredient-table">
           <span class="col-5"></span>
           <span class="col-2 col-md-2 col-lg-1 heading" id="qty-unit">(kg&nbsp;L)</span>
@@ -126,31 +138,48 @@
           <span class="col-1 heading">(g/l)</span>
           <span class="col-1"></span>
         </div>
+
+        <!-- Ingredients -->
         <div id="ingredients" class="list-group">
         </div>
+
+        <!-- Additional acid from fermenation -->
         <div class="row ingredient-table" id="acid-from-fermentation">
-          <span class="col-5 adacid-label" >Additional acid from fermenation</span>
+          <div class="col-5 full-width" >
+            <div class="adacid-label" >Acid from fermenation</div>
+          </div>
           <span class="col-3 col-md-3 col-lg-2"></span>
           <span class="col-1 ingredient-value">1.50</span>
         </div>
+
+        <!-- New ingredient selector -->
         <div class="row ingredient-table" id="ingredient-select">
         </div>
+
+        <!-- TOTALS -->
         <div class="row ingredient-table" id="ingredient-totals">
         </div>
+
+        <!-- TARGETS -->
         <div class="row ingredient-table" id="style-targets">
         </div>
+
+        <!-- Save -->
         <div class="row ingredient-table">
           {% if user.is_authenticated %}
             <button type="button" class="btn btn-secondary" id="save-button" style="visibility:hidden">Save</button>
             <span id="save-status" style="visibility:hidden">Saved</span>
           {% endif %}
         </div>
+
       </form>
     </div>
     <div id="chart-block" class="col-lg-4 col-md-4 col-7">
       <canvas width="100%" height="100%"></canvas>
     </div>
   </div>
+
+  <!-- Chart -->
   <div id="modal-chart-block">
     <div id="chart-handle" class="menubar"></div>
     <div id="button-box" class="menubar">
@@ -161,4 +190,5 @@
     </div>
   </div>
   <div id="modal-chart-shadow"></div>
+
 {% endblock %}

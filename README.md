@@ -122,3 +122,7 @@ It focuses instead on the files that contain code or data specific to this proje
 * drag: don't allow drag from ingredient name - too easy to hit accidentally
 * mobile: switch to landscape
 * cookie warning
+* chart: stack ingredients in a bar
+* recipe: store versions to avoid change to existing brews
+* recipe: see ingredient props while viewing list
+* recipe: after drag and drop, redisplay ingredients (update colours and chart)
