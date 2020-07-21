@@ -1,0 +1,34 @@
+#new-brew {
+  max-width: 1000px;
+  margin: auto;
+  padding: 10px;
+  font-size: 0.8em;
+}
+
+label {
+  font-style: italic;
+}
+
+.title {
+  font-size: 1.5em;
+}
+
+#recipe {
+  font-size: 1em;
+}
+
+.submit {
+  font-size: 1em;
+}
+
+.inline {
+  display:inline;
+}
+
+#volume {
+  width: 5em;
+  margin-right: 5px;
+  font-size: 1em;
+  padding: 0 6px 0 6px;
+  height: 2em;
+}

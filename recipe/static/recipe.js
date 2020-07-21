@@ -107,8 +107,10 @@ function buildRecipeApp() {
     hideSavedStatus();
   };
 
-  // Add action for Save button
+  // Add actions for buttons
   try {
+    document.querySelector("#edit-button").onclick = editRecipe;
+    document.querySelector("#brew-button").onclick = brewRecipe;
     document.querySelector("#save-button").onclick = saveRecipe;
   }
   catch(err) {
@@ -571,6 +573,17 @@ function setDescrSize() {
     lines = 4;
   }
   descr.rows = lines;
+}
+
+function editRecipe() {
+  // Switch recipe from view-only to editable.
+}
+
+function brewRecipe() {
+  id = document.querySelector('#recipe_id').value;
+  url = '/newbrew?' + new URLSearchParams({recipe_id: id}).toString();
+  console.log(url);
+  location.href = url;
 }
 
 function saveRecipe() {

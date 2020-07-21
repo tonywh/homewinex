@@ -159,3 +159,44 @@ def profile(request):
         profile = Profile.objects.get(user=user)
 
     return render(request, "recipe/profile.html", {'user': user, 'profile': profile})
+
+def newbrew(request):
+    if request.user.is_anonymous:
+        return HttpResponse('Unauthorized', status=401)
+
+    if request.method == "GET":
+        # Getting the form to start a brew
+        id = int(request.GET.get("recipe_id"))
+        try:
+            recipe = Recipe.objects.get(id=id).to_dict()
+        except Recipe.DoesNotExist:
+            raise Http404("Recipe does not exist")
+
+        return render(request, "recipe/newbrew.html", {'recipe': recipe, 'recipe_id': id} )
+
+    else:
+        # Posting details to start a brew
+        id = int(request.POST.get("recipe_id"))
+        try:
+            recipe = Recipe.objects.get(id=id)
+        except Recipe.DoesNotExist:
+            raise Http404("Recipe does not exist")
+
+        # Create the new brew entry
+        data = {
+            'user': request.user,
+            'recipe_id': request.POST.get('recipe_id'),
+            'size_l': request.POST.get('volume')
+        }
+
+        brew = Brew.objects.create(
+                user=data['user'],
+                recipe_id=data['recipe_id'],
+                size_l=data['size_l']
+                )
+        data['id'] = brew.id
+
+    return render(request, "recipe/brew.html", data )
+
+def brew(request):
+    pass
