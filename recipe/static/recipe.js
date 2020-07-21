@@ -256,14 +256,7 @@ function dropIngredient(ev) {
       order++;
     });
 
-    // In HTML elements, renumber the order sequence.
-    order = 0;
-    document.getElementsByName("ingredient_order[]").forEach( el => {
-      el.value = order;
-      order++;
-    });
-
-    showSaveButton();
+    updateAfterChange();
   }
 }
 
