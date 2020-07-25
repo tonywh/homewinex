@@ -72,14 +72,14 @@
     {% endverbatim %}
   </script>
 
-  <!-- Template: content of the new ingredient row-->
+  <!-- Template: content of the style details row-->
   <script id="style_info" type="text/x-handlebars-template">
     {% verbatim %}
       <div>{{style.sweetness}} {{style.colour}}, {{style.alcohol}}% alcohol</div>
     {% endverbatim %}
   </script>
 
-  <script src="{% static "recipe.js" %}"></script>
+  <script type="module" src="{% static "recipe.js" %}"></script>
 {% endblock %}
 
 {% block body %}

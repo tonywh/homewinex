@@ -4,48 +4,10 @@ const ingredient_totals_template = Handlebars.compile(document.querySelector('#i
 const style_template = Handlebars.compile(document.querySelector('#style').innerHTML);
 const style_info_template = Handlebars.compile(document.querySelector('#style_info').innerHTML);
 
-class Converter {
-  constructor(data) {
-    this.units = data.units;    // array of tuples (id, string), where id is same as index
-    this.conv = data.conv;      // array of conv factors indexed by id
-  }
-
-  convert(value, fromUnit, toUnit) {
-    return value * this.conv[toUnit] / this.conv[fromUnit];
-  }
-
-  toString(unit) {
-    return this.units[unit][1];
-  }
-}
-
-var ingredientColours = [
-  'rgba(255,0,0,0.2)',
-  'rgba(255,100,0,0.2)',
-  'rgba(255,200,0,0.2)',
-  'rgba(100,255,0,0.2)',
-  'rgba(0,255,100,0.2)',
-  'rgba(0,100,255,0.2)',
-  'rgba(0,0,255,0.2)',
-  'rgba(100,0,255,0.2)',
-];
-
-var ingredientBorderColours = [
-  'rgba(255,0,0,0.4)',
-  'rgba(255,100,0,0.4)',
-  'rgba(255,200,0,0.4)',
-  'rgba(100,255,0,0.4)',
-  'rgba(0,255,100,0.4)',
-  'rgba(0,100,255,0.4)',
-  'rgba(0,0,255,0.4)',
-  'rgba(100,0,255,0.4)',
-];
+import * as utils from './utils.js';
 
 var recipe;
 var ingredients;
-var styles;
-var liquid;
-var solid;
 var totals;
 var descrLineHeight;
 var barChart;
@@ -56,35 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
   buildRecipeApp();
 })
 
-function enableSave() {
-  disabled = true;
-
-  // Enable if there is a modified text input
-  document.querySelectorAll('.form-control').forEach( input => {
-    if ( input.dataset.value != input.value ) {
-      disabled = false;
-    }
-  });
-
-  // Enable if there is a modified radio button input
-  document.querySelectorAll('.custom-control-input').forEach( radio => {
-    if ( radio.checked ) {
-      if ( radio.closest('.form-group').dataset.value != radio.value ) {
-        disabled = false;
-      }
-    }
-  });
-
-  document.querySelector('.submit').disabled = disabled;
-
-  return true;
-}
-
 function buildRecipeApp() {
-  id = document.querySelector('#recipe_id').value;
+  var id = document.querySelector('#recipe_id').value;
 
   // update displayed URL - it might have the newrecipe URL still
-  page_url = 'recipe?' + new URLSearchParams({id: id}).toString();
+  var page_url = 'recipe?' + new URLSearchParams({id: id}).toString();
   history.pushState({'url': 'recipe', 'id': id}, page_url, page_url);
 
   // Set actions for name and volume inputs
@@ -98,7 +36,7 @@ function buildRecipeApp() {
   };
 
   // Set description size and add action for description input
-  descr = document.querySelector("#recipe-descr");
+  var descr = document.querySelector("#recipe-descr");
   descrLineHeight = descr.scrollHeight;   // HTML/CSS is set to 1 row, no padding
   setDescrSize();
   document.querySelector("#recipe-descr").oninput = () => {
@@ -118,24 +56,22 @@ function buildRecipeApp() {
 
   // Get recipe and ingredient list
   const request = new XMLHttpRequest();
-  url = '/recipedetail?' + new URLSearchParams({id: id}).toString();
+  var url = '/recipedetail?' + new URLSearchParams({id: id}).toString();
   request.open('GET', url);
   request.onload = showRecipe;
-  csrftoken = Cookies.get('csrftoken');
+  var csrftoken = Cookies.get('csrftoken');
   request.setRequestHeader("X-CSRFToken", csrftoken);
   request.send();
 }
 
 function showRecipe(ev) {
-  request = ev.target;
+  var request = ev.target;
   const data = JSON.parse(request.responseText);
 
   // Keep a copy of the data to allow us to build the recipe locally.
   recipe = data.recipe;
   ingredients = data.ingredients;
-  styles = data.styles;
-  liquid = new Converter(data.liquid);
-  solid = new Converter(data.solid);
+  utils.setUtilProfile(data);
   profile = data.profile;
 
   // If starting a new recipe, get the basic data from the HTML elements already
@@ -151,15 +87,15 @@ function showRecipe(ev) {
   if ( profile ) {
     // Set recipe volume to the chosen liquid units. Value from backend is always
     // index zero in the converter.
-    volume_el = document.querySelector('#volume');
-    volume_el.value = liquid.convert(volume_el.value, 0, profile.liquid_large_units).toFixed(1);
-    unit_el = document.querySelector('#volume-unit');
-    unit_el.innerHTML = liquid.toString(profile.liquid_large_units);
+    var volume_el = document.querySelector('#volume');
+    volume_el.value = utils.liquid.convert(volume_el.value, 0, profile.liquid_large_units).toFixed(1);
+    var unit_el = document.querySelector('#volume-unit');
+    unit_el.innerHTML = utils.liquid.toString(profile.liquid_large_units);
 
     // Qty unit string to chosen solid and liquid units.
     unit_el = document.querySelector('#qty-unit');
-    liquidStr = liquid.toString(profile.liquid_large_units);
-    solidStr = solid.toString(profile.solid_large_units);
+    var liquidStr = utils.liquid.toString(profile.liquid_large_units);
+    var solidStr = utils.solid.toString(profile.solid_large_units);
     unit_el.innerHTML = `(${solidStr} ${liquidStr})`;
   }
 
@@ -169,7 +105,7 @@ function showRecipe(ev) {
 }
 
 function showStyle() {
-  style = getStyleData();
+  var style = utils.getStyleData(recipe.style);
   document.querySelector('#recipe-style').innerHTML = style_template({style: style});
   document.querySelector('#style-info').innerHTML = style_info_template({style: style});
   document.querySelector('#style-targets').innerHTML = ingredient_totals_template({legend: 'TARGETS', totals: style});
@@ -180,13 +116,13 @@ function showIngredients() {
   // This is O(N*N). If this becomes a performance issue change it
   // to a sorted list of ingredients and implement a binary search
   // to achieve O(N*logN).
-  ingr_el = document.querySelector("#ingredients");
+  var ingr_el = document.querySelector("#ingredients");
   ingr_el.innerHTML = "";
   i = 0;
   recipe.ingredients.forEach( use => {
     ingredients.forEach( ingredient => {
       if ( use.ingredient_id == ingredient.id ) {
-        ingr = calcIngredientAttrs(ingredient, use, recipe.volume_l);
+        var ingr = utils.calcIngredientAttrs(ingredient, use, recipe.volume_l, profile);
         ingr_el.innerHTML += ingredient_template({ingredient: ingr, index: i});
       }
     });
@@ -194,18 +130,18 @@ function showIngredients() {
   });
 
   // Ingredient background colours
-  i = 0;
+  var i = 0;
   document.querySelectorAll('.ingredient-name').forEach( el => {
-    el.style.backgroundColor = i < ingredientColours.length? ingredientColours[i] : 'rgba(0,0,0,0.2)',
-    el.style.borderColor = i < ingredientBorderColours.length? ingredientBorderColours[i] : 'rgba(0,0,0,0.4)',
-  i++;
+    el.style.backgroundColor = i < utils.ingredientColours.length? utils.ingredientColours[i] : 'rgba(0,0,0,0.2)',
+    el.style.borderColor = i < utils.ingredientBorderColours.length? utils.ingredientBorderColours[i] : 'rgba(0,0,0,0.4)',
+    i++;
   });
-  el = document.querySelector('.adacid-label');
-  el.style.backgroundColor = ingredientColours[ingredientColours.length-1];
-  el.style.borderColor = ingredientBorderColours[ingredientBorderColours.length-1];
+  var el = document.querySelector('.adacid-label');
+  el.style.backgroundColor = utils.ingredientColours[utils.ingredientColours.length-1];
+  el.style.borderColor = utils.ingredientBorderColours[utils.ingredientBorderColours.length-1];
 
   // Set totals
-  totals = calcTotalAttrs();
+  totals = utils.calcTotalAttrs(".ingredient-data");
   document.querySelector('#ingredient-totals').innerHTML = ingredient_totals_template({legend: 'TOTALS', totals: totals});
 
   // Set actions for remove buttons
@@ -219,7 +155,7 @@ function showIngredients() {
   });
 
   // Create the drag and drop list
-  ingredientSortable = Sortable.create(ingr_el, {
+  Sortable.create(ingr_el, {
     handle: '.handle', // handle's class
     animation: 150,
     onEnd: dropIngredient,
@@ -250,9 +186,9 @@ function dropIngredient(ev) {
   if (ev.oldDraggableIndex != ev.newDraggableIndex) {
     // In recipe, remove from old position and insert in new position,
     // then renumber the order sequence.
-    removed = recipe.ingredients.splice(ev.oldDraggableIndex, 1);
+    var removed = recipe.ingredients.splice(ev.oldDraggableIndex, 1);
     recipe.ingredients.splice(ev.newDraggableIndex, 0, removed[0]);
-    order = 0;
+    var order = 0;
     recipe.ingredients.forEach( ingredient => {
       ingredient.order = order;
       order++;
@@ -282,6 +218,7 @@ function makeVisibleModalChart() {
   return document.querySelector('#modal-chart-container canvas').getContext('2d');
 
   function dragGraphDown(ev) {
+    var x, y;
     ev.preventDefault();
     if ( Object.prototype.toString.call(ev) === "[object MouseEvent]") {
       x = ev.clientX;
@@ -299,6 +236,7 @@ function makeVisibleModalChart() {
   }
 
   function dragGraphMove(ev) {
+    var x, y, newX, newY;
     if ( Object.prototype.toString.call(ev) === "[object MouseEvent]") {
       ev.preventDefault();
       x = ev.clientX;
@@ -309,8 +247,8 @@ function makeVisibleModalChart() {
     }
     newX = oldX - x;
     newY = oldY - y;
-    dragEl = document.querySelector('#modal-chart-block');
-    dragShadowEl = document.querySelector('#modal-chart-shadow');
+    var dragEl = document.querySelector('#modal-chart-block');
+    var dragShadowEl = document.querySelector('#modal-chart-shadow');
     dragEl.style.top = (dragEl.offsetTop - newY) + "px";
     dragEl.style.left = (dragEl.offsetLeft - newX) + "px";
     dragShadowEl.style.top = (dragEl.offsetTop - newY) + "px";
@@ -350,6 +288,9 @@ function forceShowGraph() {
 }
 
 function showGraph() {
+  var ctx;
+  var style = utils.getStyleData(recipe.style);
+
   if ( !graphVisible ) {
     return;
   }
@@ -371,7 +312,7 @@ function showGraph() {
   Chart.defaults.global.defaultFontSize = 11;
   Chart.defaults.global.legend.display = false;
 
-  chartData =  {
+  var chartData =  {
     type: 'bar',
     data: {
       labels: ['Sugar', 'Acid', 'Tannin', 'Solids'],
@@ -411,13 +352,13 @@ function showGraph() {
   };
 
   // Add ingredient data
-  i = 0;
+  var i = 0;
   document.querySelectorAll('.ingredient-data').forEach( ingr_row => {
     chartData.data.datasets.push({
       label: ingr_row.querySelector('.ingredient-name').value,
       stack: 'recipe',
-      backgroundColor: i < ingredientColours.length? ingredientColours[i] : 'rgba(0,0,0,0.2)',
-      borderColor: i < ingredientBorderColours.length? ingredientBorderColours[i] : 'rgba(0,0,0,0.4)',
+      backgroundColor: i < utils.ingredientColours.length? utils.ingredientColours[i] : 'rgba(0,0,0,0.2)',
+      borderColor: i < utils.ingredientBorderColours.length? utils.ingredientBorderColours[i] : 'rgba(0,0,0,0.4)',
       borderWidth: 1,
       data: calcChartData({
         sugar: parseFloat(ingr_row.querySelector('.sugar').innerHTML),
@@ -433,8 +374,8 @@ function showGraph() {
   chartData.data.datasets.push({
     label: 'Acid from fermentation',
     stack: 'recipe',
-    backgroundColor: ingredientColours[ingredientColours.length-1],
-    borderColor: ingredientBorderColours[ingredientBorderColours.length-1],
+    backgroundColor: utils.ingredientColours[utils.ingredientColours.length-1],
+    borderColor: utils.ingredientBorderColours[utils.ingredientBorderColours.length-1],
     borderWidth: 1,
     data: calcChartData({
       sugar: 0,
@@ -463,14 +404,14 @@ function updateQty(ev) {
   showSaveButton();
   hideSavedStatus();
 
-  qty_kg = ev.target.value;
-  use = recipe.ingredients[ev.target.dataset.index];
+  var qty_kg = ev.target.value;
+  var use = recipe.ingredients[ev.target.dataset.index];
   use.qty_kg = qty_kg;
 
   // Update values for this ingredient
   ingredients.forEach( ingredient => {
     if ( use.ingredient_id == ingredient.id ) {
-      ingr = calcIngredientAttrs(ingredient, use, recipe.volume_l);
+      ingr = utils.calcIngredientAttrs(ingredient, use, recipe.volume_l, profile);
 
       ingr_row = ev.target.closest('.ingredient-data');
       ingr_row.querySelector('.qty').innerHTML = ingr.qty_kg;
@@ -483,7 +424,7 @@ function updateQty(ev) {
   });
 
   // Update totals
-  totals = calcTotalAttrs();
+  var totals = utils.calcTotalAttrs(".ingredient-data");
   totals_row = document.querySelector('#ingredient-totals');
   totals_row.querySelector('.sugar').innerHTML = totals.sugar;
   totals_row.querySelector('.acid').innerHTML = totals.acid;
@@ -495,76 +436,9 @@ function updateQty(ev) {
   showGraph();
 };
 
-function calcTotalAttrs() {
-  sugar = 0;
-  acid = 1.5;     // Produced during fermenation
-  tannin = 0;
-  solids = 0;
-  redness = 0;
-  document.querySelectorAll(".ingredient-data").forEach( ingr_row => {
-    sugar += parseFloat(ingr_row.querySelector('.sugar').innerHTML);
-    acid += parseFloat(ingr_row.querySelector('.acid').innerHTML);
-    tannin += parseFloat(ingr_row.querySelector('.tannin').innerHTML);
-    solids += parseFloat(ingr_row.querySelector('.solids').innerHTML);
-    redness += parseFloat(ingr_row.querySelector('.redness').innerHTML);
-  });
-  return {
-    sugar: sugar.toFixed(0),
-    acid: acid.toFixed(2),
-    tannin: tannin.toFixed(2),
-    solids: solids.toFixed(2),
-    redness: redness.toFixed(1),
-  };
-}
-
-function calcIngredientAttrs(ingredient, use, volume_l) {
-  // Convert qty to chosen units
-  if ( profile ) {
-    if (ingredient.liquid == 1000) {
-      qty = liquid.convert(use.qty_kg, 0, profile.liquid_large_units);
-    } else {
-      qty = solid.convert(use.qty_kg, 0, profile.solid_large_units);
-    }
-  } else {
-    qty = parseFloat(use.qty_kg);
-  }
-
-  return {
-    id: ingredient.id,
-    name: ingredient.name,
-    variety: ingredient.variety,
-    order: use.order,
-    qty: qty.toFixed(2),
-    sugar: (use.qty_kg * ingredient.sugar / volume_l / 2.64).toFixed(0),
-    acid: (use.qty_kg * ingredient.acid / volume_l).toFixed(2),
-    tannin: (use.qty_kg * ingredient.tannin / volume_l).toFixed(2),
-    solids: (use.qty_kg * ingredient.solu_solid / volume_l).toFixed(2),
-    redness: (use.qty_kg * ingredient.redness / volume_l).toFixed(1),
-  };
-}
-
-function getStyleData() {
-  result =  {
-    sugar: (0).toFixed(0),
-    acid: (0).toFixed(2),
-    tannin: (0).toFixed(2),
-    solids: (0).toFixed(2),
-  };
-  styles.forEach( style => {
-    if ( style.id == recipe.style ) {
-      result = Object.assign({}, style);
-      result.sugar = (result.alcohol * 7.5).toFixed(0);
-      result.acid = result.acid.toFixed(2);
-      result.tannin = result.tannin.toFixed(2);
-      result.solids = result.solu_solid.toFixed(2);
-    }
-  });
-  return result;
-}
-
 function setDescrSize() {
-  descr = document.querySelector('#recipe-descr');
-  lines = Math.floor(descr.scrollHeight / descrLineHeight);
+  var descr = document.querySelector('#recipe-descr');
+  var lines = Math.floor(descr.scrollHeight / descrLineHeight);
 
   if (lines < 1) {
     lines = 1;
@@ -580,9 +454,8 @@ function editRecipe() {
 }
 
 function brewRecipe() {
-  id = document.querySelector('#recipe_id').value;
-  url = '/newbrew?' + new URLSearchParams({recipe_id: id}).toString();
-  console.log(url);
+  var id = document.querySelector('#recipe_id').value;
+  var url = '/newbrew?' + new URLSearchParams({recipe_id: id}).toString();
   location.href = url;
 }
 
@@ -598,7 +471,7 @@ function saveRecipe() {
     }
   };
   
-  csrftoken = Cookies.get('csrftoken');
+  var csrftoken = Cookies.get('csrftoken');
   request.setRequestHeader("X-CSRFToken", csrftoken);
   request.send(data);
   return false;
