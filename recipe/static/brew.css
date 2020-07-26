@@ -1,0 +1,17 @@
+.mainview {
+  max-width: 1000px;
+  margin: auto;
+  font-size: 0.8em;
+}
+
+.nav-pills .nav-link {
+  color: #014101;
+  font-size: 1.1em;
+}
+
+.nav-pills .nav-link.active, 
+.nav-pills .nav-link.active:hover,
+.nav-pills .nav-link:hover {
+  color: #014101;
+  background-color: #fff7e0!important;
+}

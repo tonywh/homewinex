@@ -1,5 +1,4 @@
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse, Http404
-from django.forms.models import model_to_dict
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
@@ -7,7 +6,7 @@ from django.contrib.auth import authenticate, login
 import datetime
 
 from django.contrib.auth.models import User
-from .models import Ingredient, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
+from .models import Ingredient, Method, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
 from . import measures
 
 def index(request):
@@ -114,6 +113,7 @@ def recipedetail(request):
         'recipe': recipe,
         'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
         'styles': list(WineStyle.objects.values()),
+        'methods': list(Method.objects.values()),
         'liquid': {'units': list(measures.Liquid.UNITS), 'conv': list(measures.Liquid.CONV)},
         'solid': {'units': list(measures.Solid.UNITS), 'conv': list(measures.Solid.CONV)},
     }
@@ -186,6 +186,7 @@ def newbrew(request):
         data = {
             'user': request.user,
             'recipe_id': request.POST.get('recipe_id'),
+            'recipe_name': recipe.name,
             'size_l': request.POST.get('volume')
         }
 
@@ -196,7 +197,23 @@ def newbrew(request):
                 )
         data['id'] = brew.id
 
-    return render(request, "recipe/brew.html", data )
+        return HttpResponseRedirect(F"/brew?id={brew.id}")
 
 def brew(request):
-    pass
+    if request.user.is_anonymous:
+        return HttpResponse('Unauthorized', status=401)
+
+    if request.method == "GET":
+        id = int(request.GET.get("id"))
+        try:
+            brew = Brew.objects.get(id=id)
+        except Recipe.DoesNotExist:
+            raise Http404("Brew does not exist")
+        
+        recipe = Recipe.objects.get(id=brew.recipe_id)
+        data = {
+            'brew': brew.to_dict(),
+            'recipe': recipe.to_dict(),
+            }
+        print(data)
+        return render(request, "recipe/brew.html", data )

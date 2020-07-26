@@ -107,6 +107,15 @@ class Brew(models.Model):
     def __str__(self):
         return f"{self.recipe}, {self.user}"
 
+    def to_dict(self):
+        data = {}
+        data['id'] = self.id
+        data['user'] = self.user.username
+        data['recipe_id'] = self.recipe_id
+        data['size_l'] = self.size_l
+        data['image'] = self.image.id if self.image else None
+        return data
+
 class LogEntry(models.Model):
     datetime = models.DateField()
     text = models.TextField()

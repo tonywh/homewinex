@@ -1,0 +1,83 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "brew.css" %}">
+
+  <!-- Template: content of an ingredient row-->
+  <script id="ingredient" type="text/x-handlebars-template">
+    {% verbatim %}
+      <tr class="ingredient-data">
+        <td class="qty">{{ingredient.qty}}</td>
+        <td class="ingredient-name">{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}</td>
+        <td class="sugar">{{ingredient.sugar}}</td>
+        <td class="acid">{{ingredient.acid}}</td>
+        <td class="tannin">{{ingredient.tannin}}</td>
+        <td class="solids">{{ingredient.solids}}</td>
+        <td class="redness" hidden>{{ingredient.redness}}</td>
+      </tr>
+    {% endverbatim %}
+  </script>
+
+  <!-- Template: wine style display-->
+  <script id="style" type="text/x-handlebars-template">
+    {% verbatim %}
+      <div>Style: {{style.grapes}}, {{style.region}}</div>
+      <div>{{style.sweetness}} {{style.colour}}, {{style.alcohol}}% alcohol</div>
+    {% endverbatim %}
+  </script>
+
+  <script type="module" src="{% static "brew.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="mainview">
+
+    <!-- Page heading -->
+    <!-- Brew <recipe name> <volume>     <username> -->
+    <!-- <Style>    <Style info>                    -->  
+    <div class="page-heading">
+      <span id="brew" data-brew_id="{{brew.id}}"></span>
+      Brew: <span class="inline" id="recipe" data-recipe_id="{{brew.recipe_id}}">{{recipe.name}}</span>,
+      Volume: <span class="inline" id="volume">{{brew.size_l}}</span>
+      <span class="inline" id="volume-unit">L</span>
+      <span class="inline author">{{brew.user}}</span>
+      <span id="recipe-style"></span>
+      <span id="recipe-volume" data-recipe_volume_l="{{recipe.volume_l}}"></span>
+    </div>
+
+    <!-- Tabs -->
+    <!-- Ingredients   Method   Log -->
+    <nav class="nav nav-pills nav-fill" id="tabs">
+      <a class="nav-item nav-link" data-name="Ingredients" href="#">Ingredients</a>
+      <a class="nav-item nav-link" data-name="Method" href="#">Method</a>
+      <a class="nav-item nav-link" data-name="Log" href="#">Log</a>
+    </nav>
+
+    <!-- Ingredients tab content -->
+    <div class="tab-detail" data-name="Ingredients">
+      <table class="table" id="ingredients-table">
+        <thead>
+          <th>Qty<br><span id="qty-unit"></span></th>
+          <th>Name</th>
+          <th>Sugar<br>(Grav)</th>
+          <th>Acid<br>(g/l)</th>
+          <th>Tannin<br>(g/l)</th>
+          <th>Solids<br>(g/l)</th>
+        </thead>
+        <tbody id="ingredients">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Method tab content -->
+    <div class="tab-detail" data-name="Method">
+      Method content
+    </div>
+
+    <!-- Log tab content -->
+    <div class="tab-detail" data-name="Log">
+      Log content
+    </div>
+  </div>
+{% endblock %}
