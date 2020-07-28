@@ -24,7 +24,7 @@
 {% block body %}
   <div class="mainview">
     {% if thisUserOnly %}
-      <h3>Recipes</h3>
+      <h3>My Recipes</h3>
     {% endif %}
     <table id="recipe-table" {% if thisUserOnly %}class="this-user-only"{% endif %}>
       <tr>
@@ -38,5 +38,18 @@
     <form action="/newrecipe"><button type="link" class="m-1 btn btn-secondary">
       New recipe
     </button></form>
+    {% if thisUserOnly %}
+      <h3>My Brews</h3>
+      <table id="brew-table">
+        <tr>
+          <th id="th-recipe">Recipe</th>
+          <th>Brewer</th>
+          <th>Last update</th>
+          <th>Status</th>
+        </tr>
+      </table>
+    {% endif %}
+
+
   </div>
 {% endblock %}

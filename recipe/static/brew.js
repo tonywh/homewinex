@@ -68,10 +68,6 @@ function showRecipe(ev) {
   style = utils.getStyleData(recipe.style);
   document.querySelector('#recipe-style').innerHTML = style_template({style: style});
 
-  showIngredients();
-}
-
-function showIngredients() {
   // Create an ingredient line for each ingredient in the recipe
   // This is O(N*N). If this becomes a performance issue change it
   // to a sorted list of ingredients and implement a binary search
@@ -95,6 +91,27 @@ function showIngredients() {
   var targets = Object.assign({}, style);
   targets.name = 'TARGETS';
   ingr_el.innerHTML += ingredient_template({ingredient: targets});
+
+  // Show method
+
+  getLog();
+}
+
+function getLog() {
+
+}
+
+function showLog(ev) {
+  // display the log entries
+  var request = ev.target;
+  const data = JSON.parse(request.responseText);
+
+  console.log(data);
+
+  // Set the functions to enable and process the submit buttons 
+  document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
+  document.querySelectorAll('.log-form button').forEach( el => el.onclick = saveLog );
+
 }
 
 function showTab(name) {
@@ -116,4 +133,22 @@ function showTab(name) {
     }
   });
 
+}
+
+function enableSubmit(ev) {
+  // Enable if there is log content to submit
+  ev.target.parentElement.querySelector('button').disabled = ev.target.value.length == 0;
+}
+
+function saveLog(ev) {
+  const request = new XMLHttpRequest();
+  request.open('POST', `/recipe`);
+  const data = new FormData(ev.target.parentElement);
+
+  request.onload = showLog;
+  
+  var csrftoken = Cookies.get('csrftoken');
+  request.setRequestHeader("X-CSRFToken", csrftoken);
+  request.send(data);
+  return false;
 }

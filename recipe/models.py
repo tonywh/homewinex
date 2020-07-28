@@ -105,7 +105,7 @@ class Brew(models.Model):
     image = models.ForeignKey('Image', on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.recipe}, {self.user}"
+        return f"{self.id}: {self.recipe}, {self.user}"
 
     def to_dict(self):
         data = {}
@@ -120,7 +120,26 @@ class LogEntry(models.Model):
     datetime = models.DateField()
     text = models.TextField()
     brew = models.ForeignKey(Brew, on_delete=models.CASCADE)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="logs")
+
+    def __str__(self):
+        return f"{self.id}: {self.datetime} {self.user}"
+
+    class Meta:
+        ordering = ['datetime']
+
+class Comment(models.Model):
+    datetime = models.DateField()
+    text = models.TextField()
+    brew = models.ForeignKey(Brew, on_delete=models.CASCADE)
+    logEntry = models.ForeignKey(LogEntry, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="comments")
+
+    def __str__(self):
+        return f"{self.id}: {self.datetime} {self.user}"
+
+    class Meta:
+        ordering = ['datetime']
 
 class Image(models.Model):
     location = models.FileField()

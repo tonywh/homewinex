@@ -77,7 +77,19 @@
 
     <!-- Log tab content -->
     <div class="tab-detail" data-name="Log">
-      Log content
+      <!-- Log entries -->
+      <div id="log-entries">
+        Log entries here.
+      </div>
+
+      <!-- New log entry box -->
+      <form class="log-form" method="post" action="{% url 'brew' %}">
+        {% csrf_token %}
+        <input name="id" value="{{brew.id}}" hidden>
+        <a href="https://commonmark.org/help/" target="_blank">Markdown help</a>
+        <textarea name="logtext" id="logtext" placeholder="New log entry"></textarea>
+        <button type="button" class="btn btn-secondary" disabled>Save</button>
+      </form>
     </div>
   </div>
 {% endblock %}

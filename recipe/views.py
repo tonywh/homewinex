@@ -200,20 +200,76 @@ def newbrew(request):
         return HttpResponseRedirect(F"/brew?id={brew.id}")
 
 def brew(request):
-    if request.user.is_anonymous:
-        return HttpResponse('Unauthorized', status=401)
-
     if request.method == "GET":
         id = int(request.GET.get("id"))
         try:
             brew = Brew.objects.get(id=id)
         except Recipe.DoesNotExist:
-            raise Http404("Brew does not exist")
+            raise Http404(f"Brew {id} does not exist")
         
         recipe = Recipe.objects.get(id=brew.recipe_id)
         data = {
             'brew': brew.to_dict(),
             'recipe': recipe.to_dict(),
             }
-        print(data)
         return render(request, "recipe/brew.html", data )
+
+    else: #move to brewlog
+        # Posting a log entry
+        if request.user.is_anonymous:
+            return HttpResponse('You must be logged in to add logs.', status=401)
+
+        id = int(request.POST.get("id"))
+        try:
+            brew = Brew.objects.get(id=id)
+        except Recipe.DoesNotExist:
+            raise Http404(f"Brew {id} does not exist")
+
+        # Is the user authorised to add a log entry to this brew?
+        if request.user.is_superuser or request.user == brew.user:
+            LogEntry.objects.create(
+                datetime = datetime.datetime.now(),
+                text = request.POST.get('logtext'),
+                brew_id = id,
+                user = request.user
+            )
+            return HttpResponse("")
+
+        else:
+            return HttpResponse("You are not nauthorized to add a log entry to this brew.", status=401)
+
+def brewlog(request):
+    if request.method == "GET":
+        id = int(request.GET.get("id"))
+        try:
+            brew = Brew.objects.get(id=id)
+        except Recipe.DoesNotExist:
+            raise Http404(f"Brew {id} does not exist")
+
+    else: # move to brewcomment
+        # Posting a comment
+        if request.user.is_anonymous:
+            return HttpResponse('You must be logged in to add comments.', status=401)
+
+        id = int(request.POST.get("id"))
+        try:
+            brew = Brew.objects.get(id=id)
+        except Recipe.DoesNotExist:
+            raise Http404(f"Brew {id} does not exist")
+
+        Comment.objects.create(
+            datetime = datetime.datetime.now(),
+            text = request.POST.get('comment'),
+            brew_id = id,
+            logEntry_id = request.POST.get('logentry_id'),
+            user = request.user
+        )
+
+    # Return all log entries and comments for this brew
+    log = LogEntry.objects.filter(brew=brew).values()
+    for logEntry in log:
+        comments = Comment.objects.filter(logEntry=logEntry).values()
+        logEntry['comments'] = comments
+
+    print(log)
+    return JsonResponse({'log': log}, safe=False)
