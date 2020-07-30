@@ -98,7 +98,9 @@ function showRecipe(ev) {
 }
 
 function getLog() {
-
+  
+  document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
+  document.querySelectorAll('.log-form button').forEach( el => el.onclick = saveLog );
 }
 
 function showLog(ev) {
@@ -111,7 +113,6 @@ function showLog(ev) {
   // Set the functions to enable and process the submit buttons 
   document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
   document.querySelectorAll('.log-form button').forEach( el => el.onclick = saveLog );
-
 }
 
 function showTab(name) {
@@ -142,7 +143,7 @@ function enableSubmit(ev) {
 
 function saveLog(ev) {
   const request = new XMLHttpRequest();
-  request.open('POST', `/recipe`);
+  request.open('POST', `/brewlog`);
   const data = new FormData(ev.target.parentElement);
 
   request.onload = showLog;

@@ -4,9 +4,10 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 import datetime
+import markdown2
 
 from django.contrib.auth.models import User
-from .models import Ingredient, Method, Recipe, IngredientUse, Brew, LogEntry, Image, WineStyle, Profile
+from .models import Ingredient, Method, Recipe, IngredientUse, Brew, LogEntry, Comment, Image, WineStyle, Profile
 from . import measures
 
 def index(request):
@@ -197,24 +198,34 @@ def newbrew(request):
                 )
         data['id'] = brew.id
 
-        return HttpResponseRedirect(F"/brew?id={brew.id}")
+        return HttpResponseRedirect(f"/brew?id={brew.id}")
 
 def brew(request):
+    if request.method != "GET":
+        return HttpResponse('The request is not valid.', status=400)
+
+    id = int(request.GET.get("id"))
+    try:
+        brew = Brew.objects.get(id=id)
+    except Recipe.DoesNotExist:
+        raise Http404(f"Brew {id} does not exist")
+    
+    recipe = Recipe.objects.get(id=brew.recipe_id)
+    data = {
+        'brew': brew.to_dict(),
+        'recipe': recipe.to_dict(),
+        }
+    return render(request, "recipe/brew.html", data )
+
+def brewlog(request):
     if request.method == "GET":
         id = int(request.GET.get("id"))
         try:
             brew = Brew.objects.get(id=id)
         except Recipe.DoesNotExist:
             raise Http404(f"Brew {id} does not exist")
-        
-        recipe = Recipe.objects.get(id=brew.recipe_id)
-        data = {
-            'brew': brew.to_dict(),
-            'recipe': recipe.to_dict(),
-            }
-        return render(request, "recipe/brew.html", data )
 
-    else: #move to brewlog
+    else:
         # Posting a log entry
         if request.user.is_anonymous:
             return HttpResponse('You must be logged in to add logs.', status=401)
@@ -226,50 +237,59 @@ def brew(request):
             raise Http404(f"Brew {id} does not exist")
 
         # Is the user authorised to add a log entry to this brew?
-        if request.user.is_superuser or request.user == brew.user:
-            LogEntry.objects.create(
-                datetime = datetime.datetime.now(),
-                text = request.POST.get('logtext'),
-                brew_id = id,
-                user = request.user
-            )
-            return HttpResponse("")
-
-        else:
+        if not request.user.is_superuser and request.user != brew.user:
             return HttpResponse("You are not nauthorized to add a log entry to this brew.", status=401)
 
-def brewlog(request):
-    if request.method == "GET":
-        id = int(request.GET.get("id"))
-        try:
-            brew = Brew.objects.get(id=id)
-        except Recipe.DoesNotExist:
-            raise Http404(f"Brew {id} does not exist")
-
-    else: # move to brewcomment
-        # Posting a comment
-        if request.user.is_anonymous:
-            return HttpResponse('You must be logged in to add comments.', status=401)
-
-        id = int(request.POST.get("id"))
-        try:
-            brew = Brew.objects.get(id=id)
-        except Recipe.DoesNotExist:
-            raise Http404(f"Brew {id} does not exist")
-
-        Comment.objects.create(
+        LogEntry.objects.create(
             datetime = datetime.datetime.now(),
-            text = request.POST.get('comment'),
+            text = request.POST.get('logtext'),
             brew_id = id,
-            logEntry_id = request.POST.get('logentry_id'),
             user = request.user
         )
 
+    return getLog(brew)
+
+def brewcomment(request):
+    if request.user.is_anonymous:
+        return HttpResponse('You must be logged in to add comments.', status=401)
+
+    if request.method == "GET":
+        return HttpResponse('The request is not valid.', status=400)
+
+    id = int(request.POST.get("id"))
+    try:
+        brew = Brew.objects.get(id=id)
+    except Brew.DoesNotExist:
+        raise Http404(f"Brew {id} does not exist")
+    logEnty_id = int(request.POST.get("logentry_id"))
+    try:
+        logEntry = LogEntry.objects.get(id=logEntry_id)
+    except LogEntry.DoesNotExist:
+        raise Http404(f"LogEntry {id} does not exist")
+
+    Comment.objects.create(
+        datetime = datetime.datetime.now(),
+        text = request.POST.get('comment'),
+        brew_id = id,
+        logEntry_id = logEntry_id,
+        user = request.user
+    )
+
+    return getLog(brew)
+
+def getLog(brew):
     # Return all log entries and comments for this brew
-    log = LogEntry.objects.filter(brew=brew).values()
+    log = list(LogEntry.objects.filter(brew=brew).values())
+    htmlLog = []
     for logEntry in log:
-        comments = Comment.objects.filter(logEntry=logEntry).values()
-        logEntry['comments'] = comments
+        logEntry['html'] = markdown2.markdown(logEntry['text'])
+        logEntry['text'] = None
+        comments = list(Comment.objects.filter(logEntry_id=logEntry['id']).values())
+        logEntry['comments'] = []
+        for comment in comments:
+            comment['html'] = markdown2.markdown(comment['text'])
+            comment['text'] = None
+            logEntry['comments'].append(comment)
 
     print(log)
     return JsonResponse({'log': log}, safe=False)

@@ -11,6 +11,8 @@ urlpatterns = [
     path("recipe", views.recipe, name="recipe"),
     path("newbrew", views.newbrew, name="newbrew"),
     path("brew", views.brew, name="brew"),
+    path("brewlog", views.brewlog, name="brewlog"),
+    path("brewcomment", views.brewcomment, name="brewcomment"),
     path("recipedetail", views.recipedetail, name="recipedetail"),
     path('accounts/', include('django.contrib.auth.urls')),
     path("accounts/register", views.register, name="register"),
