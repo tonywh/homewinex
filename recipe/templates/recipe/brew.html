@@ -27,6 +27,36 @@
     {% endverbatim %}
   </script>
 
+  <!-- Template: log entry display-->
+  <script id="logentry" type="text/x-handlebars-template">
+    {% verbatim %}
+    <div class="log-container">
+      <div class="log-entry">
+        <div class="log-date">{{logEntry.date}}</div>
+        <div class="log-html">{{{logEntry.html}}}</div>
+        <div class="log-user">{{logEntry.user}}</div>
+      </div>
+      {{#each logEntry.comment}}
+        <div class="log-comment">
+          <div class="log-comment-date">{{this.date}}</div>
+          <div class="log-comment-html">{{{this.html}}}</div>
+          <div class="log-comment-user">{{this.user}}</div>
+        </div>
+      {{/each }}
+      {% endverbatim %}
+      <a href="#" class="comment-button">Add comment</a>
+      <form class="comment-form" hidden>
+        {% csrf_token %}
+        {% verbatim %}
+        <input name="logEntry_id" value="{{logEntry.id}}" hidden>
+        <a href="https://commonmark.org/help/" target="_blank">Markdown help</a>
+        <textarea name="comment" placeholder="Comment"></textarea>
+        <button type="button" class="btn btn-secondary" disabled>Save</button>
+        {% endverbatim %}
+      </form>
+    </div>
+  </script>
+
   <script type="module" src="{% static "brew.js" %}"></script>
 {% endblock %}
 
@@ -83,7 +113,7 @@
       </div>
 
       <!-- New log entry box -->
-      <form class="log-form" method="post" action="{% url 'brew' %}">
+      <form class="log-form">
         {% csrf_token %}
         <input name="id" value="{{brew.id}}" hidden>
         <a href="https://commonmark.org/help/" target="_blank">Markdown help</a>

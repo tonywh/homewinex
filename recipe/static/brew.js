@@ -1,5 +1,6 @@
 const ingredient_template = Handlebars.compile(document.querySelector('#ingredient').innerHTML);
 const style_template = Handlebars.compile(document.querySelector('#style').innerHTML);
+const logentry_template = Handlebars.compile(document.querySelector('#logentry').innerHTML);
 
 import * as utils from './utils.js';
 
@@ -94,13 +95,18 @@ function showRecipe(ev) {
 
   // Show method
 
+  // Get recipe and ingredient list
   getLog();
 }
 
 function getLog() {
-  
-  document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
-  document.querySelectorAll('.log-form button').forEach( el => el.onclick = saveLog );
+  const request = new XMLHttpRequest();
+  var url = '/brewlog?' + new URLSearchParams({id: brew.id}).toString();
+  request.open('GET', url);
+  request.onload = showLog;
+  var csrftoken = Cookies.get('csrftoken');
+  request.setRequestHeader("X-CSRFToken", csrftoken);
+  request.send();
 }
 
 function showLog(ev) {
@@ -110,7 +116,18 @@ function showLog(ev) {
 
   console.log(data);
 
+  var log_el = document.querySelector("#log-entries");
+  log_el.innerHTML = "";
+  data.log.forEach( logEntry => {
+    log_el.innerHTML += logentry_template({logEntry: logEntry});
+  });
+
+  // Set the function of the add comment buttons
+  document.querySelectorAll('.comment-button').forEach( el => el.onclick = showCommentForm );
+
   // Set the functions to enable and process the submit buttons 
+  document.querySelectorAll('.comment-form textarea').forEach( el => el.oninput = enableSubmit );
+  document.querySelectorAll('.comment-form button').forEach( el => el.onclick = saveComment );
   document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
   document.querySelectorAll('.log-form button').forEach( el => el.onclick = saveLog );
 }
@@ -136,6 +153,12 @@ function showTab(name) {
 
 }
 
+function showCommentForm(ev) {
+  ev.target.parentElement.querySelector('form').hidden = false;
+  ev.target.hidden = true;
+  return false;
+}
+
 function enableSubmit(ev) {
   // Enable if there is log content to submit
   ev.target.parentElement.querySelector('button').disabled = ev.target.value.length == 0;
@@ -144,6 +167,19 @@ function enableSubmit(ev) {
 function saveLog(ev) {
   const request = new XMLHttpRequest();
   request.open('POST', `/brewlog`);
+  const data = new FormData(ev.target.parentElement);
+
+  request.onload = showLog;
+  
+  var csrftoken = Cookies.get('csrftoken');
+  request.setRequestHeader("X-CSRFToken", csrftoken);
+  request.send(data);
+  return false;
+}
+
+function saveComment(ev) {
+  const request = new XMLHttpRequest();
+  request.open('POST', `/brewcomment`);
   const data = new FormData(ev.target.parentElement);
 
   request.onload = showLog;

@@ -256,12 +256,7 @@ def brewcomment(request):
     if request.method == "GET":
         return HttpResponse('The request is not valid.', status=400)
 
-    id = int(request.POST.get("id"))
-    try:
-        brew = Brew.objects.get(id=id)
-    except Brew.DoesNotExist:
-        raise Http404(f"Brew {id} does not exist")
-    logEnty_id = int(request.POST.get("logentry_id"))
+    logEntry_id = int(request.POST.get("logEntry_id"))
     try:
         logEntry = LogEntry.objects.get(id=logEntry_id)
     except LogEntry.DoesNotExist:
@@ -270,12 +265,13 @@ def brewcomment(request):
     Comment.objects.create(
         datetime = datetime.datetime.now(),
         text = request.POST.get('comment'),
-        brew_id = id,
+        brew_id = logEntry.brew_id,
         logEntry_id = logEntry_id,
         user = request.user
     )
 
-    return getLog(brew)
+    return getLog(Brew.objects.get(id=logEntry.brew_id)
+)
 
 def getLog(brew):
     # Return all log entries and comments for this brew
