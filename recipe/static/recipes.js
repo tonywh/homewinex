@@ -19,9 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
 function getRecipeList(order) {
   const request = new XMLHttpRequest();
   if ( document.querySelector(".this-user-only") ) {
-    url = '/recipelist?' + new URLSearchParams({order: order, thisUserOnly: "true"}).toString();
+    url = '/api/recipelist?' + new URLSearchParams({order: order, thisUserOnly: "true"}).toString();
   } else {
-    url = '/recipelist?' + new URLSearchParams({order: order}).toString();
+    url = '/api/recipelist?' + new URLSearchParams({order: order}).toString();
   }
   request.open('GET', url);
   request.onload = showRecipeList;

@@ -56,7 +56,7 @@ function buildRecipeApp() {
 
   // Get recipe and ingredient list
   const request = new XMLHttpRequest();
-  var url = '/recipedetail?' + new URLSearchParams({id: id}).toString();
+  var url = '/api/recipe?' + new URLSearchParams({id: id}).toString();
   request.open('GET', url);
   request.onload = showRecipe;
   var csrftoken = Cookies.get('csrftoken');

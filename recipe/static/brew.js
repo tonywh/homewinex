@@ -33,7 +33,7 @@ function buildBrewApp() {
   // Get recipe and ingredient list
   var recipe_id = document.querySelector('#recipe').dataset.recipe_id;
   const request = new XMLHttpRequest();
-  var url = '/recipedetail?' + new URLSearchParams({id: recipe_id}).toString();
+  var url = '/api/recipe?' + new URLSearchParams({id: recipe_id}).toString();
   request.open('GET', url);
   request.onload = showRecipe;
   var csrftoken = Cookies.get('csrftoken');
@@ -101,7 +101,7 @@ function showRecipe(ev) {
 
 function getLog() {
   const request = new XMLHttpRequest();
-  var url = '/brewlog?' + new URLSearchParams({id: brew.id}).toString();
+  var url = '/api/brewlog?' + new URLSearchParams({id: brew.id}).toString();
   request.open('GET', url);
   request.onload = showLog;
   var csrftoken = Cookies.get('csrftoken');
@@ -166,7 +166,7 @@ function enableSubmit(ev) {
 
 function saveLog(ev) {
   const request = new XMLHttpRequest();
-  request.open('POST', `/brewlog`);
+  request.open('POST', `/api/brewlog`);
   const data = new FormData(ev.target.parentElement);
 
   request.onload = showLog;
@@ -179,7 +179,7 @@ function saveLog(ev) {
 
 function saveComment(ev) {
   const request = new XMLHttpRequest();
-  request.open('POST', `/brewcomment`);
+  request.open('POST', `/api/brewcomment`);
   const data = new FormData(ev.target.parentElement);
 
   request.onload = showLog;

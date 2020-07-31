@@ -10,6 +10,10 @@ from django.contrib.auth.models import User
 from .models import Ingredient, Method, Recipe, IngredientUse, Brew, LogEntry, Comment, Image, WineStyle, Profile
 from . import measures
 
+#
+## Page requests
+#
+
 def index(request):
     return render(request, "recipe/home.html")
 
@@ -18,23 +22,6 @@ def mywine(request):
 
 def recipes(request):
     return render(request, "recipe/recipes.html")
-
-def recipelist(request):
-    order = request.GET.get("order")
-    thisUserOnly = request.GET.get("thisUserOnly")
-    if thisUserOnly:
-        recipelist = Recipe.objects.filter(created_by=request.user)
-    else:
-        recipelist = Recipe.objects.all()
-    arglist = order.split(',')
-    recipes = list(recipelist.order_by(*arglist).values())
-    for recipe in recipes:
-        try:
-            recipe['style'] = WineStyle.objects.filter(id=recipe['style_id']).values()[0]
-            recipe['created_by'] = User.objects.filter(id=recipe['created_by_id']).values()[0]['username']
-        except:
-            pass
-    return JsonResponse({'recipes': recipes}, safe=False)
 
 def newrecipe(request):
     if request.method == "GET":
@@ -73,6 +60,7 @@ def recipe(request):
         data = {'id': id, 'name': recipe.name, 'volume_l': recipe.volume_l, 'descr': recipe.description}
         return render(request, "recipe/recipe.html", data )
     else:
+        # Posted recipe form to save the recipe
         if request.user.is_anonymous:
             return HttpResponse('Unauthorized', status=401)
 
@@ -101,65 +89,8 @@ def recipe(request):
         # Remove old ingredient uses that are no longer used.
         oldUses.delete()
             
+        # Recipe page updates itself so no need to return the recipe page 
         return HttpResponse("")
-
-def recipedetail(request):
-    id = int(request.GET.get("id"))
-    if id < 0:
-        recipe = {'id': -1, 'name': '', 'volume': 0, 'descr': '', 'ingredients': [] }
-    else:
-        recipe = Recipe.objects.get(id=id).to_dict()
-    
-    data = { 
-        'recipe': recipe,
-        'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
-        'styles': list(WineStyle.objects.values()),
-        'methods': list(Method.objects.values()),
-        'liquid': {'units': list(measures.Liquid.UNITS), 'conv': list(measures.Liquid.CONV)},
-        'solid': {'units': list(measures.Solid.UNITS), 'conv': list(measures.Solid.CONV)},
-    }
-
-    if request.user.is_authenticated:
-        data['profile'] = Profile.objects.filter(user=request.user).values()[0]
-    else:
-        data['profile'] = None
-
-    return JsonResponse(data, safe=False)
-
-def register(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            profile, created = Profile.objects.get_or_create(user=user)
-            return HttpResponseRedirect("/accounts/profile")
-
-    form = UserCreationForm()
-    return render(request, "registration/register.html", {'form': form})
-
-def profile(request):
-    if request.user.is_anonymous:
-        return HttpResponse('Unauthorized', status=401)
-
-    user = request.user
-    profile = Profile.objects.get(user=user)
-    if request.method == "POST":
-        user.first_name = request.POST.get("first_name")
-        user.last_name = request.POST.get("last_name")
-        user.save()
-        profile.location = request.POST.get('location')
-        profile.solid_small_units = request.POST.get('solid_small_units')
-        profile.solid_large_units = request.POST.get('solid_large_units')
-        profile.liquid_small_units = request.POST.get('liquid_small_units')
-        profile.liquid_large_units = request.POST.get('liquid_large_units')
-        profile.save()
-        profile = Profile.objects.get(user=user)
-
-    return render(request, "recipe/profile.html", {'user': user, 'profile': profile})
 
 def newbrew(request):
     if request.user.is_anonymous:
@@ -217,7 +148,87 @@ def brew(request):
         }
     return render(request, "recipe/brew.html", data )
 
-def brewlog(request):
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            profile, created = Profile.objects.get_or_create(user=user)
+            return HttpResponseRedirect("/accounts/profile")
+
+    form = UserCreationForm()
+    return render(request, "registration/register.html", {'form': form})
+
+def profile(request):
+    if request.user.is_anonymous:
+        return HttpResponse('Unauthorized', status=401)
+
+    user = request.user
+    profile = Profile.objects.get(user=user)
+    if request.method == "POST":
+        user.first_name = request.POST.get("first_name")
+        user.last_name = request.POST.get("last_name")
+        user.save()
+        profile.location = request.POST.get('location')
+        profile.solid_small_units = request.POST.get('solid_small_units')
+        profile.solid_large_units = request.POST.get('solid_large_units')
+        profile.liquid_small_units = request.POST.get('liquid_small_units')
+        profile.liquid_large_units = request.POST.get('liquid_large_units')
+        profile.save()
+        profile = Profile.objects.get(user=user)
+
+    return render(request, "recipe/profile.html", {'user': user, 'profile': profile})
+
+
+#
+## API requests 
+#
+
+def apiRecipeList(request):
+    order = request.GET.get("order")
+    thisUserOnly = request.GET.get("thisUserOnly")
+    if thisUserOnly:
+        recipelist = Recipe.objects.filter(created_by=request.user)
+    else:
+        recipelist = Recipe.objects.all()
+    arglist = order.split(',')
+    recipes = list(recipelist.order_by(*arglist).values())
+    for recipe in recipes:
+        try:
+            recipe['style'] = WineStyle.objects.filter(id=recipe['style_id']).values()[0]
+            recipe['created_by'] = User.objects.filter(id=recipe['created_by_id']).values()[0]['username']
+        except:
+            pass
+    return JsonResponse({'recipes': recipes}, safe=False)
+
+def apiRecipe(request):
+    id = int(request.GET.get("id"))
+    if id < 0:
+        recipe = {'id': -1, 'name': '', 'volume': 0, 'descr': '', 'ingredients': [] }
+    else:
+        recipe = Recipe.objects.get(id=id).to_dict()
+    
+    data = { 
+        'recipe': recipe,
+        'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
+        'styles': list(WineStyle.objects.values()),
+        'methods': list(Method.objects.values()),
+        'liquid': {'units': list(measures.Liquid.UNITS), 'conv': list(measures.Liquid.CONV)},
+        'solid': {'units': list(measures.Solid.UNITS), 'conv': list(measures.Solid.CONV)},
+    }
+
+    if request.user.is_authenticated:
+        data['profile'] = Profile.objects.filter(user=request.user).values()[0]
+    else:
+        data['profile'] = None
+
+    return JsonResponse(data, safe=False)
+
+def apiBrewLog(request):
     if request.method == "GET":
         id = int(request.GET.get("id"))
         try:
@@ -249,7 +260,7 @@ def brewlog(request):
 
     return getLog(brew)
 
-def brewcomment(request):
+def apiBrewComment(request):
     if request.user.is_anonymous:
         return HttpResponse('You must be logged in to add comments.', status=401)
 
