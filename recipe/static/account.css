@@ -2,15 +2,32 @@
   max-width: 1000px;
   margin: auto;
   padding: 10px;
-  font-size: 1.1em;
+  font-size: 0.8em;
+}
+
+.title {
+  font-size: 1.5em;
 }
 
 label, legend {
   font-style: italic;
+  padding-bottom: 0!important;
+}
+
+.form-control {
+  font-size: 1em;
+}
+
+.form-group {
+  margin-bottom: 0;
+}
+
+.radio-container {
+  padding-bottom: 10px!important;
 }
 
 .form-control-plaintext {
-  font-size: 1.1em;
+  font-size: 1em;
 }
 
 .custom-control-input:checked ~ .custom-control-label::before {

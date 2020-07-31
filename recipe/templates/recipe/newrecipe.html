@@ -9,7 +9,7 @@
 
 {% block body %}
 <div id="new-recipe">
-  <h2>Create New Recipe</h2>
+  <h2 class="title">Create New Recipe</h2>
   <form method="post" action="{% url 'newrecipe' %}">
     {% csrf_token %}
     <div class="form-group row">
@@ -47,7 +47,7 @@
     <div class="form-group row">
       <label for="descr" class="col-sm-4 col-md-3 col-lg-2 col-form-label">Description</label>
       <div class="col-sm-8 col-md-9 col-lg-10">
-        <textarea class="text" name="descr" id="descr" rows="3" maxlength="1000" autofocus placeholder="Optional"></textarea>
+        <textarea class="text" name="descr" id="descr" rows="3" maxlength="1000" placeholder="Optional"></textarea>
       </div>
     </div>
     <div class="form-group row">

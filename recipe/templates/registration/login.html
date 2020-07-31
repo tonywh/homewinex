@@ -16,7 +16,7 @@
     {% endif %}
     {% endif %}
 
-    <h2>Login</h2>
+    <h2 class="title">Login</h2>
     <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
     <table>
@@ -29,7 +29,7 @@
         <td>{{ form.password }}</td>
       </tr>
     </table>
-    <input type="submit" value="Login" />
+    <input class="btn btn-secondary" type="submit" value="Login" />
     <input type="hidden" name="next" value="{{ next }}" />
     </form>
     <br>

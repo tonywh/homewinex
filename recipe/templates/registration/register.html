@@ -7,11 +7,11 @@
     <p>Your passwords didn't match or did not fit the minimum criteria. Please try again.</p>
     {% endif %}
 
-    <h2>Register</h2>
+    <h2 class="title">Register</h2>
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <button type="submit">Register</button>
+      <button class="btn btn-secondary" type="submit">Register</button>
     </form>
   </div>
 

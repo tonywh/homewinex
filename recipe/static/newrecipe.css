@@ -2,13 +2,29 @@
   max-width: 1000px;
   margin: auto;
   padding: 10px;
-  font-size: 1.1em;
+  font-size: 0.8em;
+}
+
+.title {
+  font-size: 1.5em;
 }
 
 label {
   font-style: italic;
 }
 
+.form-control {
+  font-size: 1em;
+}
+
 select {
   padding: 3px;
+}
+
+textarea {
+  width: 100%;
+}
+
+.submit {
+  font-size: 1em;
 }
