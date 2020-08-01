@@ -13,6 +13,7 @@ var descrLineHeight;
 var barChart;
 var profile;
 var graphVisible = true;
+var ingredient_sortable;
 
 document.addEventListener('DOMContentLoaded', () => {
   buildRecipeApp();
@@ -28,7 +29,6 @@ function buildRecipeApp() {
   // Set actions for name and volume inputs
   document.querySelector('#recipe-name').oninput = () => {
     showSaveButton();
-    hideSavedStatus();
   };
   document.querySelector('#volume').oninput = () => {
     recipe.volume_l = document.querySelector('#volume').value;
@@ -42,7 +42,6 @@ function buildRecipeApp() {
   document.querySelector("#recipe-descr").oninput = () => {
     setDescrSize();
     showSaveButton();
-    hideSavedStatus();
   };
 
   // Add actions for buttons
@@ -101,6 +100,7 @@ function showRecipe(ev) {
 
   showStyle();
   showIngredients();
+  disableInputs(true);
   showGraph();
 }
 
@@ -155,10 +155,11 @@ function showIngredients() {
   });
 
   // Create the drag and drop list
-  Sortable.create(ingr_el, {
+  ingredient_sortable = Sortable.create(ingr_el, {
     handle: '.handle', // handle's class
     animation: 150,
     onEnd: dropIngredient,
+    sort: false,
   });
   
   // Set actions for qty changes
@@ -402,7 +403,6 @@ function updateQty(ev) {
   // so that the UI runs smoothly making it a more interactive experience.
 
   showSaveButton();
-  hideSavedStatus();
 
   var qty_kg = ev.target.value;
   var use = recipe.ingredients[ev.target.dataset.index];
@@ -449,8 +449,30 @@ function setDescrSize() {
   descr.rows = lines;
 }
 
+function disableInputs( v ) {
+  document.querySelectorAll('input, textarea, .tltip, select').forEach( el => { el.disabled = v; });
+  ingredient_sortable.option('sort', !v);
+}
+
 function editRecipe() {
-  // Switch recipe from view-only to editable.
+  disableInputs(false);
+  hideElement('#edit-button')
+}
+
+function hideElement(selector) {
+  try {
+    document.querySelector(selector).style.visibility = "hidden";
+  }
+  catch(err) {
+  }
+}
+
+function showElement(selector) {
+  try {
+    document.querySelector(selector).style.visibility = "visible";
+  }
+  catch(err) {
+  }
 }
 
 function brewRecipe() {
@@ -467,7 +489,6 @@ function saveRecipe() {
   request.onload = () => {
     if (request.status == 200) {
       hideSaveButton();
-      showSavedStatus();
     }
   };
   
@@ -479,31 +500,25 @@ function saveRecipe() {
 
 function updateAfterChange() {
   showSaveButton();
-  hideSavedStatus();
   showIngredients();
   showGraph();
 }
 
 function showSaveButton() {
-  try {
-    document.querySelector('#save-button').style.visibility = "visible"
-  }
-  catch(err) {
-  }
+  showElement('#save-button');
+  hideElement('#brew-button');
+  hideSavedStatus();
 }
 
-
 function hideSaveButton() {
-  try {
-    document.querySelector('#save-button').style.visibility = "hidden"
-  }
-  catch(err) {
-  }
+  hideElement('#save-button');
+  showElement('#brew-button');
+  showSavedStatus();
 }
 
 function showSavedStatus() {
   try {
-    document.querySelector('#save-status').style.visibility = "visible"
+    showElement('#save-status');
     document.querySelector('#save-status').classList.add("fade");
   }
   catch(err) {
@@ -512,7 +527,7 @@ function showSavedStatus() {
 
 function hideSavedStatus() {
   try {
-    document.querySelector('#save-status').style.visibility = "hidden"
+    hideElement('#save-status');
     document.querySelector('#save-status').classList.remove("fade");
   }
   catch(err) {

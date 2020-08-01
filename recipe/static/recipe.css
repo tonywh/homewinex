@@ -57,12 +57,12 @@ label, legend {
   border-color: transparent transparent black transparent;
 }
 
-.tltip:hover {
+.tltip:hover:not([disabled]) {
   border-color: rgb(98, 98, 98);
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.tltip:hover .tltiptext {
+.tltip:hover:not([disabled]) .tltiptext {
   visibility: visible;
 }
 
@@ -97,11 +97,6 @@ label, legend {
   padding: 0px 2px 0px 2px;
   margin: 0px;
   width: 100%;
-}
-
-#recipe-descr:hover {
-  border-color: black;
-  border-style: solid;
 }
 
 #recipe-descr-zero {

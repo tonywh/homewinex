@@ -124,4 +124,3 @@ It focuses instead on the files that contain code or data specific to this proje
 * cookie warning
 * recipe: store versions to avoid change to existing brews
 * recipe: see ingredient props while viewing list
-* recipe: view only until click "edit"

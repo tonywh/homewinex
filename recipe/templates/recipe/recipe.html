@@ -92,10 +92,10 @@
         <!-- Title/Volume   Style/Description   Edit/Brew -->
         <div class="row ingredient-table">
           <div class="col-5 full-width">
-            <div class="tltip full-width">
+            <fieldset class="tltip full-width">
               <input type="text" name="name" id="recipe-name" class="form-control-plaintext" value="{{name}}">
               <span class="tltiptext">Rename</span>
-            </div>
+            </fieldset>
             <label class="left-label inline" for="volume">Volume</label>
             <input type="number" step="0.1" name="volume" id="volume" class="form-control inline" value="{{volume_l}}">
             <span class="inline" id="volume-unit">L</span>
@@ -103,11 +103,11 @@
           <div class="col-5 col-md-5 col-lg-4 full-width">
             <span id="recipe-style" data-style_id="{{style_id}}"></span>
             <span id="style-info"></span>
-            <div class="tltip full-width">
+            <fieldset class="tltip full-width">
               <textarea name="descr" id="recipe-descr" class="text form-control-plaintext" rows="1" 
                 maxlength="1000" value="{{descr}}"></textarea>
               <span class="tltiptext">Edit description</span>
-            </div>
+            </fieldset>
           </div>
           <div class="col-1 full-width">
           </div>
