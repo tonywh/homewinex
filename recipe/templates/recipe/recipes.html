@@ -7,7 +7,7 @@
   <script id="recipe_list" type="text/x-handlebars-template">
     {% verbatim %}
       {{# each recipes }}
-        <tr class="recipe-row" data-recipe_id="{{this.id}}">
+        <tr class="recipe-row" data-id="{{this.id}}">
           <td>{{this.name}}</td>
           <td>{{this.style.grapes}}, {{this.style.region}}</td>
           <td>{{this.style.sweetness}} {{this.style.colour}} {{this.style.alcohol}}% alc</td>
@@ -18,7 +18,7 @@
     {% endverbatim %}
   </script>
 
-  <script src="{% static "recipes.js" %}"></script>
+  <script type="module" src="{% static "recipes.js" %}"></script>
 {% endblock %}
 
 {% block body %}
