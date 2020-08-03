@@ -191,10 +191,20 @@ def profile(request):
 def apiRecipeList(request):
     order = request.GET.get("order")
     thisUserOnly = request.GET.get("thisUserOnly")
+    recent = request.GET.get("recent")
     if thisUserOnly:
         recipelist = Recipe.objects.filter(created_by=request.user)
     else:
         recipelist = Recipe.objects.all()
+
+    if recent:
+        days = 7
+        recentlist = []
+        while len(recentlist) < 10 and days <= 448:
+            recentlist = recipelist.filter(create_date__gte=datetime.date.today()-datetime.timedelta(days=days))
+            days *= 2
+        recipelist = recentlist
+
     arglist = order.split(',')
     recipes = list(recipelist.order_by(*arglist).values())
     for recipe in recipes:
@@ -211,7 +221,7 @@ def apiRecipe(request):
         recipe = {'id': -1, 'name': '', 'volume': 0, 'descr': '', 'ingredients': [] }
     else:
         recipe = Recipe.objects.get(id=id).to_dict()
-    
+
     data = { 
         'recipe': recipe,
         'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
@@ -227,6 +237,31 @@ def apiRecipe(request):
         data['profile'] = None
 
     return JsonResponse(data, safe=False)
+
+def apiBrewList(request):
+    order = request.GET.get("order")
+    recent = request.GET.get("recent")
+
+    if recent:
+        days = 7
+        recentlist = []
+        while len(recentlist) < 10 and days <= 448:
+            recentlist = Brew.objects.filter(updated__gte=datetime.date.today()-datetime.timedelta(days=days))
+            days *= 2
+        brewlist = recentlist
+    else:
+        brewlist = Brew.objects.all()
+
+    arglist = order.split(',')
+    brews = list(brewlist.order_by(*arglist).values())
+    for brew in brews:
+        try:
+            brew['user'] = User.objects.filter(id=brew['user_id']).values()[0]['username']
+            brew['recipe'] = Recipe.objects.get(id=brew['recipe_id']).to_dict()
+            brew['recipe']['style'] = WineStyle.objects.filter(id=brew['recipe']['style']).values()[0]
+        except:
+            pass
+    return JsonResponse({'brews': brews}, safe=False)
 
 def apiBrewLog(request):
     if request.method == "GET":

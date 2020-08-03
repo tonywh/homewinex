@@ -16,3 +16,25 @@ h4 {
 p {
   font-size: 0.8em;
 }
+
+#recipe-table, #brew-table {
+  width: 100%;
+  font-size: 0.8em;
+}
+
+.th-name {
+  min-width: 4.5em;
+}
+
+th, .recipe-row, td, .brew-row {
+  padding: 3px;
+  cursor: pointer;
+}
+
+th:hover, .recipe-row:hover, .brew-row:hover {
+  background: #dfdfdf;
+}
+
+#recent-brews {
+  padding-top: 10px;
+}

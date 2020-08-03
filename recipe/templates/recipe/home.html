@@ -4,20 +4,77 @@
   {% load static %}
   <link rel="stylesheet" href="{% static "home.css" %}">
 
-  <script src="{% static "home.js" %}"></script>
+  <script id="recipe_list" type="text/x-handlebars-template">
+    {% verbatim %}
+      {{# each recipes }}
+        <tr class="recipe-row" data-id="{{this.id}}">
+          <td>{{this.create_date}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.style.grapes}}, {{this.style.region}}</td>
+          <td>{{this.style.sweetness}} {{this.style.colour}} {{this.style.alcohol}}% alc</td>
+          <td>{{this.created_by}}</td>
+        </tr>
+      {{/each}}
+    {% endverbatim %}
+  </script>
+  
+  <script id="brew_list" type="text/x-handlebars-template">
+    {% verbatim %}
+      {{# each brews }}
+        <tr class="brew-row" data-id="{{this.id}}">
+          <td>{{this.updated}}</td>
+          <td>{{this.recipe.name}}</td>
+          <td>{{this.recipe.style.sweetness}} {{this.recipe.style.colour}} {{this.recipe.style.alcohol}}% alc</td>
+          <td>{{this.log_count}}</td>
+          <td>{{this.started}}</td>
+          <td>{{this.user}}</td>
+        </tr>
+      {{/each}}
+    {% endverbatim %}
+  </script>
+  
+  <script type="module" src="{% static "home.js" %}"></script>
 {% endblock %}
 
 {% block body %}
   <div class="mainview">
-    <h3>Welcome to Home Wine Exchange.</h3>
-    <p>
-      The aim of this website is to enable home wine enthusiasts make wines of real quality.
-      The HomeWineX recipe app helps create balanced recipes. 
-      User's exchange recipes and brewing experiences. 
-    </p>
-    <p>
-      You can view the site anonymously, but to save a recipe or log a brew you will need to register and login. 
-      If you haven't been here before, the <a href="{% url 'recipes' %}">recipes</a> page is a good place to get started.
-    </p>
+    <div id="welcome">
+      <h3>Welcome to Home Wine Exchange.</h3>
+      <p>
+        HomeWineX is a website for home winemaking enthusiasts. It aims to help improve
+        wine quality by providing data, tools and a forum to exhcnage experiences.
+      </p>
+      <p>
+        You can view the site anonymously, but to save a recipe or log a brew you will 
+        need to register and login. If you haven't been here before, the
+        <a href="{% url 'recipes' %}">recipes</a> page is a good place to get started.
+      </p>
+    </div>
+    <div id="recent-recipes">
+      <h3>Recent activity</h3>
+      <h4>Recipes</h4>
+      <table id="recipe-table">
+        <tr>
+          <th data-order='-create_date'>Date <span class="fa fa-sort"></span></th>
+          <th data-order='name'>Name <span class="fa fa-sort th-name"></span></th>
+          <th data-order='style__grapes,style__region'>Style <span class="fa fa-sort"></span></th>
+          <th data-order='style__sweetness,style__colour'>Type <span class="fa fa-sort"></span></th>
+          <th data-order='created_by'>By <span class="fa fa-sort"></span></th>
+        </tr>
+      </table>
+    </div>
+    <div id="recent-brews">
+      <h4>Brews</h4>
+      <table id="brew-table">
+        <tr>
+          <th data-order='-updated'>Updated <span class="fa fa-sort"></span></th>
+          <th data-order='recipe__name'>Recipe <span class="fa fa-sort th-name"></span></th>
+          <th data-order='recipe__style__sweetness,recipe__style__colour'>Type <span class="fa fa-sort"></span></th>
+          <th data-order='-log_count'>Logs <span class="fa fa-sort"></span></th>
+          <th data-order='-started'>Started <span class="fa fa-sort"></span></th>
+          <th data-order='user'>Brewer <span class="fa fa-sort"></span></th>
+        </tr>
+      </table>
+    </div>
   </div>
 {% endblock %}

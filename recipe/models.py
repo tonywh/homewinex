@@ -103,7 +103,10 @@ class Brew(models.Model):
     recipe = models.ForeignKey(Recipe, on_delete=models.PROTECT)
     size_l = models.FloatField()
     image = models.ForeignKey('Image', on_delete=models.CASCADE, blank=True, null=True)
-
+    started = models.DateField(default=datetime.date.today)
+    updated = models.DateField(default=datetime.date.today)
+    log_count = models.IntegerField(default=0)
+    
     def __str__(self):
         return f"{self.id}: {self.recipe}, {self.user}"
 

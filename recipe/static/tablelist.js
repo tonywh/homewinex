@@ -11,29 +11,25 @@ export class TableList {
     this.listUrl = data.listUrl;            // search url
     this.searchParams = data.searchParams;  // list of additional constant search parameters
     this.responseName = data.responseName;  // Name of the list in the response data
-    this.dateName = data.dateName;          // The name of date variable to be localised
+    this.dateNames = data.dateNames;        // The name of date variable to be localised
     this.itemUrl = data.itemUrl;            // url to get an item's page
-
-    self = this;                            // make context available in callbacks
 
     document.addEventListener('DOMContentLoaded', () => {
 
-      // Default sort order is 'name' in the first column. 
-      // Style the heading to reflect this
-      var th = document.querySelector(self.tableSelector + ' th');
+      // Default is to sort by the first column. 
+      var th = document.querySelector(this.tableSelector + ' th');
       th.style.fontStyle = 'italic';
       th.style.fontSize = '1.1em';
-    
-      self.getList('name');
+      this.getList(th.dataset.order);
     })
   }
 
   getList(order) {
     const request = new XMLHttpRequest();
-    self.searchParams.order = order;
-    var url = self.listUrl + '?' + new URLSearchParams(self.searchParams).toString();
+    this.searchParams.order = order;
+    var url = this.listUrl + '?' + new URLSearchParams(this.searchParams).toString();
     request.open('GET', url);
-    request.onload = self.showList;
+    request.onload = (ev) => {this.showList(ev)};
     var csrftoken = Cookies.get('csrftoken');
     request.setRequestHeader("X-CSRFToken", csrftoken);
     request.send();
@@ -42,40 +38,42 @@ export class TableList {
   showList(ev) {
     const request = ev.target;
     const data = JSON.parse(request.responseText);
-
-    // Convert create dates to locale specific format
-    if ( self.dateName ) {
-      data[self.responseName].forEach( item => {
-        var d = new Date(item[self.dateName]);
-        item[self.dateName] = d.toLocaleDateString();
+    
+    // Convert dates to locale specific format
+    if ( this.dateNames ) {
+      this.dateNames.forEach( name => {
+        data[this.responseName].forEach( item => {
+          var d = new Date(item[name]);
+          item[name] = d.toLocaleDateString();
+        });
       });
     }
 
-    document.querySelectorAll(self.tableSelector + ' ' + self.rowSelector).forEach( row => { row.remove(); });
-    document.querySelector(self.tableSelector).innerHTML += self.listTemplate(data);
+    document.querySelectorAll(this.tableSelector + ' ' + this.rowSelector).forEach( row => { row.remove(); });
+    document.querySelector(this.tableSelector).innerHTML += this.listTemplate(data);
 
     // Set on click actions for headings
-    document.querySelectorAll(self.tableSelector + ' th').forEach( heading => {
-      heading.onclick = self.setSortOrder;
+    document.querySelectorAll(this.tableSelector + ' th').forEach( heading => {
+      heading.onclick = (ev) => {this.setSortOrder(ev)};
     });
 
     // Set on click actions for rows
-    document.querySelectorAll(self.tableSelector + ' ' + self.rowSelector).forEach( row => {
+    document.querySelectorAll(this.tableSelector + ' ' + this.rowSelector).forEach( row => {
       row.onclick = (ev) => {
-        var url = self.itemUrl + '?' + new URLSearchParams({id: ev.currentTarget.dataset.id}).toString();
+        var url = this.itemUrl + '?' + new URLSearchParams({id: ev.currentTarget.dataset.id}).toString();
         window.location.href = url;
       };
     });
   }
 
   setSortOrder(ev) {
-    document.querySelectorAll(self.tableSelector + ' th').forEach( heading => {
+    document.querySelectorAll(this.tableSelector + ' th').forEach( heading => {
       heading.style.fontStyle = 'normal';
       heading.style.fontSize = '1em';
     });
 
     ev.target.style.fontStyle = 'italic';
     ev.target.style.fontSize = '1.1em';
-    self.getList(ev.target.dataset.order);
+    this.getList(ev.target.dataset.order);
   }
 }
