@@ -18,7 +18,7 @@ def index(request):
     return render(request, "recipe/home.html")
 
 def mywine(request):
-    return render(request, "recipe/recipes.html", {'thisUserOnly': True})
+    return render(request, "recipe/mywine.html")
 
 def recipes(request):
     return render(request, "recipe/recipes.html")
@@ -241,16 +241,19 @@ def apiRecipe(request):
 def apiBrewList(request):
     order = request.GET.get("order")
     recent = request.GET.get("recent")
+    thisUserOnly = request.GET.get("thisUserOnly")
+    if thisUserOnly:
+        brewlist = Brew.objects.filter(user=request.user)
+    else:
+        brewlist = Brew.objects.all()
 
     if recent:
         days = 7
         recentlist = []
         while len(recentlist) < 10 and days <= 448:
-            recentlist = Brew.objects.filter(updated__gte=datetime.date.today()-datetime.timedelta(days=days))
+            recentlist = brewlist.filter(updated__gte=datetime.date.today()-datetime.timedelta(days=days))
             days *= 2
         brewlist = recentlist
-    else:
-        brewlist = Brew.objects.all()
 
     arglist = order.split(',')
     brews = list(brewlist.order_by(*arglist).values())

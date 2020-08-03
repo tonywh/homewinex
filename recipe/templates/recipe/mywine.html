@@ -1,0 +1,66 @@
+{% extends "recipe/base.html" %}
+
+{% block head %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static "mywine.css" %}">
+
+  <script id="recipe_list" type="text/x-handlebars-template">
+    {% verbatim %}
+      {{# each recipes }}
+        <tr class="recipe-row" data-id="{{this.id}}">
+          <td>{{this.name}}</td>
+          <td>{{this.style.grapes}}, {{this.style.region}}</td>
+          <td>{{this.style.sweetness}} {{this.style.colour}} {{this.style.alcohol}}% alc</td>
+          <td>{{this.create_date}}</td>
+        </tr>
+      {{/each}}
+    {% endverbatim %}
+  </script>
+
+  <script id="brew_list" type="text/x-handlebars-template">
+    {% verbatim %}
+      {{# each brews }}
+        <tr class="brew-row" data-id="{{this.id}}">
+          <td>{{this.updated}}</td>
+          <td>{{this.recipe.name}}</td>
+          <td>{{this.recipe.style.sweetness}} {{this.recipe.style.colour}} {{this.recipe.style.alcohol}}% alc</td>
+          <td>{{this.log_count}}</td>
+          <td>{{this.started}}</td>
+        </tr>
+      {{/each}}
+    {% endverbatim %}
+  </script>
+  
+  <script type="module" src="{% static "mywine.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class="mainview">
+    <div id="my-recipes">
+      <h3>My Recipes</h3>
+      <table id="recipe-table" {% if thisUserOnly %}class="this-user-only"{% endif %}>
+        <tr>
+          <th id="th-name" data-order='name'>Name <span class="fa fa-sort"></span></th>
+          <th data-order='style__grapes,style__region'>Style <span class="fa fa-sort"></span></th>
+          <th data-order='style__sweetness,style__colour'>Type <span class="fa fa-sort"></span></th>
+          <th data-order='create_date'>Date <span class="fa fa-sort"></span></th>
+        </tr>
+      </table>
+      <form action="/newrecipe"><button type="link" class="m-1 btn btn-secondary">
+        New recipe
+      </button></form>
+    </div>
+    <div id="my-brews">
+      <h3>My Brews</h3>
+      <table id="brew-table">
+        <tr>
+          <th data-order='-updated'>Updated <span class="fa fa-sort"></span></th>
+          <th data-order='recipe__name'>Recipe <span class="fa fa-sort th-name"></span></th>
+          <th data-order='recipe__style__sweetness,recipe__style__colour'>Type <span class="fa fa-sort"></span></th>
+          <th data-order='-log_count'>Logs <span class="fa fa-sort"></span></th>
+          <th data-order='-started'>Started <span class="fa fa-sort"></span></th>
+        </tr>
+      </table>
+    </div>
+  </div>
+{% endblock %}
