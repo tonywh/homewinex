@@ -3,11 +3,12 @@
 {% block head %}
   {% load static %}
   <link rel="stylesheet" href="{% static "brew.css" %}">
+  <link rel="stylesheet" href="{% static "hwx-table.css" %}">
 
   <!-- Template: content of an ingredient row-->
   <script id="ingredient" type="text/x-handlebars-template">
     {% verbatim %}
-      <tr class="ingredient-data">
+      <tr class="ingredient-data hwx-tr">
         <td class="qty">{{ingredient.qty}}</td>
         <td class="ingredient-name">{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}</td>
         <td class="sugar">{{ingredient.sugar}}</td>
@@ -22,8 +23,10 @@
   <!-- Template: wine style display-->
   <script id="style" type="text/x-handlebars-template">
     {% verbatim %}
-      <div>Style: {{style.grapes}}, {{style.region}}</div>
-      <div>{{style.sweetness}} {{style.colour}}, {{style.alcohol}}% alcohol</div>
+      <div>
+        <i>Style: </i>{{style.grapes}}, {{style.region}}; 
+        {{style.sweetness}} {{style.colour}}, {{style.alcohol}}% alcohol
+      </div>
     {% endverbatim %}
   </script>
 
@@ -32,28 +35,29 @@
     {% verbatim %}
     <div class="log-container">
       <div class="log-entry">
-        <div class="log-date">{{logEntry.date}}</div>
-        <div class="log-html">{{{logEntry.html}}}</div>
-        <div class="log-user">{{logEntry.user}}</div>
+        <div class="log-date">{{logEntry.datetime}}</div>
+        <div class="log-text">{{{logEntry.text}}}</div>
       </div>
-      {{#each logEntry.comment}}
+      {{#each logEntry.comments}}
         <div class="log-comment">
-          <div class="log-comment-date">{{this.date}}</div>
-          <div class="log-comment-html">{{{this.html}}}</div>
-          <div class="log-comment-user">{{this.user}}</div>
+          <span class="log-comment-text">{{{this.text}}}</span>
+          &ndash;
+          <a class="log-comment-user" href="#">{{this.user}}</a>
+          <span class="log-comment-date">{{this.datetime}}</span>
         </div>
       {{/each }}
       {% endverbatim %}
-      <a href="#" class="comment-button">Add comment</a>
-      <form class="comment-form" hidden>
-        {% csrf_token %}
-        {% verbatim %}
-        <input name="logEntry_id" value="{{logEntry.id}}" hidden>
-        <a href="https://commonmark.org/help/" target="_blank">Markdown help</a>
-        <textarea name="comment" placeholder="Comment"></textarea>
-        <button type="button" class="btn btn-secondary" disabled>Save</button>
-        {% endverbatim %}
-      </form>
+      <div class="new-comment">
+        <a href="#" class="comment-button">Add comment</a>
+        <form class="comment-form" hidden>
+          {% csrf_token %}
+          {% verbatim %}
+          <input name="logEntry_id" value="{{logEntry.id}}" hidden>
+          <textarea name="comment" placeholder="Comment"></textarea>
+          <button type="button" class="btn btn-secondary" disabled>Save</button>
+          {% endverbatim %}
+        </form>
+      </div>
     </div>
   </script>
 
@@ -68,10 +72,11 @@
     <!-- <Style>    <Style info>                    -->  
     <div class="page-heading">
       <span id="brew" data-brew_id="{{brew.id}}"></span>
-      Brew: <span class="inline" id="recipe" data-recipe_id="{{brew.recipe_id}}">{{recipe.name}}</span>,
-      Volume: <span class="inline" id="volume">{{brew.size_l}}</span>
-      <span class="inline" id="volume-unit">L</span>
-      <span class="inline author">{{brew.user}}</span>
+      <h3>Brewing</h3>
+      <span class="inline" id="recipe" data-recipe_id="{{brew.recipe_id}}">{{recipe.name}}</span>
+      <span class="inline" id="volume">{{brew.size_l}}</span>
+      <span class="inline" id="volume-unit">L</span>,
+      <i>Brewer:</i> <span class="inline author">{{brew.user}}</span>
       <span id="recipe-style"></span>
       <span id="recipe-volume" data-recipe_volume_l="{{recipe.volume_l}}"></span>
     </div>
@@ -86,7 +91,7 @@
 
     <!-- Ingredients tab content -->
     <div class="tab-detail" data-name="Ingredients">
-      <table class="table" id="ingredients-table">
+      <table class="table hwx-table" id="ingredients-table">
         <thead>
           <th>Qty<br><span id="qty-unit"></span></th>
           <th>Name</th>
@@ -116,7 +121,6 @@
       <form class="log-form">
         {% csrf_token %}
         <input name="id" value="{{brew.id}}" hidden>
-        <a href="https://commonmark.org/help/" target="_blank">Markdown help</a>
         <textarea name="logtext" id="logtext" placeholder="New log entry"></textarea>
         <button type="button" class="btn btn-secondary" disabled>Save</button>
       </form>

@@ -3,11 +3,12 @@
 {% block head %}
   {% load static %}
   <link rel="stylesheet" href="{% static "home.css" %}">
+  <link rel="stylesheet" href="{% static "hwx-table.css" %}">
 
   <script id="recipe_list" type="text/x-handlebars-template">
     {% verbatim %}
       {{# each recipes }}
-        <tr class="recipe-row" data-id="{{this.id}}">
+        <tr class="recipe-row hwx-tr" data-id="{{this.id}}">
           <td>{{this.create_date}}</td>
           <td>{{this.name}}</td>
           <td>{{this.style.grapes}}, {{this.style.region}}</td>
@@ -21,7 +22,7 @@
   <script id="brew_list" type="text/x-handlebars-template">
     {% verbatim %}
       {{# each brews }}
-        <tr class="brew-row" data-id="{{this.id}}">
+        <tr class="brew-row hwx-tr" data-id="{{this.id}}">
           <td>{{this.updated}}</td>
           <td>{{this.recipe.name}}</td>
           <td>{{this.recipe.style.sweetness}} {{this.recipe.style.colour}} {{this.recipe.style.alcohol}}% alc</td>
@@ -46,14 +47,13 @@
       </p>
       <p>
         You can view the site anonymously, but to save a recipe or log a brew you will 
-        need to register and login. If you haven't been here before, the
-        <a href="{% url 'recipes' %}">recipes</a> page is a good place to get started.
+        need to register and login. 
       </p>
     </div>
     <div id="recent-recipes">
       <h3>Recent activity</h3>
       <h4>Recipes</h4>
-      <table id="recipe-table">
+      <table id="recipe-table" class="hwx-table">
         <tr>
           <th data-order='-create_date'>Date <span class="fa fa-sort"></span></th>
           <th data-order='name'>Name <span class="fa fa-sort th-name"></span></th>
@@ -65,7 +65,7 @@
     </div>
     <div id="recent-brews">
       <h4>Brews</h4>
-      <table id="brew-table">
+      <table id="brew-table" class="hwx-table">
         <tr>
           <th data-order='-updated'>Updated <span class="fa fa-sort"></span></th>
           <th data-order='recipe__name'>Recipe <span class="fa fa-sort th-name"></span></th>

@@ -3,11 +3,12 @@
 {% block head %}
   {% load static %}
   <link rel="stylesheet" href="{% static "mywine.css" %}">
+  <link rel="stylesheet" href="{% static "hwx-table.css" %}">
 
   <script id="recipe_list" type="text/x-handlebars-template">
     {% verbatim %}
       {{# each recipes }}
-        <tr class="recipe-row" data-id="{{this.id}}">
+        <tr class="recipe-row hwx-tr" data-id="{{this.id}}">
           <td>{{this.name}}</td>
           <td>{{this.style.grapes}}, {{this.style.region}}</td>
           <td>{{this.style.sweetness}} {{this.style.colour}} {{this.style.alcohol}}% alc</td>
@@ -20,7 +21,7 @@
   <script id="brew_list" type="text/x-handlebars-template">
     {% verbatim %}
       {{# each brews }}
-        <tr class="brew-row" data-id="{{this.id}}">
+        <tr class="brew-row hwx-tr" data-id="{{this.id}}">
           <td>{{this.updated}}</td>
           <td>{{this.recipe.name}}</td>
           <td>{{this.recipe.style.sweetness}} {{this.recipe.style.colour}} {{this.recipe.style.alcohol}}% alc</td>
@@ -38,7 +39,7 @@
   <div class="mainview">
     <div id="my-recipes">
       <h3>My Recipes</h3>
-      <table id="recipe-table" {% if thisUserOnly %}class="this-user-only"{% endif %}>
+      <table id="recipe-table" class="hwx-table">
         <tr>
           <th id="th-name" data-order='name'>Name <span class="fa fa-sort"></span></th>
           <th data-order='style__grapes,style__region'>Style <span class="fa fa-sort"></span></th>
@@ -52,7 +53,7 @@
     </div>
     <div id="my-brews">
       <h3>My Brews</h3>
-      <table id="brew-table">
+      <table id="brew-table" class="hwx-table">
         <tr>
           <th data-order='-updated'>Updated <span class="fa fa-sort"></span></th>
           <th data-order='recipe__name'>Recipe <span class="fa fa-sort th-name"></span></th>

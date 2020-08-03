@@ -9,20 +9,6 @@ h3 {
   font-size: 1em;
 }
 
-#recipe-table {
-  width: 100%;
-  font-size: 0.8em;
-}
-
 #th-name {
   min-width: 4.5em;
-}
-
-th, .recipe-row, td {
-  padding: 3px;
-  cursor: pointer;
-}
-
-th:hover, .recipe-row:hover {
-  background: #dfdfdf;
 }

@@ -327,14 +327,17 @@ def getLog(brew):
     log = list(LogEntry.objects.filter(brew=brew).values())
     htmlLog = []
     for logEntry in log:
-        logEntry['html'] = markdown2.markdown(logEntry['text'])
-        logEntry['text'] = None
+        try:
+            logEntry['user'] = User.objects.filter(id=logEntry['user_id']).values()[0]['username']
+        except:
+            pass
         comments = list(Comment.objects.filter(logEntry_id=logEntry['id']).values())
         logEntry['comments'] = []
         for comment in comments:
-            comment['html'] = markdown2.markdown(comment['text'])
-            comment['text'] = None
+            try:
+                comment['user'] = User.objects.filter(id=comment['user_id']).values()[0]['username']
+            except:
+                pass
             logEntry['comments'].append(comment)
 
-    print(log)
     return JsonResponse({'log': log}, safe=False)

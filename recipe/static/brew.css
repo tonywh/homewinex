@@ -1,12 +1,18 @@
 .mainview {
   max-width: 1000px;
   margin: auto;
-  font-size: 0.8em;
+  font-size: 1em;
+}
+
+h3 {
+  font-size: 1.5em;
 }
 
 .nav-pills .nav-link {
   color: #014101;
+  background-color: #f8f8f8!important;
   font-size: 1.1em;
+  margin-bottom: 6px;
 }
 
 .nav-pills .nav-link.active, 
@@ -14,4 +20,43 @@
 .nav-pills .nav-link:hover {
   color: #014101;
   background-color: #fff7e0!important;
+}
+
+.nav-pills .nav-link.active, 
+.nav-pills .nav-link.active:hover {
+  border-bottom: solid 2px pink;
+}
+
+.log-container {
+  font-size: 0.8em;
+  border-top: solid 1px lightgrey;
+  padding: 0 10px 0 10px;
+}
+
+.log-date {
+  font-size: 1.1em;
+}
+
+.log-comment {
+  border-top: solid 1px lightgrey;
+  padding-left: 10px;
+}
+
+.log-comment-date {
+  color: grey;
+}
+
+.new-comment {
+  border-top: solid 1px lightgrey;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-form textarea {
+  width: 100%;
+}
+
+#logtext {
+  width: 100%;
+  font-size: 0.8em;
 }

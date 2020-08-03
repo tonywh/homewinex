@@ -119,6 +119,12 @@ function showLog(ev) {
   var log_el = document.querySelector("#log-entries");
   log_el.innerHTML = "";
   data.log.forEach( logEntry => {
+    var d = new Date(logEntry.datetime);
+    logEntry.datetime = d.toLocaleDateString();
+    logEntry.comments.forEach( comment => {
+      var d = new Date(comment.datetime);
+      comment.datetime = d.toLocaleDateString();
+    });
     log_el.innerHTML += logentry_template({logEntry: logEntry});
   });
 

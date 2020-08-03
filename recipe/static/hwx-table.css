@@ -1,0 +1,23 @@
+.hwx-table {
+  width: 100%;
+  font-size: 0.8em;
+  border: 1px solid lightgrey;
+  border-spacing: 0;
+}
+
+.hwx-table th, .hwx-table tr, .hwx-table td {
+  padding: 3px;
+  cursor: pointer;
+}
+
+.hwx-table th, .hwx-table td {
+  border-bottom: 1px solid  lightgrey;
+}
+
+.hwx-table th:hover, .hwx-table .hwx-tr:hover {
+  background: #dfdfdf;
+}
+
+.hwx-table tr:last-child > td {
+  border-bottom: none;
+}

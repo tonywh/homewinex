@@ -3,11 +3,12 @@
 {% block head %}
   {% load static %}
   <link rel="stylesheet" href="{% static "recipes.css" %}">
+  <link rel="stylesheet" href="{% static "hwx-table.css" %}">
 
   <script id="recipe_list" type="text/x-handlebars-template">
     {% verbatim %}
       {{# each recipes }}
-        <tr class="recipe-row" data-id="{{this.id}}">
+        <tr class="recipe-row hwx-tr" data-id="{{this.id}}">
           <td>{{this.name}}</td>
           <td>{{this.style.grapes}}, {{this.style.region}}</td>
           <td>{{this.style.sweetness}} {{this.style.colour}} {{this.style.alcohol}}% alc</td>
@@ -23,7 +24,7 @@
 
 {% block body %}
   <div class="mainview">
-    <table id="recipe-table" {% if thisUserOnly %}class="this-user-only"{% endif %}>
+    <table id="recipe-table" class="hwx-table">
       <tr>
         <th id="th-name" data-order='name'>Name <span class="fa fa-sort"></span></th>
         <th data-order='style__grapes,style__region'>Style <span class="fa fa-sort"></span></th>
