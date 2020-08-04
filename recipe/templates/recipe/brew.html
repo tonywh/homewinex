@@ -36,7 +36,7 @@
     <div class="log-container">
       <div class="log-entry">
         <div class="log-date">{{logEntry.datetime}}</div>
-        <div class="log-text">{{{logEntry.text}}}</div>
+        <div class="log-text"><pre>{{{logEntry.text}}}</pre></div>
       </div>
       {{#each logEntry.comments}}
         <div class="log-comment">
@@ -118,10 +118,13 @@
       </div>
 
       <!-- New log entry box -->
-      <form class="log-form">
+      <div class="log-entry-button-container">
+        <button class="btn btn-secondary log-entry-button">Add log entry</button>
+      </div>
+      <form class="log-form" hidden>
         {% csrf_token %}
         <input name="id" value="{{brew.id}}" hidden>
-        <textarea name="logtext" id="logtext" placeholder="New log entry"></textarea>
+        <textarea name="logtext" id="logtext" rows="10" placeholder="New log entry"></textarea>
         <button type="button" class="btn btn-secondary" disabled>Save</button>
       </form>
     </div>

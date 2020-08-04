@@ -114,8 +114,6 @@ function showLog(ev) {
   var request = ev.target;
   const data = JSON.parse(request.responseText);
 
-  console.log(data);
-
   var log_el = document.querySelector("#log-entries");
   log_el.innerHTML = "";
   data.log.forEach( logEntry => {
@@ -127,6 +125,12 @@ function showLog(ev) {
     });
     log_el.innerHTML += logentry_template({logEntry: logEntry});
   });
+
+  // Set the function and display of the add log entry button and form
+  document.querySelector('.log-entry-button').onclick = showNewLogEntryForm;
+  document.querySelector('.log-entry-button').hidden = false;
+  document.querySelector('.log-form').hidden = true;
+  document.querySelector('.log-form textarea').value = "";
 
   // Set the function of the add comment buttons
   document.querySelectorAll('.comment-button').forEach( el => el.onclick = showCommentForm );
@@ -157,6 +161,16 @@ function showTab(name) {
     }
   });
 
+}
+
+function showNewLogEntryForm(ev) {
+  var form = document.querySelector('.log-form')
+  form.hidden = false;
+  ev.target.hidden = true;
+  window.scrollTo(0,document.body.scrollHeight);
+  form.querySelector('textarea').focus();
+
+  return false;
 }
 
 function showCommentForm(ev) {
