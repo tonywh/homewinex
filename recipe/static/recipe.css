@@ -66,10 +66,37 @@ label, legend {
   visibility: visible;
 }
 
+@media (max-width: 767px) {
+  .mobile {
+    display: inline;
+  }
+  .non-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .mobile {
+    display: none;
+  }
+  .non-mobile {
+    display: inline;
+  }
+}
+
 .btn {
   font-size: 1em;
   padding: 2px 5px 2px 5px;
   margin: 0;
+}
+
+#edit-button, #brew-button {
+  margin-left: 0!important;
+}
+
+#brew-button {
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .left-label {
@@ -105,6 +132,7 @@ label, legend {
 
 .ingredient-table .heading {
   text-align: center;
+  padding: 0;
 }
 
 .ingredient-table {
