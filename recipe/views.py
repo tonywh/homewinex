@@ -268,33 +268,60 @@ def apiBrewList(request):
 
 def apiBrewLog(request):
     if request.method == "GET":
-        id = int(request.GET.get("id"))
+        brew_id = int(request.GET.get("brew_id"))
         try:
-            brew = Brew.objects.get(id=id)
+            brew = Brew.objects.get(id=brew_id)
         except Recipe.DoesNotExist:
-            raise Http404(f"Brew {id} does not exist")
+            raise Http404(f"Brew {brew_id} does not exist")
 
     else:
         # Posting a log entry
         if request.user.is_anonymous:
             return HttpResponse('You must be logged in to add logs.', status=401)
 
-        id = int(request.POST.get("id"))
-        try:
-            brew = Brew.objects.get(id=id)
-        except Recipe.DoesNotExist:
-            raise Http404(f"Brew {id} does not exist")
+        brew_id = request.POST.get("brew_id")
+        logEntry_id = request.POST.get("logEntry_id")
+        if brew_id:
+            try:
+                brew = Brew.objects.get(id=int(brew_id))
+            except Brew.DoesNotExist:
+                raise Http404(f"Brew {brew_id} does not exist")
 
-        # Is the user authorised to add a log entry to this brew?
-        if not request.user.is_superuser and request.user != brew.user:
-            return HttpResponse("You are not nauthorized to add a log entry to this brew.", status=401)
+            # Is the user authorised to add a log entry to this brew?
+            if not request.user.is_superuser and request.user != brew.user:
+                return HttpResponse("You are not nauthorized to add a log entry to this brew.", status=401)
 
-        LogEntry.objects.create(
-            datetime = datetime.datetime.now(),
-            text = request.POST.get('logtext'),
-            brew_id = id,
-            user = request.user
-        )
+            LogEntry.objects.create(
+                datetime = datetime.datetime.now(),
+                text = request.POST.get('logtext').rstrip(" \t\r\n"),
+                brew_id = brew_id,
+                user = request.user
+            )
+
+            brew.log_count = LogEntry.objects.filter(brew_id=brew_id).count()
+            brew.updated = datetime.datetime.now()
+            brew.save()
+
+        elif logEntry_id:
+            try:
+                logEntry = LogEntry.objects.get(id=int(logEntry_id))
+            except LogEntry.DoesNotExist:
+                raise Http404(f"Log entry {logEntry_id} does not exist")
+
+            # Is the user authorised to edit a log entry to this brew?
+            if not request.user.is_superuser and request.user != logEntry.brew.user:
+                return HttpResponse("You are not nauthorized to add a log entry to this brew.", status=401)
+
+            logEntry.text = request.POST.get('logtext').rstrip(" \t\r\n")
+            logEntry.user = request.user
+            logEntry.save()
+            brew = logEntry.brew
+            brew.log_count = LogEntry.objects.filter(brew_id=brew.id).count()
+            brew.updated = datetime.datetime.now()
+            brew.save()
+
+        else:
+            return HttpResponse("Request must contain brew_id or logEntry_id", status=400)
 
     return getLog(brew)
 
@@ -313,7 +340,7 @@ def apiBrewComment(request):
 
     Comment.objects.create(
         datetime = datetime.datetime.now(),
-        text = request.POST.get('comment'),
+        text = request.POST.get('comment').rstrip(" \t\r\n"),
         brew_id = logEntry.brew_id,
         logEntry_id = logEntry_id,
         user = request.user

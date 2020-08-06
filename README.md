@@ -100,17 +100,17 @@ It focuses instead on the files that contain code or data specific to this proje
 | "My Wine" view                              | Javascript, Python, Django  |
 | Display weights and volumes in chosen units | Javascript                  |
 | Read-only view for anonymous users          | Javascript, Python, Django  |
+| Home / introduction                         | HTML                        |
+| Website activity view                       | Javascript, Python, Django  |
+| Recipe brew logging                         | Javascript, Python, Django  |
 
 ### Future additions
 | Feature                                     | Technology                  |
 | -----------------------------------------   | --------------------------- |
 | Recipe private/public control               | Javascript, Python, Django  |
-| Recipe brew logging                         | Javascript, Python, Django  |
 | Recipe review and rating                    | Javascript, Python, Django  |
-| Website activity view                       | Javascript, Python, Django  |
 | Change password                             | Django/SQL database         |
 | About + acknowledgements                    | HTML                        |
-| Home / introduction                         | HTML                        |
 | Help                                        | HTML                        |
 | Protect registration from bots              | ReCaptcha                   |
 | Recipe: save as new                         | Javascript                  |
@@ -118,8 +118,8 @@ It focuses instead on the files that contain code or data specific to this proje
 ### Todo
 * units: selection per ingredient
 * units: default amount in database, choose appropriate units
-* edit recipe: only author or admin
-* drag: don't allow drag from ingredient name - too easy to hit accidentally
+* recipe: edit - only author or admin
+* recipe: drag, don't allow drag from ingredient name - too easy to hit accidentally
 * mobile: switch to landscape
 * cookie warning
 * recipe: store versions to avoid change to existing brews
@@ -129,4 +129,6 @@ It focuses instead on the files that contain code or data specific to this proje
 * recipe: ingredient delete buttons are active in read-only mode
 * recipe: no mouse change on hover over dnd elements
 * recipe: no changes on hover over disabled ingredinet Add button
-* brew: update log entry count and updated date
+* brew: delete existing log entry
+* brew: edit / delete existing comment
+* brew: select initial tag display using url (e.g. tab=Log)

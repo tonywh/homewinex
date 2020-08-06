@@ -37,8 +37,23 @@ h3 {
   padding: 0 10px 0 10px;
 }
 
+.fa {
+  color: inherit;
+}
+
+.bottom-link {
+  color: blue;
+  font-size: 1em;
+  margin-bottom: 3px;
+}
+
 .log-date {
   font-size: 1.2em;
+}
+
+.log-options {
+  font-size: 0.9em;
+  float: right;
 }
 
 .log-comment {
@@ -79,8 +94,13 @@ h3 {
   font-size: 0.8em;
 }
 
-.log-text pre {
+.log-text {
   font-size: 1em;
   font-family: Arial, Helvetica, sans-serif;
-  margin: 5px;
+  padding: 3px 0 3px 5px;
+}
+
+.save-button, .cancel-button {
+  margin-top: 3px;
+  margin-bottom: 3px;
 }

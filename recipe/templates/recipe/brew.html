@@ -35,8 +35,21 @@
     {% verbatim %}
     <div class="log-container">
       <div class="log-entry">
+        <div class="log-options">
+          <a href="" class="log-edit">edit</a>
+          &nbsp;&nbsp;&nbsp;&nbsp;
+          <a href="" class="log-delete">delete</a>
+        </div>
         <div class="log-date">{{logEntry.datetime}}</div>
-        <div class="log-text"><pre>{{{logEntry.text}}}</pre></div>
+        <form class="log-form">
+          {% endverbatim %}
+          {% csrf_token %}
+          {% verbatim %}
+          <input name="logEntry_id" value="{{logEntry.id}}" hidden>
+          <textarea name="logtext" class="form-control-plaintext log-text" readonly>{{logEntry.text}}</textarea>
+          <button type="button" class="btn btn-secondary save-button" disabled hidden>Save</button>
+          <button type="button" class="btn btn-secondary cancel-button" hidden>Cancel</button>
+        </form>
       </div>
       {{#each logEntry.comments}}
         <div class="log-comment">
@@ -112,6 +125,8 @@
 
     <!-- Log tab content -->
     <div class="tab-detail" data-name="Log">
+      <div class="bottom-link"><a href="#bottom"><span class="fa fa-arrow-circle-down"></span> bottom</a></div>
+
       <!-- Log entries -->
       <div id="log-entries">
         Log entries here.
@@ -121,12 +136,14 @@
       <div class="log-entry-button-container">
         <button class="btn btn-secondary log-entry-button">Add log entry</button>
       </div>
-      <form class="log-form" hidden>
+      <form class="new-log-form" hidden>
         {% csrf_token %}
-        <input name="id" value="{{brew.id}}" hidden>
+        <input name="brew_id" value="{{brew.id}}" hidden>
         <textarea name="logtext" id="logtext" rows="10" placeholder="New log entry"></textarea>
         <button type="button" class="btn btn-secondary" disabled>Save</button>
       </form>
+
+      <a id="bottom"></a>
     </div>
   </div>
 {% endblock %}

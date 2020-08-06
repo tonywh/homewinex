@@ -42,3 +42,7 @@ html {
   margin: 0em;
   border: none;
 }
+
+.btn {
+  padding: 3px 6px 3px 6px;
+}

@@ -101,7 +101,7 @@ function showRecipe(ev) {
 
 function getLog() {
   const request = new XMLHttpRequest();
-  var url = '/api/brewlog?' + new URLSearchParams({id: brew.id}).toString();
+  var url = '/api/brewlog?' + new URLSearchParams({brew_id: brew.id}).toString();
   request.open('GET', url);
   request.onload = showLog;
   var csrftoken = Cookies.get('csrftoken');
@@ -126,20 +126,35 @@ function showLog(ev) {
     log_el.innerHTML += logentry_template({logEntry: logEntry});
   });
 
+  // Set the log entry textarea heights and edit and delete functions
+  document.querySelectorAll('.log-edit').forEach( el => el.onclick = editLogEntry );
+  document.querySelectorAll('.log-delete').forEach( el => el.onclick = deleteLogEntry );
+
+
   // Set the function and display of the add log entry button and form
   document.querySelector('.log-entry-button').onclick = showNewLogEntryForm;
   document.querySelector('.log-entry-button').hidden = false;
-  document.querySelector('.log-form').hidden = true;
-  document.querySelector('.log-form textarea').value = "";
+  document.querySelector('.new-log-form').hidden = true;
+  document.querySelector('.new-log-form textarea').value = "";
 
   // Set the function of the add comment buttons
   document.querySelectorAll('.comment-button').forEach( el => el.onclick = showCommentForm );
 
-  // Set the functions to enable and process the submit buttons 
+  // Set the functions to enable and process the save and cancel buttons 
   document.querySelectorAll('.comment-form textarea').forEach( el => el.oninput = enableSubmit );
   document.querySelectorAll('.comment-form button').forEach( el => el.onclick = saveComment );
   document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
-  document.querySelectorAll('.log-form button').forEach( el => el.onclick = saveLog );
+  document.querySelectorAll('.log-form .save-button').forEach( el => el.onclick = saveLog );
+  document.querySelectorAll('.log-form .cancel-button').forEach( el => el.onclick = cancelLog );
+  document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
+  document.querySelector('.new-log-form textarea').oninput = enableSubmit;
+  document.querySelector('.new-log-form button').onclick = saveLog;
+
+  // Set the log entry textarea heights
+  document.querySelectorAll('.log-text').forEach( el => {
+    el.style.height = "";
+    el.style.height = el.scrollHeight + 3 + "px";
+  });
 }
 
 function showTab(name) {
@@ -161,10 +176,16 @@ function showTab(name) {
     }
   });
 
+  // Set the log entry textarea heights
+  document.querySelectorAll('.log-text').forEach( el => {
+    el.style.height = "";
+    el.style.height = el.scrollHeight + 3 + "px";
+  });
+
 }
 
 function showNewLogEntryForm(ev) {
-  var form = document.querySelector('.log-form')
+  var form = document.querySelector('.new-log-form')
   form.hidden = false;
   ev.target.hidden = true;
   window.scrollTo(0,document.body.scrollHeight);
@@ -173,9 +194,26 @@ function showNewLogEntryForm(ev) {
   return false;
 }
 
+function editLogEntry(ev) {
+  var form = ev.target.closest('.log-entry').querySelector('form');
+  form.querySelector('textarea').readOnly = false;
+  form.querySelector('.save-button').hidden = false;
+  form.querySelector('.cancel-button').hidden = false;
+  form.querySelector('textarea').focus();
+  return false;
+}
+
+function deleteLogEntry(ev) {
+  console.log("delete");
+  console.log(ev);
+  return false;
+}
+
 function showCommentForm(ev) {
-  ev.target.parentElement.querySelector('form').hidden = false;
+  var form = ev.target.parentElement.querySelector('form')
+  form.hidden = false;
   ev.target.hidden = true;
+  form.querySelector('textarea').focus();
   return false;
 }
 
@@ -195,6 +233,10 @@ function saveLog(ev) {
   request.setRequestHeader("X-CSRFToken", csrftoken);
   request.send(data);
   return false;
+}
+
+function cancelLog() {
+  getLog();
 }
 
 function saveComment(ev) {
