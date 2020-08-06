@@ -154,6 +154,22 @@ label, legend {
   float: left;
 }
 
+.handle:not([disabled]) {
+  cursor: grab;
+}
+
+.handle input:not([disabled]) {
+  cursor: grab;
+}
+
+.handle:active {
+  cursor: grabbing;
+}
+
+.handle input:active {
+  cursor: grabbing;
+}
+
 input.qty {
   font-size: 1em;
   padding: 0 6px 0 6px;
@@ -170,6 +186,10 @@ input.qty {
   padding: 0;
   margin: 0;
   color: #014101;
+}
+
+.remove-button:disabled {
+  cursor: default;
 }
 
 #chart-handle {
@@ -213,6 +233,10 @@ input.qty {
 #new_ingr_button {
   padding: 0 5px 0 5px;
   height: 2em;
+}
+
+#new_ingr_button:disabled {
+  cursor: default;
 }
 
 #save-status {

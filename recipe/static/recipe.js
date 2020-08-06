@@ -411,9 +411,9 @@ function updateQty(ev) {
   // Update values for this ingredient
   ingredients.forEach( ingredient => {
     if ( use.ingredient_id == ingredient.id ) {
-      ingr = utils.calcIngredientAttrs(ingredient, use, recipe.volume_l, profile);
+      var ingr = utils.calcIngredientAttrs(ingredient, use, recipe.volume_l, profile);
 
-      ingr_row = ev.target.closest('.ingredient-data');
+      var ingr_row = ev.target.closest('.ingredient-data');
       ingr_row.querySelector('.qty').innerHTML = ingr.qty_kg;
       ingr_row.querySelector('.sugar').innerHTML = ingr.sugar;
       ingr_row.querySelector('.acid').innerHTML = ingr.acid;
@@ -425,7 +425,7 @@ function updateQty(ev) {
 
   // Update totals
   var totals = utils.calcTotalAttrs(".ingredient-data");
-  totals_row = document.querySelector('#ingredient-totals');
+  var totals_row = document.querySelector('#ingredient-totals');
   totals_row.querySelector('.sugar').innerHTML = totals.sugar;
   totals_row.querySelector('.acid').innerHTML = totals.acid;
   totals_row.querySelector('.tannin').innerHTML = totals.tannin;
@@ -450,7 +450,7 @@ function setDescrSize() {
 }
 
 function disableInputs( v ) {
-  document.querySelectorAll('input, textarea, .tltip, select').forEach( el => { el.disabled = v; });
+  document.querySelectorAll('input, textarea, .tltip, select, .remove-button').forEach( el => { el.disabled = v; });
   ingredient_sortable.option('sort', !v);
 }
 

@@ -124,11 +124,8 @@ It focuses instead on the files that contain code or data specific to this proje
 * cookie warning
 * recipe: store versions to avoid change to existing brews
 * recipe: see ingredient props while viewing list
-* recipe: qty update not adjusting chart
 * recipe: cannot delete ingredient on portrait-oriented mobile
 * recipe: ingredient delete buttons are active in read-only mode
-* recipe: no mouse change on hover over dnd elements
-* recipe: no changes on hover over disabled ingredinet Add button
 * brew: delete existing log entry
 * brew: edit / delete existing comment
 * brew: select initial tag display using url (e.g. tab=Log)
