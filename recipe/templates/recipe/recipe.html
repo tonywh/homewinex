@@ -20,7 +20,7 @@
             <input type="number" name="ingredient_order[]" value="{{ingredient.order}}" hidden>
             <button type="button" class="fa fa-trash m-1 btn btn-light remove-button" data-index="{{index}}" data-toggle="tooltip" title="Remove" disabled></button>
           </div>
-          <input type="number" name="qty[]" step="0.01" min="0" class="col-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
+          <input type="number" name="qty[]" step="0.005" min="0" class="col-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
           <span class="col-1 ingredient-value sugar">{{ingredient.sugar}}</span>
           <span class="col-1 ingredient-value acid">{{ingredient.acid}}</span>
           <span class="col-1 ingredient-value tannin">{{ingredient.tannin}}</span>

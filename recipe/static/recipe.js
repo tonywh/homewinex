@@ -501,6 +501,7 @@ function saveRecipe() {
 function updateAfterChange() {
   showSaveButton();
   showIngredients();
+  disableInputs(false);
   showGraph();
 }
 

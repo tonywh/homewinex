@@ -19,6 +19,15 @@ label {
 
 select {
   padding: 3px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+select option {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 textarea {

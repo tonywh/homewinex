@@ -126,7 +126,7 @@ class LogEntry(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="logs")
 
     def __str__(self):
-        return f"{self.id}: {self.datetime} {self.user}"
+        return f"{self.id}: {self.datetime} {self.user} {self.brew_id}"
 
     class Meta:
         ordering = ['datetime']
