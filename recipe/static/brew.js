@@ -140,35 +140,38 @@ function showLog(ev) {
     log_el.innerHTML += logentry_template({logEntry: logEntry});
   });
 
-  // Set the log entry textarea heights and edit and delete functions
-  document.querySelectorAll('.log-edit').forEach( el => el.onclick = editLogEntry );
-  document.querySelectorAll('.log-delete').forEach( el => el.onclick = deleteLogEntry );
-
-
-  // Set the function and display of the add log entry button and form
-  document.querySelector('.log-entry-button').onclick = showNewLogEntryForm;
-  document.querySelector('.log-entry-button').hidden = false;
-  document.querySelector('.new-log-form').hidden = true;
-  document.querySelector('.new-log-form textarea').value = "";
-
-  // Set the function of the add comment buttons
+  // Set the function of the add comment buttons and forms
   document.querySelectorAll('.comment-button').forEach( el => el.onclick = showCommentForm );
-
-  // Set the functions to enable and process the save and cancel buttons 
   document.querySelectorAll('.comment-form textarea').forEach( el => el.oninput = enableSubmit );
   document.querySelectorAll('.comment-form button').forEach( el => el.onclick = saveComment );
-  document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
-  document.querySelectorAll('.log-form .save-button').forEach( el => el.onclick = saveLog );
-  document.querySelectorAll('.log-form .cancel-button').forEach( el => el.onclick = cancelLog );
-  document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
-  document.querySelector('.new-log-form textarea').oninput = enableSubmit;
-  document.querySelector('.new-log-form button').onclick = saveLog;
 
   // Set the log entry textarea heights
   document.querySelectorAll('.log-text').forEach( el => {
     el.style.height = "";
     el.style.height = el.scrollHeight + 3 + "px";
   });
+  
+  // Can the user modify this brew log?
+  if (document.querySelector('.log-entry-button')) {
+
+    // Set the log entry edit and delete functions
+    document.querySelectorAll('.log-edit').forEach( el => el.onclick = editLogEntry );
+    document.querySelectorAll('.log-delete').forEach( el => el.onclick = deleteLogEntry );
+
+    // Set the function and display of the add log entry button and form
+    document.querySelector('.log-entry-button').onclick = showNewLogEntryForm;
+    document.querySelector('.log-entry-button').hidden = false;
+    document.querySelector('.new-log-form').hidden = true;
+    document.querySelector('.new-log-form textarea').value = "";
+
+    // Set the functions to enable and process the save and cancel buttons 
+    document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
+    document.querySelectorAll('.log-form .save-button').forEach( el => el.onclick = saveLog );
+    document.querySelectorAll('.log-form .cancel-button').forEach( el => el.onclick = cancelLog );
+    document.querySelectorAll('.log-form textarea').forEach( el => el.oninput = enableSubmit );
+    document.querySelector('.new-log-form textarea').oninput = enableSubmit;
+    document.querySelector('.new-log-form button').onclick = saveLog;
+  }  
 }
 
 function showTab(name) {

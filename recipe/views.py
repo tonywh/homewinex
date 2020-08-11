@@ -147,6 +147,7 @@ def brew(request):
         'brew': brew.to_dict(),
         'recipe': recipe.to_dict(),
         'tab': tab,
+        'canModify': canModifyBrew(request.user, brew),
         }
     return render(request, "recipe/brew.html", data )
 
@@ -290,7 +291,7 @@ def apiBrewLog(request):
                 raise Http404(f"Brew {brew_id} does not exist")
 
             # Is the user authorised to add a log entry to this brew?
-            if not request.user.is_superuser and request.user != brew.user:
+            if not canModifyBrew(request.user, brew):
                 return HttpResponse("You are not nauthorized to add a log entry to this brew.", status=401)
 
             LogEntry.objects.create(
@@ -311,7 +312,7 @@ def apiBrewLog(request):
                 raise Http404(f"Log entry {logEntry_id} does not exist")
 
             # Is the user authorised to edit a log entry to this brew?
-            if not request.user.is_superuser and request.user != logEntry.brew.user:
+            if not canModifyBrew(request.user, logEntry.brew):
                 return HttpResponse("You are not authorized to add a log entry to this brew.", status=401)
 
             logEntry.text = request.POST.get('logtext').rstrip(" \t\r\n")
@@ -340,7 +341,7 @@ def apiBrewLogDelete(request):
             raise Http404(f"Log entry {logEntry_id} does not exist")
 
         # Is the user authorised to edit a log entry to this brew?
-        if not request.user.is_superuser and request.user != logEntry.brew.user:
+        if not canModifyBrew(request.user, logEntry.brew):
             return HttpResponse("You are not authorized to delete a log entry in this brew.", status=401)
 
         brew = logEntry.brew
@@ -397,3 +398,9 @@ def getLog(brew):
             logEntry['comments'].append(comment)
 
     return JsonResponse({'log': log}, safe=False)
+
+def canModifyBrew(user, brew):
+    return user.is_superuser or user == brew.user
+
+def canModifyRecipe(user, recipe):
+    return user.is_superuser or user == recipe.created_by
