@@ -126,3 +126,6 @@ It focuses instead on the files that contain code or data specific to this proje
 * recipe: on mobile dnd works only once
 * recipe: add cancel button
 * brew: edit / delete existing comment
+* brew: copy ingredients list to log
+* recipe: list brews of a recipe
+* recipes: list for a chosen ingredient
