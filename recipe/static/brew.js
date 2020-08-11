@@ -20,13 +20,27 @@ function buildBrewApp() {
   brew.id = document.querySelector('#brew').dataset.brew_id;
   brew.size_l = document.querySelector('#volume').innerHTML;
   
-  // Make first tab active
-  showTab(document.querySelector('#tabs .nav-link').dataset.name);
+  // Make requested tab active or first tabif none requested
+  var tab = document.querySelector('#initial-tab').dataset.name;
+  if (!tab) {
+    tab = document.querySelector('#tabs .nav-link').dataset.name;
+  }
+
+  showTab(tab);
+  setUrl(tab);
 
   // Set the tab onclick listeners
   document.querySelectorAll('#tabs .nav-link').forEach( item => {
-    item.onclick = function() {
-      showTab( this.dataset.name );
+    item.onclick = function(ev) {
+      ev.preventDefault();
+      pushUrl(this.dataset.name);
+      showTab(this.dataset.name);
+      setUrl(this.dataset.name);
+
+      window.onpopstate = (ev) => {
+        console.log(ev);
+        showTab(ev.state.tab, 0)
+      };    
     };
   });
   
@@ -184,6 +198,22 @@ function showTab(name) {
 
 }
 
+function setUrl( name ) {
+  var page_url = 'brew?' + new URLSearchParams({id: brew.id, tab: name}).toString();
+  document.title = "HomeWineX - Brew: " + name;
+  history.replaceState({'url': 'brew', 'id': brew.id, 'tab': name}, document.title, page_url);
+}
+
+// function pushUrl( name ) {
+//   var page_url = 'brew?' + new URLSearchParams({id: brew.id, tab: name}).toString();
+//   document.title = "HomeWineX - Brew: " + name;
+//   history.pushState({'url': 'brew', 'id': brew.id, 'tab': name}, document.title, page_url);
+// }
+
+function pushUrl( name ) {
+  history.pushState({'url': 'brew', 'id': brew.id, 'tab': name}, document.title, document.location);
+}
+
 function showNewLogEntryForm(ev) {
   var form = document.querySelector('.new-log-form')
   form.hidden = false;
@@ -204,8 +234,15 @@ function editLogEntry(ev) {
 }
 
 function deleteLogEntry(ev) {
-  console.log("delete");
-  console.log(ev);
+  const request = new XMLHttpRequest();
+  request.open('POST', `/api/brewlogdelete`);
+  const data = new FormData(ev.target.closest('.log-entry').querySelector('form'));
+
+  request.onload = showLog;
+  
+  var csrftoken = Cookies.get('csrftoken');
+  request.setRequestHeader("X-CSRFToken", csrftoken);
+  request.send(data);
   return false;
 }
 

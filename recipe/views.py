@@ -142,9 +142,11 @@ def brew(request):
         raise Http404(f"Brew {id} does not exist")
     
     recipe = Recipe.objects.get(id=brew.recipe_id)
+    tab = request.GET.get("tab", "")
     data = {
         'brew': brew.to_dict(),
         'recipe': recipe.to_dict(),
+        'tab': tab,
         }
     return render(request, "recipe/brew.html", data )
 
@@ -310,7 +312,7 @@ def apiBrewLog(request):
 
             # Is the user authorised to edit a log entry to this brew?
             if not request.user.is_superuser and request.user != logEntry.brew.user:
-                return HttpResponse("You are not nauthorized to add a log entry to this brew.", status=401)
+                return HttpResponse("You are not authorized to add a log entry to this brew.", status=401)
 
             logEntry.text = request.POST.get('logtext').rstrip(" \t\r\n")
             logEntry.user = request.user
@@ -322,6 +324,33 @@ def apiBrewLog(request):
 
         else:
             return HttpResponse("Request must contain brew_id or logEntry_id", status=400)
+
+    return getLog(brew)
+
+def apiBrewLogDelete(request):
+    # Posting to delete a log entry
+    if request.user.is_anonymous:
+        return HttpResponse('You must be logged in to delete logs.', status=401)
+
+    logEntry_id = request.POST.get("logEntry_id")
+    if logEntry_id:
+        try:
+            logEntry = LogEntry.objects.get(id=int(logEntry_id))
+        except LogEntry.DoesNotExist:
+            raise Http404(f"Log entry {logEntry_id} does not exist")
+
+        # Is the user authorised to edit a log entry to this brew?
+        if not request.user.is_superuser and request.user != logEntry.brew.user:
+            return HttpResponse("You are not authorized to delete a log entry in this brew.", status=401)
+
+        brew = logEntry.brew
+        logEntry.delete()
+        brew.log_count = LogEntry.objects.filter(brew_id=brew.id).count()
+        brew.updated = datetime.datetime.now()
+        brew.save()
+
+    else:
+        return HttpResponse("Request must contain logEntry_id", status=400)
 
     return getLog(brew)
 

@@ -1,6 +1,8 @@
 {% extends "recipe/base.html" %}
 
 {% block head %}
+  <title>HomeWineX - Brew</title>
+
   {% load static %}
   <link rel="stylesheet" href="{% static "brew.css" %}">
   <link rel="stylesheet" href="{% static "hwx-table.css" %}">
@@ -101,6 +103,9 @@
       <a class="nav-item nav-link" data-name="Method" href="#">Method</a>
       <a class="nav-item nav-link" data-name="Log" href="#">Log</a>
     </nav>
+
+    <!-- Pass name of initial tab to the frontend-->
+    <span id="initial-tab" data-name="{{tab}}" hidden></span>
 
     <!-- Ingredients tab content -->
     <div class="tab-detail" data-name="Ingredients">

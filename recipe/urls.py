@@ -20,5 +20,6 @@ urlpatterns = [
     path("api/recipe", views.apiRecipe, name="apiRecipe"),
     path("api/brewlist", views.apiBrewList, name="apiBrewList"),
     path("api/brewlog", views.apiBrewLog, name="apiBrewLog"),
+    path("api/brewlogdelete", views.apiBrewLogDelete, name="apiBrewLogDelete"),
     path("api/brewcomment", views.apiBrewComment, name="apiBrewComment"),
 ]

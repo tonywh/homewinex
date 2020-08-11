@@ -125,7 +125,5 @@ It focuses instead on the files that contain code or data specific to this proje
 * recipe: see ingredient props while viewing list
 * recipe: on mobile dnd works only once
 * recipe: add cancel button
-* brew: delete existing log entry
 * brew: edit / delete existing comment
-* brew: select initial tag display using url (e.g. tab=Log)
 * brew: frontend remove links/buttons if not allowed to use 
