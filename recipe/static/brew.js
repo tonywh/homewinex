@@ -237,15 +237,18 @@ function editLogEntry(ev) {
 }
 
 function deleteLogEntry(ev) {
-  const request = new XMLHttpRequest();
-  request.open('POST', `/api/brewlogdelete`);
-  const data = new FormData(ev.target.closest('.log-entry').querySelector('form'));
+  if (confirm("Delete Log entry?")) {
+    const request = new XMLHttpRequest();
+    request.open('POST', `/api/brewlogdelete`);
+    const data = new FormData(ev.target.closest('.log-entry').querySelector('form'));
 
-  request.onload = showLog;
-  
-  var csrftoken = Cookies.get('csrftoken');
-  request.setRequestHeader("X-CSRFToken", csrftoken);
-  request.send(data);
+    request.onload = showLog;
+    
+    var csrftoken = Cookies.get('csrftoken');
+    request.setRequestHeader("X-CSRFToken", csrftoken);
+    request.send(data);
+  }
+
   return false;
 }
 
