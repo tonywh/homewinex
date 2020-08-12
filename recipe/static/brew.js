@@ -85,18 +85,13 @@ function showRecipe(ev) {
 
   // Create an ingredient line for each ingredient in the recipe
   // This is O(N*N). If this becomes a performance issue change it
-  // to a sorted list of ingredients and implement a binary search
-  // to achieve O(N*logN).
+  // findIngredient to use a sorted list and binary search.
   var ingr_el = document.querySelector("#ingredients");
   ingr_el.innerHTML = "";
   recipe.ingredients.forEach( use => {
-    ingredients.forEach( ingredient => {
-      if ( use.ingredient_id == ingredient.id ) {
-        var ingr = utils.calcIngredientAttrs(ingredient, use, recipe.volume_l, profile);
-        ingr.qty = ingr.qty * brew.size_l / recipe.volume_l;
-        ingr_el.innerHTML += ingredient_template({ingredient: ingr});
-      }
-    });
+    var ingr = utils.calcIngredientAttrs(findIngredient(use.ingredient_id), use, recipe.volume_l, profile);
+    ingr.qty = ingr.qty * brew.size_l / recipe.volume_l;
+    ingr_el.innerHTML += ingredient_template({ingredient: ingr});
   });
 
   // Set totals and targets
@@ -293,4 +288,15 @@ function saveComment(ev) {
   request.setRequestHeader("X-CSRFToken", csrftoken);
   request.send(data);
   return false;
+}
+
+function findIngredient(id) {
+  // Linear search because the set of ingredients is very small
+  var result = null;
+  ingredients.forEach( ingredient => {
+    if ( id == ingredient.id ) {
+      result = ingredient;
+    }
+  });
+  return result;
 }

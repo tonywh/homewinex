@@ -120,12 +120,8 @@ function showIngredients() {
   ingr_el.innerHTML = "";
   i = 0;
   recipe.ingredients.forEach( use => {
-    ingredients.forEach( ingredient => {
-      if ( use.ingredient_id == ingredient.id ) {
-        var ingr = utils.calcIngredientAttrs(ingredient, use, recipe.volume_l, profile);
-        ingr_el.innerHTML += ingredient_template({ingredient: ingr, index: i});
-      }
-    });
+    var ingr = utils.calcIngredientAttrs(findIngredient(use.ingredient_id), use, recipe.volume_l, profile);
+    ingr_el.innerHTML += ingredient_template({ingredient: ingr, index: i});
     i++;
   });
 
@@ -173,9 +169,11 @@ function showIngredients() {
   };
   document.querySelector('#new_ingr_button').onclick = () => {
     // Adds new ingredient to the array and updates the page.
+    var ingredient_id = document.querySelector('#new_ingr_select').value;
+    var ingredient = findIngredient(ingredient_id);
     recipe.ingredients.push({
-      ingredient_id: document.querySelector('#new_ingr_select').value,
-      qty_kg: 1.0,
+      ingredient_id: ingredient_id,
+      qty_kg: ingredient.default_qty_kg_per_l * recipe.volume_l,
       order: recipe.ingredients.length,
     });
     updateAfterChange();
@@ -533,4 +531,15 @@ function hideSavedStatus() {
   }
   catch(err) {
   }
+}
+
+function findIngredient(id) {
+  // Linear search because the set of ingredients is very small
+  var result = null;
+  ingredients.forEach( ingredient => {
+    if ( id == ingredient.id ) {
+      result = ingredient;
+    }
+  });
+  return result;
 }

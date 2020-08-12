@@ -28,7 +28,7 @@ class IngredientAdmin(admin.ModelAdmin):
     fields = ( ('id',),
                ('name', 'variety'),
                ('acid', 'sugar', 'unferm_sugar', 'solu_solid', 'body_to_acid', 'tannin', 'starch', 'liquid'),
-               ('pectin', 'pectolaise', 'redness', 'brownness', 'suggest_max'),
+               ('pectin', 'pectolaise', 'redness', 'brownness', 'suggest_max', 'default_qty_kg_per_l'),
                ('method') )
 
 class RecipeAdmin(admin.ModelAdmin):

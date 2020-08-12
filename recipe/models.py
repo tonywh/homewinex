@@ -30,7 +30,8 @@ class Ingredient(models.Model):
     method = models.ForeignKey(Method, on_delete=models.PROTECT)
     liquid = models.FloatField()        # 1000.0 means it's a liquid ingredient
     suggest_max = models.FloatField()   # max suggested quantity of the ingredient
-
+    default_qty_kg_per_l = models.FloatField(default=0.2)
+    
     class Meta:
         ordering = ['name', 'variety']
 
