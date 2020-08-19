@@ -27,7 +27,7 @@ class IngredientAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
     fields = ( ('id',),
                ('name', 'variety'),
-               ('acid', 'sugar', 'unferm_sugar', 'solu_solid', 'body_to_acid', 'tannin', 'starch', 'liquid'),
+               ('acid', 'sugar', 'unferm_sugar', 'solu_solid', 'body_to_acid', 'tannin', 'starch', 'liquid', 'is_solid'),
                ('pectin', 'pectolaise', 'redness', 'brownness', 'suggest_max', 'default_qty_kg_per_l'),
                ('method') )
 

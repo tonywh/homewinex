@@ -28,10 +28,11 @@ class Ingredient(models.Model):
     brownness = models.FloatField()     # scale 1 - 10
     starch = models.FloatField()
     method = models.ForeignKey(Method, on_delete=models.PROTECT)
-    liquid = models.FloatField()        # 1000.0 means it's a liquid ingredient
+    liquid = models.FloatField()        # qty liquid (L) in 1000.0 of qty_kg
+    is_solid = models.BooleanField(default=False)
     suggest_max = models.FloatField()   # max suggested quantity of the ingredient
     default_qty_kg_per_l = models.FloatField(default=0.2)
-    
+
     class Meta:
         ordering = ['name', 'variety']
 
