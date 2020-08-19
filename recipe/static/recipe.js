@@ -87,15 +87,16 @@ function showRecipe(ev) {
     // Set recipe volume to the chosen liquid units. Value from backend is always
     // index zero in the converter.
     var volume_el = document.querySelector('#volume');
-    volume_el.value = utils.liquid.convert(volume_el.value, 0, profile.liquid_large_units).toFixed(1);
+    utils.liquid.unit = profile.liquid_large_units;
+    volume_el.value = utils.liquid.convert(volume_el.value).toFixed(1);
     var unit_el = document.querySelector('#volume-unit');
-    unit_el.innerHTML = utils.liquid.toString(profile.liquid_large_units);
+    unit_el.innerHTML = utils.liquid.string;
 
-    // Qty unit string to chosen solid and liquid units.
-    unit_el = document.querySelector('#qty-unit');
-    var liquidStr = utils.liquid.toString(profile.liquid_large_units);
-    var solidStr = utils.solid.toString(profile.solid_large_units);
-    unit_el.innerHTML = `(${solidStr} ${liquidStr})`;
+    // // Qty unit string to chosen solid and liquid units.
+    // unit_el = document.querySelector('#qty-unit');
+    // var liquidStr = utils.liquid.toString(profile.liquid_large_units);
+    // var solidStr = utils.solid.toString(profile.solid_large_units);
+    // unit_el.innerHTML = `(${solidStr} ${liquidStr})`;
   }
 
   showStyle();
@@ -402,22 +403,23 @@ function updateQty(ev) {
 
   showSaveButton();
 
-  var qty_kg = ev.target.value;
+  var qty = parseFloat(ev.target.value);
   var use = recipe.ingredients[ev.target.dataset.index];
-  use.qty_kg = qty_kg;
 
   // Update values for this ingredient
   ingredients.forEach( ingredient => {
     if ( use.ingredient_id == ingredient.id ) {
-      var ingr = utils.calcIngredientAttrs(ingredient, use, recipe.volume_l, profile);
+      var ingr = utils.updateIngredientAttrs(ingredient, qty, use.order, recipe.volume_l);
+      recipe.ingredients[ev.target.dataset.index].qty_kg = ingr.qty_kg;
 
       var ingr_row = ev.target.closest('.ingredient-data');
-      ingr_row.querySelector('.qty').innerHTML = ingr.qty_kg;
+      ingr_row.querySelector('.qty').value = ingr.qty;
+      ingr_row.querySelector('.qty').step = ingr.qtystep;
+      ingr_row.querySelector('.unit').innerHTML = ingr.unit;
       ingr_row.querySelector('.sugar').innerHTML = ingr.sugar;
       ingr_row.querySelector('.acid').innerHTML = ingr.acid;
       ingr_row.querySelector('.tannin').innerHTML = ingr.tannin;
       ingr_row.querySelector('.solids').innerHTML = ingr.solids;
-      ingr_row.querySelector('.redness').innerHTML = ingr.redness;
     }
   });
 
@@ -428,7 +430,6 @@ function updateQty(ev) {
   totals_row.querySelector('.acid').innerHTML = totals.acid;
   totals_row.querySelector('.tannin').innerHTML = totals.tannin;
   totals_row.querySelector('.solids').innerHTML = totals.solids;
-  totals_row.querySelector('.redness').innerHTML = totals.redness;
 
   // Update graph
   showGraph();

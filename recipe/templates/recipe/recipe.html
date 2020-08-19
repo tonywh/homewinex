@@ -22,12 +22,12 @@
             <input type="number" name="ingredient_order[]" value="{{ingredient.order}}" hidden>
             <button type="button" class="fa fa-trash m-1 btn btn-light remove-button" data-index="{{index}}" data-toggle="tooltip" title="Remove" disabled></button>
           </div>
-          <input type="number" name="qty[]" step="0.005" min="0" class="col-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
+          <input type="number" name="qty[]" step="{{ingredient.qtystep}}" min="0" class="col-2 col-md-2 col-lg-1 form-control qty" value="{{ingredient.qty}}" data-index="{{index}}">
+          <span class="col-1 ingredient-value unit">{{ingredient.unit}}</span>
           <span class="col-1 ingredient-value sugar">{{ingredient.sugar}}</span>
           <span class="col-1 ingredient-value acid">{{ingredient.acid}}</span>
           <span class="col-1 ingredient-value tannin">{{ingredient.tannin}}</span>
           <span class="col-1 ingredient-value solids">{{ingredient.solids}}</span>
-          <span class="col-1 ingredient-value redness">{{ingredient.redness}}</span>
         </div>
       </div>
     {% endverbatim %}
@@ -36,14 +36,14 @@
   <!-- Template: content of the new ingredient row-->
   <script id="new_ingredient" type="text/x-handlebars-template">
     {% verbatim %}
-      <div class="col-5">
-      <select id="new_ingr_select" value="-1">
-        <option value="-1">&nbsp;&nbsp;&nbsp;--- Select new ingredient ---</option>
-        {{# each ingredients}}
-          <option value="{{this.id}}">{{this.name}}{{#if this.variety }}, {{this.variety}}{{/if}}</option>
-        {{/each}}
-      </select>
-      <button type="button" id="new_ingr_button" class="m-1 btn btn-secondary" disabled>Add</button>
+      <div>
+        <select id="new_ingr_select" value="-1">
+          <option value="-1">&nbsp;&nbsp;&nbsp;--- Select new ingredient ---</option>
+          {{# each ingredients}}
+            <option value="{{this.id}}">{{this.name}}{{#if this.variety }}, {{this.variety}}{{/if}}</option>
+          {{/each}}
+        </select>
+        <button type="button" id="new_ingr_button" class="m-1 btn btn-secondary" disabled>Add</button>
       </div>
       <div class="col-1"></div>
       <div class="col-1">
@@ -56,14 +56,11 @@
   <script id="ingredient_totals" type="text/x-handlebars-template">
     {% verbatim %}
       <span class="col-5 ingredient-total" >{{legend}}</span>
-      <span class="col-2 col-md-2 col-lg-1 ingredient-total"></span>
+      <span class="col-3 col-md-3 col-lg-2 ingredient-total"></span>
       <span class="col-1 ingredient-total sugar">{{totals.sugar}}</span>
       <span class="col-1 ingredient-total acid">{{totals.acid}}</span>
       <span class="col-1 ingredient-total tannin">{{totals.tannin}}</span>
       <span class="col-1 ingredient-total solids">{{totals.solids}}</span>
-      {{#if totals.redness}}
-        <span class="col-1 ingredient-total redness">{{totals.redness}}</span>
-      {{/if}}
     {% endverbatim %}
   </script>
 
@@ -122,23 +119,21 @@
         <!--          Column-titles -->
         <div class="row ingredient-table">
           <span class="col-5"></span>
-          <span class="col-2 col-md-2 col-lg-1 heading">Qty</span>
+          <span class="col-3 col-md-3 col-lg-2 heading">Qty</span>
           <span class="col-1 heading"><span class="non-mobile">Sugar</span><span class="mobile">Sug</span></span>
           <span class="col-1 heading"><span class="non-mobile">Acid</span><span class="mobile">Acid</span></span>
           <span class="col-1 heading"><span class="non-mobile">Tannin</span><span class="mobile">Tan</span></span>
           <span class="col-1 heading"><span class="non-mobile">Solids</span><span class="mobile">Sol</span></span>
-          <span class="col-1 heading"><span class="non-mobile">Redness</span><span class="mobile">Red</span></span>
         </div>
 
         <!--          Column-units -->
         <div class="row ingredient-table">
           <span class="col-5"></span>
-          <span class="col-2 col-md-2 col-lg-1 heading" id="qty-unit">(kg&nbsp;L)</span>
+          <span class="col-3 col-md-3 col-lg-2"></span>
           <span class="col-1 heading">(grav)</span>
           <span class="col-1 heading">(g/l)</span>
           <span class="col-1 heading">(g/l)</span>
           <span class="col-1 heading">(g/l)</span>
-          <span class="col-1"></span>
         </div>
 
         <!-- Ingredients -->
@@ -150,7 +145,7 @@
           <div class="col-5 full-width" >
             <div class="adacid-label" ><span class="non-mobile">Acid from fermenation</span><span class="mobile">Fermentation acid</span></div>
           </div>
-          <span class="col-3 col-md-3 col-lg-2"></span>
+          <span class="col-4 col-md-4 col-lg-3"></span>
           <span class="col-1 ingredient-value">1.50</span>
         </div>
 

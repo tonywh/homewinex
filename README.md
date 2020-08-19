@@ -129,3 +129,5 @@ It focuses instead on the files that contain code or data specific to this proje
 * brew: copy ingredients list to log
 * recipe: list brews of a recipe
 * recipes: list for a chosen ingredient
+* recipe: close graph, add ingredient, graph open no longer functions
+* backend: python exception on "connection reset request" when mobile sleeps

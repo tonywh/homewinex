@@ -10,6 +10,8 @@ class Solid:
         (OZ, 'oz'),
     )
     CONV = [1.0, 1000.0, 2.2046226, 35.273961]
+    STEP = [0.005, 5.0, 0.0125, 0.2]
+    DECIMALS = [3, 0, 4, 1]
 
     def __init__(self, val, unit=KG):
         self.val = Val
@@ -34,6 +36,8 @@ class Liquid:
         (IMPFLOZ, 'floz-Imp'),
     )
     CONV = [1.0, 1000.0, 0.26417205, 0.21996925, 33.814023, 35.195079]
+    STEP = [0.005, 5.0, 0.0015625, 0.00125, 0.2, 0.2]
+    DECIMALS = [3, 0, 4, 4, 1, 1]
 
     def __init__(self, val, unit=L):
         self.val = Val

@@ -230,8 +230,18 @@ def apiRecipe(request):
         'ingredients': list(Ingredient.objects.order_by('name','variety').values()),
         'styles': list(WineStyle.objects.values()),
         'methods': list(Method.objects.values()),
-        'liquid': {'units': list(measures.Liquid.UNITS), 'conv': list(measures.Liquid.CONV)},
-        'solid': {'units': list(measures.Solid.UNITS), 'conv': list(measures.Solid.CONV)},
+        'liquid': {
+            'units': list(measures.Liquid.UNITS),
+            'conv': list(measures.Liquid.CONV),
+            'step': list(measures.Liquid.STEP),
+            'decimals': list(measures.Liquid.DECIMALS),
+        },
+        'solid': {
+            'units': list(measures.Solid.UNITS),
+            'conv': list(measures.Solid.CONV),
+            'step': list(measures.Solid.STEP),
+            'decimals': list(measures.Solid.DECIMALS),
+        },
     }
 
     if request.user.is_authenticated:
