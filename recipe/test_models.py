@@ -12,11 +12,12 @@ class WineStyleTestCase(TestCase):
 
     def test_winestyle_ordering(self):
         laststyle = None
-        for style in WineStyle.objects.values():
+        for style in WineStyle.objects.all():
             if laststyle != None:
                 self.assertGreaterEqual(style.grapes,laststyle.grapes)
                 if style.grapes == laststyle.grapes:
                     self.assertGreaterEqual(style.region,laststyle.region)
+            laststyle = style
 
 class RecipeAndIngredientTestCase(TestCase):
 
@@ -34,6 +35,7 @@ class RecipeAndIngredientTestCase(TestCase):
         for use in IngredientUse.objects.filter(recipe_id=recipe.id):
             if lastuse != None:
                 self.assertGreaterEqual(use.order,lastuse.order)
+            lastuse = use
 
     def test_recipe_to_dict(self):
         recipe = Recipe.objects.get(name='a')
@@ -77,6 +79,7 @@ class BrewTestCase(TestCase):
         for log in LogEntry.objects.filter(brew=brew):
             if lastlog != None:
                 self.assertGreaterEqual(log.datetime,lastlog.datetime)
+            lastlog = log
 
     def test_comment_ordering(self):
         user = User.objects.get(username="user1")
@@ -85,4 +88,5 @@ class BrewTestCase(TestCase):
         for comment in Comment.objects.filter(brew=brew):
             if lastcomment != None:
                 self.assertGreaterEqual(comment.datetime,lastcomment.datetime)
+            lastcomment = comment
 
