@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 import datetime
-import markdown2
 
 from django.contrib.auth.models import User
 from .models import Ingredient, Method, Recipe, IngredientUse, Brew, LogEntry, Comment, Image, WineStyle, Profile

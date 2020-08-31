@@ -72,12 +72,6 @@ function showRecipe(ev) {
     volume_el.innerHTML = utils.liquid.convert(volume_el.innerHTML, 0, profile.liquid_large_units).toFixed(1);
     var unit_el = document.querySelector('#volume-unit');
     unit_el.innerHTML = utils.liquid.toString(profile.liquid_large_units);
-
-    // Qty unit string to chosen solid and liquid units.
-    unit_el = document.querySelector('#qty-unit');
-    var liquidStr = utils.liquid.toString(profile.liquid_large_units);
-    var solidStr = utils.solid.toString(profile.solid_large_units);
-    unit_el.innerHTML = `(${solidStr} ${liquidStr})`;
   }
 
   style = utils.getStyleData(recipe.style);

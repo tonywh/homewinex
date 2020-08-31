@@ -11,7 +11,7 @@
   <script id="ingredient" type="text/x-handlebars-template">
     {% verbatim %}
       <tr class="ingredient-data hwx-tr">
-        <td class="qty">{{ingredient.qty}}</td>
+        <td class="qty">{{ingredient.qty}} {{ingredient.unit}}</td>
         <td class="ingredient-name">{{ingredient.name}}{{#if ingredient.variety }}, {{ingredient.variety}}{{/if}}</td>
         <td class="sugar">{{ingredient.sugar}}</td>
         <td class="acid">{{ingredient.acid}}</td>
@@ -115,7 +115,7 @@
     <div class="tab-detail" data-name="Ingredients">
       <table class="table hwx-table" id="ingredients-table">
         <thead>
-          <th>Qty<br><span id="qty-unit"></span></th>
+          <th>Qty</th>
           <th>Name</th>
           <th>Sugar<br>(Grav)</th>
           <th>Acid<br>(g/l)</th>

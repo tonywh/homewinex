@@ -8,7 +8,7 @@ class Method(models.Model):
     method_num = models.IntegerField(unique=True)
     description = models.TextField()
 
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return f"{self.method_num}: {self.description}"
 
 class Ingredient(models.Model):
@@ -36,7 +36,7 @@ class Ingredient(models.Model):
     class Meta:
         ordering = ['name', 'variety']
 
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return f"{self.id}: {self.name}, {self.variety}"
 
 class WineStyle(models.Model):
@@ -54,7 +54,7 @@ class WineStyle(models.Model):
     class Meta:
         ordering = ['grapes', 'region']
 
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return f"{self.grapes}, {self.region}"
 
 class Recipe(models.Model):
@@ -76,7 +76,7 @@ class Recipe(models.Model):
     class Meta:
         ordering = ['name']
 
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return f"{self.id}: {self.name}"
 
     def to_dict(self):
@@ -109,7 +109,7 @@ class Brew(models.Model):
     updated = models.DateField(default=datetime.date.today)
     log_count = models.IntegerField(default=0)
     
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return f"{self.id}: {self.recipe}, {self.user}"
 
     def to_dict(self):
@@ -127,7 +127,7 @@ class LogEntry(models.Model):
     brew = models.ForeignKey(Brew, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="logs")
 
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return f"{self.id}: {self.datetime} {self.user} {self.brew_id}"
 
     class Meta:
@@ -140,7 +140,7 @@ class Comment(models.Model):
     logEntry = models.ForeignKey(LogEntry, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="comments")
 
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return f"{self.id}: {self.datetime} {self.user}"
 
     class Meta:
@@ -158,5 +158,5 @@ class Profile(models.Model):
     liquid_small_units = models.PositiveSmallIntegerField(choices=measures.Liquid.UNITS, default=measures.Liquid.ML)
     liquid_large_units = models.PositiveSmallIntegerField(choices=measures.Liquid.UNITS, default=measures.Liquid.L)
 
-    def __str__(self):
+    def __str__(self):      # pragma: no cover
         return self.user.username

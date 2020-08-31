@@ -1,4 +1,4 @@
 Django==3.0.7
 django_nested_admin==3.3.2
 lxml==4.5.1
-markdown2==2.3.9
+coverage=5.2.1

@@ -116,8 +116,6 @@ It focuses instead on the files that contain code or data specific to this proje
 | Recipe: save as new                         | Javascript                  |
 
 ### Todo
-* units: selection per ingredient
-* units: default amount in database, choose appropriate units
 * recipe: edit - only author or admin
 * recipe: drag, don't allow drag from ingredient name - too easy to hit accidentally
 * cookie consent - only needed if I add none-essential cookies
