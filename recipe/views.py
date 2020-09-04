@@ -13,15 +13,37 @@ from . import measures
 ## Page requests
 #
 
+''' Index page.
+    GET, No parameters
+'''
 def index(request):
     return render(request, "recipe/home.html")
 
+''' MyWine page.
+    GET:
+        No parameters
+'''
 def mywine(request):
     return render(request, "recipe/mywine.html")
 
+''' Recipes page.
+    GET:
+        No parameters
+'''
 def recipes(request):
     return render(request, "recipe/recipes.html")
 
+''' New recipe page.
+    GET: Gets the new recipe form.
+        No parameters
+
+    POST: Posts the new recipe form and returns a recipe page containing the new
+    recipe.
+        name        the recipe name
+        style       the ID of the wines style chosen by the dropdown
+        volume      the wine recipe volume (L)
+        descr       an optionally blank description
+'''
 def newrecipe(request):
     if request.method == "GET":
         return render(request, "recipe/newrecipe.html", {'styles': list(WineStyle.objects.values())})
@@ -48,6 +70,18 @@ def newrecipe(request):
 
     return render(request, "recipe/recipe.html", data )
 
+''' Recipe page
+    GET: get a recipe page
+        id:         the recipe ID
+
+    POST: post the (modified) recipe data to store it in the recipe
+        name        the recipe name
+        volume      the wine recipe volume (L)
+        descr       an optionally blank description
+        ingredient_id[]     list of ingredient IDs for each ingredient
+        ingredient_order[]  list of sort order for each ingredient
+        qty[]               list of quantities (kg solid, L liquid) for each ingredient
+'''
 def recipe(request):
     if request.method == "GET":
         id = int(request.GET.get("id"))
@@ -91,6 +125,15 @@ def recipe(request):
         # Recipe page updates itself so no need to return the recipe page 
         return HttpResponse("")
 
+''' New brew page.
+    GET: Gets the new brew form.
+        No parameters
+
+    POST: Posts the new brew form and returns a brew page containing the new
+    brew.
+        recipe_id   the ID of the recipe to brew
+        volume      the wine recipe volume (L)
+'''
 def newbrew(request):
     if request.user.is_anonymous:
         return HttpResponse('Unauthorized', status=401)
@@ -130,6 +173,10 @@ def newbrew(request):
 
         return HttpResponseRedirect(f"/brew?id={brew.id}")
 
+''' Brew page
+    GET: get a brew page
+        id:         the brew ID
+'''
 def brew(request):
     if request.method != "GET":
         return HttpResponse('The request is not valid.', status=400)
@@ -150,6 +197,12 @@ def brew(request):
         }
     return render(request, "recipe/brew.html", data )
 
+''' User registration page
+    GET: get the user registration form
+        No parameters
+
+    POST: post the form to create a user
+'''
 def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -165,6 +218,19 @@ def register(request):
     form = UserCreationForm()
     return render(request, "registration/register.html", {'form': form})
 
+''' User profile page
+    GET: get the current user's profile
+        No parameters.
+
+    POST: post the modified user's profile
+        first_name
+        last_name
+        location
+        solid_small_units
+        solid_large_units
+        liquid_small_units
+        liquid_large_units
+'''
 def profile(request):
     if request.user.is_anonymous:
         return HttpResponse('Unauthorized', status=401)
