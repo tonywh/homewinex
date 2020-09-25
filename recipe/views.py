@@ -9,10 +9,6 @@ from django.contrib.auth.models import User
 from .models import Ingredient, Method, Recipe, IngredientUse, Brew, LogEntry, Comment, Image, WineStyle, Profile
 from . import measures
 
-#
-## Page requests
-#
-
 ''' Index page.
     GET, No parameters
 '''
@@ -184,7 +180,7 @@ def brew(request):
     id = int(request.GET.get("id"))
     try:
         brew = Brew.objects.get(id=id)
-    except Recipe.DoesNotExist:
+    except Brew.DoesNotExist:
         raise Http404(f"Brew {id} does not exist")
     
     recipe = Recipe.objects.get(id=brew.recipe_id)
@@ -252,10 +248,20 @@ def profile(request):
     return render(request, "recipe/profile.html", {'user': user, 'profile': profile})
 
 
-#
-## API requests 
-#
-
+''' API Get a list of recipes.
+    GET:
+        order           list of fields to set the sort order. It is a comma with
+                        no white-space separated list. Each field name must by in
+                        the form required by the order_by() Django QuerySet method
+        thisUserOnly    if True then only recipes belonging to this user are returned
+        recent          if True then only the most recent recipes are returned and 
+                        parameter order is ignored
+    
+        Returns a JSON list of recipes. Each recipe has
+            all the fields from the recipe record, plus
+            style       all the fields of the style set for the recipe
+            create_by   the username of the person that created the recipe
+'''
 def apiRecipeList(request):
     order = request.GET.get("order")
     thisUserOnly = request.GET.get("thisUserOnly")
@@ -266,15 +272,11 @@ def apiRecipeList(request):
         recipelist = Recipe.objects.all()
 
     if recent:
-        days = 7
-        recentlist = []
-        while len(recentlist) < 10 and days <= 448:
-            recentlist = recipelist.filter(create_date__gte=datetime.date.today()-datetime.timedelta(days=days))
-            days *= 2
-        recipelist = recentlist
+        recipes = list(recipelist.order_by('-create_date')[0:10].values())
+    else:
+        arglist = order.split(',')
+        recipes = list(recipelist.order_by(*arglist).values())
 
-    arglist = order.split(',')
-    recipes = list(recipelist.order_by(*arglist).values())
     for recipe in recipes:
         try:
             recipe['style'] = WineStyle.objects.filter(id=recipe['style_id']).values()[0]
@@ -283,6 +285,22 @@ def apiRecipeList(request):
             pass
     return JsonResponse({'recipes': recipes}, safe=False)
 
+''' API Get the full details for a recipe.
+    GET:
+        id          the ID of the required recipe
+
+        Returns JSON containing
+            recipe      all the fields from the recipe record
+            ingredients an alphabetically ordered list of records for all possible ingredients
+            styles      an list of records for all possible wine style
+            methods     an list of records for all possible preparation methods
+            liquid      
+                units   a list of liquid units
+                conv    a list containing conversion factor for each unit
+                step    a list containing spinner step for each unit
+                decimals    a list containing deciaml places to display for each unit
+            solid       lists of solid units, like the liquid lists
+'''
 def apiRecipe(request):
     id = int(request.GET.get("id"))
     if id < 0:
@@ -316,6 +334,16 @@ def apiRecipe(request):
 
     return JsonResponse(data, safe=False)
 
+''' API Get a list of brews.
+    GET:
+        parameters are the same as apiRecipeList()
+    
+        Returns a JSON list of brews. Each brew has
+            all the fields from the brew record, plus
+            user        the username of the person who owns the brew
+            recipe      all the fields of the recipe used for the brew plus
+                style       all the fields of the style set for the recipe
+'''
 def apiBrewList(request):
     order = request.GET.get("order")
     recent = request.GET.get("recent")
@@ -344,6 +372,27 @@ def apiBrewList(request):
             pass
     return JsonResponse({'brews': brews}, safe=False)
 
+''' API Get or set log entries for a brew.
+    GET:
+        id          the ID of the brew to get
+
+        Returns in JSON format a chronological list of log entries for the brew
+        Each log entry contains the log entry data plus
+            user        the username of the user that made the log entry
+            comments    a chronological list of comments attached to the log entry
+
+    POST: new log entry
+        brew_id     the ID of the brew being logged
+        logtext     the text for the log
+
+        Returns the same as GET.
+
+    POST: modify log entry
+        logEntry_id the ID of the log entry to be modified
+        logtext     the replacement text for the log entry
+
+        Returns the same as GET.
+'''
 def apiBrewLog(request):
     if request.method == "GET":
         brew_id = int(request.GET.get("brew_id"))
@@ -403,6 +452,12 @@ def apiBrewLog(request):
 
     return getLog(brew)
 
+''' API Delete a brew log entry
+    POST:
+        logEntry_id     the ID of the log entry to be deleted
+
+        Returns same as apiBrewLog().
+'''
 def apiBrewLogDelete(request):
     # Posting to delete a log entry
     if request.user.is_anonymous:
@@ -430,6 +485,13 @@ def apiBrewLogDelete(request):
 
     return getLog(brew)
 
+''' API Add a comment to a brew.
+    POST:
+        logEntry_id     the ID of the log entry that the comment is for
+        comment         the text of the comment
+
+        Returns same as apiBrewLog().
+'''
 def apiBrewComment(request):
     if request.user.is_anonymous:
         return HttpResponse('You must be logged in to add comments.', status=401)
@@ -453,6 +515,7 @@ def apiBrewComment(request):
 
     return getLog(Brew.objects.get(id=logEntry.brew_id)
 )
+
 
 def getLog(brew):
     # Return all log entries and comments for this brew

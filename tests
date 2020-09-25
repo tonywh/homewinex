@@ -1,0 +1,2 @@
+coverage run --source=recipe manage.py test recipe
+coverage html
