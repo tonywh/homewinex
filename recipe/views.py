@@ -278,11 +278,11 @@ def apiRecipeList(request):
         recipes = list(recipelist.order_by(*arglist).values())
 
     for recipe in recipes:
-        try:
-            recipe['style'] = WineStyle.objects.filter(id=recipe['style_id']).values()[0]
-            recipe['created_by'] = User.objects.filter(id=recipe['created_by_id']).values()[0]['username']
-        except:
-            pass
+        styles = WineStyle.objects.filter(id=recipe['style_id'])
+        recipe['style'] = styles.values()[0] if styles else None
+        users = User.objects.filter(id=recipe['created_by_id'])
+        recipe['created_by'] = users.values()[0]['username'] if users else None
+
     return JsonResponse({'recipes': recipes}, safe=False)
 
 ''' API Get the full details for a recipe.

@@ -11,7 +11,7 @@ class PagesTestCase(TestCase):
         user1 = User.objects.create_user(username="user1", password="user1_pw")
         profile1 = Profile.objects.create(user=user1)
         admin = User.objects.create_user(username="admin", password="admin_pw")
-        profile1 = Profile.objects.create(user=admin)
+        profile2 = Profile.objects.create(user=admin)
         admin.is_superuser = True
         admin.save()
 
